@@ -11,5 +11,10 @@ hopefully eventually some example applications.
 
 Currently in development, so it is quite raw.
 
-On linux, running upg_local.sh will update your local environment to the current pySafe state
-On windows, upg_local.bat...
+On linux, running upg_local.sh will update your local environment to the current pySafe state (any python prog can
+import pySafe, sym-linked to the development directory):
+
+sh ./upg_local.sh
+
+On windows:
+upg_local.bat
