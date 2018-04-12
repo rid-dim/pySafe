@@ -23,12 +23,16 @@ def get_mod_loc(module):
 
 # __file__ is relative to localization.py result
 
+# todo These variables must always return the correct library location.. Test test test
+
 BINPATH = os.path.dirname(_lvl_down(__file__))+os.sep+'compiled_binaries'
 HEADERPATH = os.path.dirname(__file__)+os.sep+'extracted_headers'
 
 
 SAFEAPPFILE=os.path.join(BINPATH,'libsafe_app.so')
 SAFEAUTHFILE=os.path.join(BINPATH,'libsafe_authenticator.so')
+SAFECRUSTCONFIG=os.path.join(BINPATH,'python3.crust.config')
+
 
 SAFEFUNCHEADERS=os.path.join(HEADERPATH,'safe_c_ffi_funcs.h')
 SAFEDATAHEADERS=os.path.join(HEADERPATH,'safe_c_ffi_data.h')

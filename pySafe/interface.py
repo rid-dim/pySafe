@@ -3,12 +3,16 @@
 #  pySafe - the interface to the 'interface'
 #
 #  this file is intended as the gatekeeper to the actual interface.
+#  ..kept seperate to seperate c binding logic from 'interaction with c binding' logic
+#  ..maybe merge someday
 #
 #  includes safe_ffi_interface.py wholesale..
 #
 ########################################################################################################################
 
+import pySafe.localization
 from pySafe.safe_ffi_interface import *
+
 '''
 This brings in:
 ffi:            the interface manager object with the header definitions
@@ -19,7 +23,7 @@ print_structs():print all defined c structs
 '''
 
 NULL=ffi.NULL
-safe_cb=ffi.callback
+safe_callback=ffi.callback
 
 
 ####
@@ -49,9 +53,29 @@ def ffi_str(s):
     s=_guarantee_encoded_string(s)
     return ffi.new('char[]',s)
 
+@safe_callback("void(void*, FfiResult*)")
+def config_search_result_cb(user_data, result):
+    print_default_ffi_result(result, 'changed search path')
+
+def add_local_crust_config(config_path=pySafe.localization.BINPATH):
+    '''
+    adds config_path to the library configuration
+    '''
+    print(f'adding {config_path} to config search path')
+    lib_auth.auth_set_additional_search_path(ffi_str(config_path), NULL, config_search_result_cb)
+
+def print_default_ffi_result(result, actionDescription):
+    if result.error_code == 0:
+        print('successfully ' + actionDescription + '\n')
+    else:
+        print('An error occured - Code: ' + str(result.error_code))
+        print('Error description: ' + str(ffi.string(result.description)))
+
+## Keep for now.. todo delete when confident
+print('Basic SAFE interface generated')
+print_funcs()
+
 
 if __name__=='__main__':
-    # now we be testin'
-    print_funcs()  # a safe_ffi_interface method
-    print('basic testing...')
+    pass
 

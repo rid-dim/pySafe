@@ -61,6 +61,7 @@ def print_funcs():
         # ..to support eventual logging rather than directly print
         outstr=f'{k:{max_len}}:{v}'
         print (outstr)
+    print('----\n')
 
 def print_dtypes():
     pass
@@ -93,4 +94,3 @@ for f in __split_to_lines(_func_defs):
 
 if __name__=='__main__':
     print_funcs()
-    print(localization.get_mod_loc(localization))

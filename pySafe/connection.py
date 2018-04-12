@@ -14,7 +14,8 @@ class Connection:
                  name='SAFE_Connection',
                  version='0.0.0',
                  vendor='rid+dask',
-                 addr='http://localhost'):
+                 addr='http://localhost',
+                 alternate_crust_config=None):
         self.name = name
         self.version = version
         self.vendor = vendor
@@ -22,21 +23,9 @@ class Connection:
         self.lib_auth = interface.lib_auth
         self.lib_app = interface.lib_app
 
-    def defaultFfiResult(self, result, actionDescription):
-
-        if result.error_code == 0:
-            print('successfully ' + actionDescription)
-        else:
-            print('an Error occured - Error Code: ' + str(result.error_code))
-            print('Error description: ' + str(interface.ffi.string(result.description)))
-
-    def toByteIfString(self, parameter, encoding):
-        if type(parameter) == str:
-            return parameter.encode()
-        else:
-            return parameter
-
-
+        #Try and add this here...
+        if alternate_crust_config is None:
+            interface.add_local_crust_config()
 
 
     def login(self, account_locator, account_password, user_data=None, disconnect_notifier_cb=None, cb=None,
@@ -49,21 +38,25 @@ class Connection:
             cb - void* user_data, FfiResult* result, Authenticator* authenticator
         '''
 
-        @interface.ffi.callback("void(void*)")
+
+        @interface.safe_callback("void(void*)")
         def o_disconnect_notifier_cb(user_data):
 
+            ## ?? wise to define this inline?
             if disconnect_notifier_cb:
                 disconnect_notifier_cb(user_data)
             else:
                 pass
 
-        @interface.ffi.callback("void(void*,FfiResult*,Authenticator*)")
+        @interface.safe_callback("void(void*,FfiResult*,Authenticator*)")
         def o_cb(user_data, result, authenticator):
 
+            ## ??  wise to define this inline?
             if cb:
                 cb(user_data, result, authenticator)
             else:
-                self.defaultFfiResult(result, 'logged into the SAFE Network')
+                interface.print_default_ffi_result(result, 'HOO! logged into the SAFE Network')
+
 
         account_locator = interface.ffi_str(account_locator)
         password = interface.ffi_str(account_password)
@@ -73,5 +66,7 @@ class Connection:
             userData = NULL
 
         self.lib_auth.login(account_locator, password, userData, o_disconnect_notifier_cb, o_cb)
+
+
 
 
