@@ -53,9 +53,12 @@ def ffi_str(s):
     s=_guarantee_encoded_string(s)
     return ffi.new('char[]',s)
 
-@safe_callback("void(void*, FfiResult*)")
-def config_search_result_cb(user_data, result):
-    print_default_ffi_result(result, 'changed search path')
+
+
+####
+#  FFI initialization functions
+####
+
 
 def add_local_crust_config(config_path=pySafe.localization.BINPATH):
     '''
@@ -66,14 +69,44 @@ def add_local_crust_config(config_path=pySafe.localization.BINPATH):
 
 def print_default_ffi_result(result, actionDescription):
     if result.error_code == 0:
-        print('successfully ' + actionDescription + '\n')
+        print(f'..success: {actionDescription}')
     else:
         print('An error occured - Code: ' + str(result.error_code))
         print('Error description: ' + str(ffi.string(result.description)))
 
+#####
+#  Initialization callbacks
+#####
+
+
+
+@safe_callback("void(void*, FfiResult*)")
+def config_search_result_cb(user_data, result):
+    print_default_ffi_result(result, 'changing search path')
+
+@safe_callback("void(void*,FfiResult*, char*)")
+def stem_callback(user_data, result, name):
+    global userData, myResult
+
+    userData = user_data
+    myResult = result
+    print_default_ffi_result(result, 'executing app_exe_file_stem')
+    print(f'..callback file_stem name: {ffi.string(name)}')
+
+
+
+
 ## Keep for now.. todo delete when confident
 print('Basic SAFE interface generated')
 print_funcs()
+
+
+
+## todo .. is this the right place for this?
+lib_app.app_exe_file_stem(ffi.NULL, stem_callback)
+
+
+
 
 
 if __name__=='__main__':

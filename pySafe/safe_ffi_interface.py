@@ -56,7 +56,7 @@ def print_funcs():
     prints all registered functions and their signatures
     '''
     max_len= max([len(k) for k in _c_functions.keys()]) + 1
-    print ('listing all functions imported from SAFE binary as (func:sig)\n---------')
+    print ('listing all functions bound from SAFE binary FFI: (func:sig)\n---------')
     for k,v in _c_functions.items():
         # ..to support eventual logging rather than directly print
         outstr=f'{k:{max_len}}:{v}'
