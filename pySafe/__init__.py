@@ -7,3 +7,5 @@
 # (temp) the imports here are the interface exposed by "import pySafe"
 
 # (temp) ...
+
+from .connection import  Connection

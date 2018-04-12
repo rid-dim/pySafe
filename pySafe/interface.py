@@ -1,15 +1,32 @@
 ########################################################################################################################
 #
-#  pySafe - utility functions
+#  pySafe - the interface to the 'interface'
 #
+#  this file is intended as the gatekeeper to the actual interface.
 #
+#  includes safe_ffi_interface.py wholesale..
 #
 ########################################################################################################################
 
-from .safe_ffi_interface import *
+from pySafe.safe_ffi_interface import *
+'''
+This brings in:
+ffi:            the interface manager object with the header definitions
+lib_app:        the opened safe_app  so 
+lib_auth:       the opened safe_auth  so
+print_funcs():  print all defined c functions 
+print_structs():print all defined c structs 
+'''
+
+NULL=ffi.NULL
+safe_cb=ffi.callback
 
 
-def _guarantee_encoded_string(s, encoding=None):
+####
+#  FFI Datatype casters
+####
+
+def _guarantee_encoded_string(s, encoding='UTF-8'):
     '''
     :param s: the string to be encoded.
     :param encoding:  The encoding of the string
@@ -31,3 +48,10 @@ def ffi_str(s):
     '''
     s=_guarantee_encoded_string(s)
     return ffi.new('char[]',s)
+
+
+if __name__=='__main__':
+    # now we be testin'
+    print_funcs()  # a safe_ffi_interface method
+    print('basic testing...')
+
