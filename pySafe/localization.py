@@ -1,3 +1,14 @@
+########################################################################################################################
+#
+# Localization
+#
+# Simple utilities to find and standardize naming of project directories.  Keeps things simpler when moving accross
+# machines
+#
+# Needs a serious pass later when we start allowing configurable options etc..
+#
+########################################################################################################################
+
 import os
 
 def find_bin_dir():
@@ -26,6 +37,7 @@ def get_mod_loc(module):
 # todo These variables must always return the correct library location.. Test test test
 
 BINPATH = os.path.dirname(_lvl_down(__file__))+os.sep+'compiled_binaries'
+LOGPATH = os.path.dirname(_lvl_down(__file__)) + os.sep + 'logs'
 HEADERPATH = os.path.dirname(__file__)+os.sep+'extracted_headers'
 
 
