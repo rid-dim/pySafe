@@ -3,6 +3,7 @@ For now, we try a flat structure.. the project is simple enough at present that 
 The structure is still fluid: At present, this is on a 'simplest thing that works' basis for the following goals.
 -pypi available
 -pip installable
+-multi platform (windows/linux/mac 64/32bit)
 
 * compilable is a goal, but there is no use compiling until there is a fully working 'server' inside the project.
 
@@ -10,10 +11,15 @@ The structure is still fluid: At present, this is on a 'simplest thing that work
 Other thoughts about design:
 ----------------------------
 
+should we split it up into authenticator / application or just make one module that uses both libs and can act as both ..?
+(actually it is kind of hard to find a motivation to have it split ...)
+
 ...
 
 
 
 Definite TODO:
 ----------------------------
-- update extractor to write the '.h' files in ./extracted_headers
+- update extractor to write the '.h' files in ./extracted_headers (datatypes does it now - lib-functions ... if a line starts with void and ends with a semicolon that is the line we need - then only getting rid of all 'constant's is the only think we need to do)
+
+- right now the installer script only works with anaconda environments i think ..? we should probably make it more universal at some point
