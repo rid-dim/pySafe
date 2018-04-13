@@ -2,7 +2,8 @@
 #
 # pySafe - Authenticator Interface
 #
-# This is really just a stub
+# This is really just a stub  ... files like this should be able to import the interface and just go, but code structure
+# really needs some thought
 #
 #
 #
