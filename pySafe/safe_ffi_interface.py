@@ -1,17 +1,20 @@
 ########################################################################################################################
 #
-#  pySafe - C FFI interface
+# pySafe - C FFI interface
 #
-#  The purpose of this file is to parse and define the function signatures and structures defined in
-#   ./safe_c_ffi_funcs.h   -> the header signatures
-#   ./safe_c_datatypes.h   -> the data structures
+# The purpose of this file is to parse and define the function signatures and structures defined in
+#  ./safe_c_ffi_funcs.h   -> the header signatures
+#  ./safe_c_datatypes.h   -> the data structures
 #
-#  This can be done inline, but at present is done from the 'header' files for cleanliness of code and to facilitate
-#  interoperation with the utility that can generate these files.
+# This can be done inline, but at present is done from the 'header' files for cleanliness of code and to facilitate
+# interoperation with the utility that can generate these files.
 #
-#  The current intended use of this file is to be imported in its entirety by 'interface.py' only.  Nothing in this file
-#  should be *directly* available to the end-user
+# The current intended use of this file is to be imported in its entirety by 'interface.py' only.  Nothing in this file
+# should be *directly* available to the end-user
 #
+# The current implementation is the 'ABI - Inline' mode of cffi operation.  As we benchmark performance, it may be
+# useful to switch it to actually compiling a library rather than doing it all in Python. See
+# https://cffi.readthedocs.io/en/latest/overview.html#simple-example-abi-level-in-line
 #
 ########################################################################################################################
 import pySafe.localization
@@ -37,6 +40,7 @@ def __split_to_lines(data):
 def __register_func_sig(f):
     '''
     registers all function names in global:functions.
+    Only useful for print_funcs and get_function_signature right now, but later could be useful for online help
     #todo parse for signature and callback
     '''
     global _c_functions
@@ -63,6 +67,13 @@ def print_funcs():
         print (outstr)
     print('----\n')
 
+
+def get_function_signature(f):
+    '''
+    returns the signature of a bound c function
+    '''
+    return _c_functions.get(f, f'function not found: {f}')
+
 def print_dtypes():
     pass
     # may be nice to implement later for debugging
@@ -84,6 +95,7 @@ lib_auth = ffi.dlopen(pySafe.localization.SAFEAUTHFILE)
 
 
 # Now, all c header definitions are available, and callable through lib_app and lib_auth.
+# Again, this is ABI-Inline mode for cffi, and it can be 'slow and fraught with errors'.. we see!
 # todo seperate headers into app and auth?
 
 

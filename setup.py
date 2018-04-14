@@ -8,6 +8,10 @@ recommended = {
     "cffi": ["cffi>1.11.5"]
 }
 
+install_requires = [
+    "cffi>=1.11.5"
+]
+
 setup(name='pySafe',
       version='0.1',
       description='Python interface to the SAFE binaries',
