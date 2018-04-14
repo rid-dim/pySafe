@@ -1,12 +1,14 @@
 ########################################################################################################################
 #
-#  pySafe - the interface to the 'interface'
+# pySafe - the interface to the 'interface'
 #
-#  this file is intended as the gatekeeper to the actual interface.
-#  ..kept seperate to seperate c binding logic from 'interaction with c binding' logic
-#  ..maybe merge someday
+# this file is intended as the gatekeeper to the actual interface.
+# - kept seperate to seperate c binding logic from 'interaction with c binding' logic
+# - another advantage is that this seperation will make it easier if we want to change the safe_ffi_interface to a
+#   'compiling' mode at some point in the future
+# .. maybe merge someday
 #
-#  includes safe_ffi_interface.py wholesale..
+# includes safe_ffi_interface.py wholesale..
 #
 ########################################################################################################################
 
@@ -22,6 +24,7 @@ print_funcs():  print all defined c functions
 print_structs():print all defined c structs 
 '''
 
+# convenience, lazyness, simplifying namespace
 NULL=ffi.NULL
 safe_callback=ffi.callback
 
