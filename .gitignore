@@ -2,6 +2,9 @@
 # Compiled python modules.
 *.pyc
 
+# Program generated logs
+/logs/
+
 # the extracted libraries are too large for github
 *.so
 

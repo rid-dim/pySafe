@@ -8,4 +8,6 @@
 
 # (temp) ...
 
-from .connection import  Connection
+from pySafe.logging import setup_logger, logger
+
+from pySafe.connection import Connection
