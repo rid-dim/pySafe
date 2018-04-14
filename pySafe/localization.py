@@ -8,12 +8,12 @@
 # Needs a serious pass later when we start allowing configurable options etc..
 #
 ########################################################################################################################
-
+import platform
 import os
+
 
 def find_bin_dir():
     pass
-
 
 
 def _lvl_down(path):
@@ -40,11 +40,20 @@ BINPATH = os.path.dirname(_lvl_down(__file__))+os.sep+'compiled_binaries'
 LOGPATH = os.path.dirname(_lvl_down(__file__)) + os.sep + 'logs'
 HEADERPATH = os.path.dirname(__file__)+os.sep+'extracted_headers'
 
+LINUX_AUTHLIB = 'libsafe_authenticator.so'
+LINUX_APPLIB = 'libsafe_app.so'
+WIN_AUTHLIB = 'NOT_IMPLEMENTED'
+WIN_APPLIB = 'NOT_IMPLEMENTED'
 
-SAFEAPPFILE=os.path.join(BINPATH,'libsafe_app.so')
-SAFEAUTHFILE=os.path.join(BINPATH,'libsafe_authenticator.so')
+APPLIB = LINUX_APPLIB if platform.system() == 'Linux' else WIN_APPLIB
+AUTHLIB = LINUX_AUTHLIB if platform.system() == 'Linux' else WIN_AUTHLIB
+
+SAFEAPPFILE = os.path.join(BINPATH, APPLIB)
+SAFEAUTHFILE = os.path.join(BINPATH, AUTHLIB)
+
+# Eventually need a utility to find this.
 SAFECRUSTCONFIG=os.path.join(BINPATH,'python3.crust.config')
 
-
+# Review this after the autogenerators
 SAFEFUNCHEADERS=os.path.join(HEADERPATH,'safe_c_ffi_funcs.h')
 SAFEDATAHEADERS=os.path.join(HEADERPATH,'safe_c_ffi_data.h')

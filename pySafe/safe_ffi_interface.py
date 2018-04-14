@@ -40,6 +40,7 @@ def __split_to_lines(data):
 def __register_func_sig(f):
     '''
     registers all function names in global:functions.
+    Only useful for print_funcs and get_function_signature right now, but later could be useful for online help
     #todo parse for signature and callback
     '''
     global _c_functions
@@ -65,6 +66,13 @@ def print_funcs():
         outstr=f'{k:{max_len}}:{v}'
         print (outstr)
     print('----\n')
+
+
+def get_function_signature(f):
+    '''
+    returns the signature of a bound c function
+    '''
+    return _c_functions.get(f, f'function not found: {f}')
 
 def print_dtypes():
     pass

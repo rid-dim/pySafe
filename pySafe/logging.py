@@ -3,6 +3,9 @@
 # Logging utils
 #
 # For now, just putting in a backbone for nice printing, plus the ability to write detailed debug log files.
+# Not hooked into anything just yet, we need to debate how/when to use it instead of print
+# Very useful during dev to have a very detailed log
+#
 #
 ########################################################################################################################
 
@@ -72,7 +75,7 @@ def setup_logger(style='debug', log_to_file=True, start_msg_threshold=logging.DE
         except:
             logger.system('Logfile: {0} bad, no logfile output'.format(logfile))
 
-    logger.debug(f'Logger initialized for "{logname}", with starting level {start_msg_threshold}')
+    # logger.debug(f'Logger initialized for "{logname}", with starting level {start_msg_threshold}')
     return logger
 
 

@@ -2,8 +2,11 @@
 # Compiled python modules.
 *.pyc
 
-# logging
+# Program generated logs
 /logs/
+
+# the extracted libraries are too large for github
+*.so
 
 # Setuptools distribution folder.
 /dist/
@@ -13,4 +16,7 @@
 
 # Pycharm project stuff
 /.cache/
-/*.idea/
+/.idea/
+
+# jupyter checkpoints
+*checkpoint.ipynb
