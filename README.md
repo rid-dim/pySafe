@@ -1,4 +1,5 @@
-#pySafe
+pySafe
+----
 
 python interface for the C FFI API of the SAFE Network (www.maidsafe.net)
 
