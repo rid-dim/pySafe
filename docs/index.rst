@@ -1,19 +1,6 @@
 pySafe
 ----
 
-Build Status master:
-
-|Linux/OS X|Windows|Docs|
-|:--------:|:-----:|:----:|
-|[![Build Status](https://travis-ci.org/rid-dim/pySafe.svg?branch=master)](https://travis-ci.org/rid-dim/pySafe?branch=master)|[![Build status](https://ci.appveyor.com/api/projects/status/rid-dim/pysafe/branch/master?svg=true)](https://ci.appveyor.com/project/rid-dim/pysafe/branch/master)|[![docs](https://readthedocs.org/projects/pysafe/badge/?branch=master)](http://pysafe.readthedocs.io/en/latest/?branch=master)|
-
-Build Status dev:
-
-|Linux/OS X|Windows|Docs|
-|:--------:|:-----:|:----:|
-|[![Build Status](https://travis-ci.org/rid-dim/pySafe.svg?branch=dev)](https://travis-ci.org/rid-dim/pySafe?branch=dev)|[![Build status](https://ci.appveyor.com/api/projects/status/rid-dim/pysafe/branch/dev?svg=true)](https://ci.appveyor.com/project/rid-dim/pysafe/branch/dev)|[![docs](https://readthedocs.org/projects/pysafe/badge/?branch=dev)](http://pysafe.readthedocs.io/en/latest/?branch=dev)|
-
-
 python interface for the C FFI API of the SAFE Network (www.maidsafe.net)
 
 contributors: rid-dim, duncankushnir
@@ -39,6 +26,9 @@ Currently in development, so it is quite raw.
 Contributing
 ----
 
-If you want to help us and work together with us on this project you can just join [our telegram channel](https://t.me/pySafe) or [get in touch with us in the dev forum](https://forum.safedev.org/) or you just open a pull request / contact us on github :)
+If you want to help us and work together with us on this project you can just join `our telegram channel`_ or get in touch with us in the `dev forum`_ or you just open a pull request / contact us on github :)
 
 The more people get involved, the easier it is to utilize safe and the more powerful this library gets the better for freedom of humanity =) Together we work on creating a peoples internet where everybody wins and access to knowledge and freedom of speech are no privileges but universal rights of every human.
+
+.. _dev forum: https://forum.safedev.org/
+.. _our telegram channel: https://t.me/pySafe
