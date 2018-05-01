@@ -28,7 +28,7 @@ Tests
 
 Automatic tests are run through travis-ci and appveyor on windows, osx and linux
 
-To add tests the test files that are meant to be executed need to be added to the tests_ directory and need to start with **test_**\* or end with **_test**
+To add tests the test files that are meant to be executed need to be added to the tests_ directory and need to start with **test_**\* or end with \***_test**
 
 .. _tests: https://github.com/rid-dim/pySafe/tree/dev/tests
 
@@ -37,8 +37,7 @@ To add tests the test files that are meant to be executed need to be added to th
 
 the test functions that are meant to be executed must be named **test_**\* and need to include an **assert** at the end
 
-.. code-block:: bash
-    number-lines:
+.. code-block:: python
 
     # super simple first test
     def test_answers():
