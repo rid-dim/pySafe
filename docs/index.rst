@@ -1,18 +1,5 @@
 pySafe
-----
-
-Build Status master:
-
-|Linux/OS X|Windows|Docs|
-|:--------:|:-----:|:----:|
-|[![Build Status](https://travis-ci.org/rid-dim/pySafe.svg?branch=master)](https://travis-ci.org/rid-dim/pySafe?branch=master)|[![Build status](https://ci.appveyor.com/api/projects/status/qyx4b75u9mxrla1g/branch/master?svg=true)](https://ci.appveyor.com/project/rid-dim/pysafe/branch/master)|[![docs](https://readthedocs.org/projects/pysafe/badge/?version=master)](http://pysafe.readthedocs.io/en/master)|
-
-Build Status dev:
-
-|Linux/OS X|Windows|Docs|
-|:--------:|:-----:|:----:|
-|[![Build Status](https://travis-ci.org/rid-dim/pySafe.svg?branch=dev)](https://travis-ci.org/rid-dim/pySafe?branch=dev)|[![Build status](https://ci.appveyor.com/api/projects/status/qyx4b75u9mxrla1g/branch/dev?svg=true)](https://ci.appveyor.com/project/rid-dim/pysafe/branch/dev)|[![docs](https://readthedocs.org/projects/pysafe/badge/?version=dev)](http://pysafe.readthedocs.io/en/dev)|
-
+=======
 
 python interface for the C FFI API of the SAFE Network (www.maidsafe.net)
 
@@ -36,9 +23,39 @@ Currently in development, so it is quite raw.
 - On Windows: upg_local.bat (note that at present you will have to compile your own binaries.  Windows support is a ways off yet)
 
 
-Contributing
-----
+Tests
+=======
 
-If you want to help us and work together with us on this project you can just join [our telegram channel](https://t.me/pySafe) or [get in touch with us in the dev forum](https://forum.safedev.org/) or you just open a pull request / contact us on github :)
+Automatic tests are run through travis-ci and appveyor on windows, osx and linux
+
+To add tests the test files that are meant to be executed need to be added to the tests_ directory and need to start with **test_**\* or end with \***_test**
+
+.. _tests: https://github.com/rid-dim/pySafe/tree/dev/tests
+
+
+.. rubric:: tests to be executed
+
+the test functions that are meant to be executed must be named **test_**\* and need to include an **assert** at the end
+
+.. code-block:: python
+
+    # super simple first test
+    def test_answers():
+        assert inc(4) == 5
+
+
+Documentation
+=======
+
+feel free to just improve this docs and open a pull request on github.
+
+
+Contributing
+=======
+
+If you want to help us and work together with us on this project you can just join `our telegram channel`_ or get in touch with us in the `dev forum`_ or you just open a pull request / contact us on github :)
 
 The more people get involved, the easier it is to utilize safe and the more powerful this library gets the better for freedom of humanity =) Together we work on creating a peoples internet where everybody wins and access to knowledge and freedom of speech are no privileges but universal rights of every human.
+
+.. _dev forum: https://forum.safedev.org/
+.. _our telegram channel: https://t.me/pySafe

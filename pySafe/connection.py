@@ -1,14 +1,22 @@
 ########################################################################################################################
 #
-#  pySafe - Authenticator Interface
+# pySafe - Authenticator Interface
+#
+# This is really just a stub  ... files like this should be able to import the interface and just go, but code structure
+# really needs some thought
+#
+#
 #
 ########################################################################################################################
 
-# This brings all the c interfaces into this module .. maybe better to keep it in a namespace?
+# This brings all the c interfaces into this module ..  at this point still clean code
 import pySafe.interface as interface
 
 NULL=interface.NULL
 
+
+# From here on in is just a very basic 'working' example
+# todo we need heavy thought on how to structure the various classes.
 class Connection:
     def __init__(self,
                  name='SAFE_Connection',
