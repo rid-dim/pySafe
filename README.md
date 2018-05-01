@@ -5,13 +5,13 @@ Build Status master:
 
 |Linux/OS X|Windows|Docs|
 |:--------:|:-----:|:----:|
-|[![Build Status](https://travis-ci.org/rid-dim/pySafe.svg?branch=master)](https://travis-ci.org/rid-dim/pySafe?branch=master)|[![Build status](https://ci.appveyor.com/api/projects/status/qyx4b75u9mxrla1g/branch/master?svg=true)](https://ci.appveyor.com/project/rid-dim/pysafe/branch/master)|[![docs](https://readthedocs.org/projects/pysafe/badge/?branch=master)](http://pysafe.readthedocs.io/en/latest/?branch=master)|
+|[![Build Status](https://travis-ci.org/rid-dim/pySafe.svg?branch=master)](https://travis-ci.org/rid-dim/pySafe?branch=master)|[![Build status](https://ci.appveyor.com/api/projects/status/qyx4b75u9mxrla1g/branch/master?svg=true)](https://ci.appveyor.com/project/rid-dim/pysafe/branch/master)|[![docs](https://readthedocs.org/projects/pysafe/badge/?version=master)](http://pysafe.readthedocs.io/en/master)|
 
 Build Status dev:
 
 |Linux/OS X|Windows|Docs|
 |:--------:|:-----:|:----:|
-|[![Build Status](https://travis-ci.org/rid-dim/pySafe.svg?branch=dev)](https://travis-ci.org/rid-dim/pySafe?branch=dev)|[![Build status](https://ci.appveyor.com/api/projects/status/qyx4b75u9mxrla1g/branch/dev?svg=true)](https://ci.appveyor.com/project/rid-dim/pysafe/branch/dev)|[![docs](https://readthedocs.org/projects/pysafe/badge/?branch=dev)](http://pysafe.readthedocs.io/en/latest/?branch=dev)|
+|[![Build Status](https://travis-ci.org/rid-dim/pySafe.svg?branch=dev)](https://travis-ci.org/rid-dim/pySafe?branch=dev)|[![Build status](https://ci.appveyor.com/api/projects/status/qyx4b75u9mxrla1g/branch/dev?svg=true)](https://ci.appveyor.com/project/rid-dim/pysafe/branch/dev)|[![docs](https://readthedocs.org/projects/pysafe/badge/?version=dev)](http://pysafe.readthedocs.io/en/dev)|
 
 
 python interface for the C FFI API of the SAFE Network (www.maidsafe.net)
