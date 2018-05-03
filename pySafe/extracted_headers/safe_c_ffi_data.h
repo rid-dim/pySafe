@@ -27,14 +27,14 @@ typedef long int intptr_t;
 typedef unsigned long int uintptr_t;
 typedef long int intmax_t;
 typedef unsigned long int uintmax_t;
-typedef uint8_t const* AsymPublicKey;
-typedef uint8_t const* AsymSecretKey;
-typedef uint8_t const* AsymNonce;
-typedef uint8_t const* SymSecretKey;
-typedef uint8_t const* SymNonce;
-typedef uint8_t const* SignPublicKey;
-typedef uint8_t const* SignSecretKey;
-typedef uint8_t const* XorNameArray;
+typedef uint8_t* AsymPublicKey;
+typedef uint8_t* AsymSecretKey;
+typedef uint8_t* AsymNonce;
+typedef uint8_t* SymSecretKey;
+typedef uint8_t* SymNonce;
+typedef uint8_t* SignPublicKey;
+typedef uint8_t* SignSecretKey;
+typedef uint8_t* XorNameArray;
 typedef uint64_t ObjectHandle;
 typedef ObjectHandle CipherOptHandle;
 typedef ObjectHandle EncryptPubKeyHandle;
@@ -57,7 +57,7 @@ typedef enum {
 } MDataAction;
 typedef struct {
  int32_t error_code;
- char const* description;
+ char* description;
 } FfiResult;
 typedef struct {
  uint64_t size;
@@ -78,25 +78,25 @@ typedef struct {
  _Bool manage_permissions;
 } PermissionSet;
 typedef struct {
- char const* id;
- char const* scope;
- char const* name;
- char const* vendor;
+ char* id;
+ char* scope;
+ char* name;
+ char* vendor;
 } AppExchangeInfo;
 typedef struct {
- char const* cont_name;
+ char* cont_name;
  PermissionSet access;
 } ContainerPermissions;
 typedef struct {
  AppExchangeInfo app;
  _Bool app_container;
- ContainerPermissions const* containers;
+ ContainerPermissions* containers;
  uintptr_t containers_len;
  uintptr_t containers_cap;
 } AuthReq;
 typedef struct {
  AppExchangeInfo app;
- ContainerPermissions const* containers;
+ ContainerPermissions* containers;
  uintptr_t containers_len;
  uintptr_t containers_cap;
 } ContainersReq;
@@ -107,7 +107,7 @@ typedef struct {
 } ShareMData;
 typedef struct {
  AppExchangeInfo app;
- ShareMData const* mdata;
+ ShareMData* mdata;
  uintptr_t mdata_len;
  uintptr_t mdata_cap;
 } ShareMDataReq;
@@ -143,12 +143,12 @@ typedef struct {
  SymNonce nonce;
 } AccessContInfo;
 typedef struct {
- char const* name;
+ char* name;
  MDataInfo mdata_info;
  PermissionSet permissions;
 } ContainerInfo;
 typedef struct {
- ContainerInfo const* containers;
+ ContainerInfo* containers;
  uintptr_t containers_len;
  uintptr_t containers_cap;
 } AccessContainerEntry;
@@ -163,21 +163,21 @@ typedef struct {
 typedef struct {
  SignPublicKey sign_key;
  PermissionSet permissions;
- char const* name;
- char const* app_id;
+ char* name;
+ char* app_id;
 } AppAccess;
 typedef struct {
- char const* name;
- char const* description;
+ char* name;
+ char* description;
  XorNameArray xor_name;
  uint64_t type_tag;
 } MetadataResponse;
 typedef struct {
- uint8_t const* val;
+ uint8_t* val;
  uintptr_t val_len;
 } MDataKey;
 typedef struct {
- uint8_t const* content;
+ uint8_t* content;
  uintptr_t content_len;
  uint64_t entry_version;
 } MDataValue;
