@@ -31,8 +31,8 @@ def copy(data,ffi):
         newData = ffi.new(ffi.typeof(data),data[0])
         
         user_metadata_ptr = ffi.new('uint8_t[]',data.user_metadata_len)
-        #copyLen=int(ffi.sizeof(data.user_metadata_ptr)*data.user_metadata_len)
-        ffi.buffer(user_metadata_ptr,data.user_metadata_len)[:]=ffi.buffer(data.user_metadata_ptr,data.user_metadata_len)[:]
+        copyLen=int(ffi.sizeof(ffi.new('uint8_t[1]'))*data.user_metadata_len)
+        ffi.buffer(user_metadata_ptr,copyLenn)[:]=ffi.buffer(data.user_metadata_ptr,copyLen)[:]
         newData.user_metadata_ptr = user_metadata_ptr
         
         return newData,[user_metadata_ptr]
@@ -63,8 +63,8 @@ def copy(data,ffi):
         newData = ffi.new(ffi.typeof(data),data[0])
         
         containers = ffi.new('ContainerPermissions[]',data.containers_len)
-        #copyLen=int(ffi.sizeof(data.containers)*data.containers_len)
-        ffi.buffer(containers,data.containers_len)[:]=ffi.buffer(data.containers,data.containers_len)[:]
+        copyLen=int(ffi.sizeof(ffi.new('ContainerPermissions[1]'))*data.containers_len)
+        ffi.buffer(containers,copyLen)[:]=ffi.buffer(data.containers,copyLen)[:]
         newData.containers = containers
         containerNames=[]
         for i in range(data.containers_len):
@@ -77,8 +77,8 @@ def copy(data,ffi):
         newData = ffi.new(ffi.typeof(data),data[0])
         
         containers = ffi.new('ContainerPermissions[]',data.containers_len)
-        #copyLen=int(ffi.sizeof(data.containers)*data.containers_len)
-        ffi.buffer(containers,data.containers_len)[:]=ffi.buffer(data.containers,data.containers_len)[:]
+        copyLen=int(ffi.sizeof(ffi.new('ContainerPermissions[1]'))*data.containers_len)
+        ffi.buffer(containers,copyLen)[:]=ffi.buffer(data.containers,copyLen)[:]
         newData.containers = containers
         containerNames=[]
         for i in range(data.containers_len):
@@ -91,8 +91,8 @@ def copy(data,ffi):
         newData = ffi.new(ffi.typeof(data),data[0])
         
         mdata = ffi.new('ShareMData[]',data.mdata_len)
-        #copyLen=int(ffi.sizeof(data.mdata)*data.mdata_len)
-        ffi.buffer(mdata,data.mdata_len)[:]=ffi.buffer(data.mdata,data.mdata_len)[:]
+        copyLen=int(ffi.sizeof(ffi.new('ShareMData[1]'))*data.mdata_len)
+        ffi.buffer(mdata,copyLen)[:]=ffi.buffer(data.mdata,copyLen)[:]
         newData.mdata = mdata
         
         return newData,[mdata]
@@ -109,8 +109,8 @@ def copy(data,ffi):
         newData = ffi.new(ffi.typeof(data),data[0])
         
         containers = ffi.new('ContainerInfo[]',data.containers_len)
-        #copyLen=int(ffi.sizeof(data.containers)*data.containers_len)
-        ffi.buffer(containers,data.containers_len)[:]=ffi.buffer(data.containers,data.containers_len)[:]
+        copyLen=int(ffi.sizeof(ffi.new('ContainerInfo[1]'))*data.containers_len)
+        ffi.buffer(containers,copyLen)[:]=ffi.buffer(data.containers,copyLen)[:]
         newData.containers = containers
         
         return newData,[containers]
@@ -119,13 +119,13 @@ def copy(data,ffi):
         newData = ffi.new(ffi.typeof(data),data[0])
         
         bootstrap_config = ffi.new('unsigned char[]',data.bootstrap_config_len)
-        #copyLen=int(ffi.sizeof(data.bootstrap_config)*data.bootstrap_config_len)
-        ffi.buffer(bootstrap_config,data.bootstrap_config_len)[:]=ffi.buffer(data.bootstrap_config,data.bootstrap_config_len)[:]
+        copyLen=int(ffi.sizeof(ffi.new('unsigned char[1]'))*data.bootstrap_config_len)
+        ffi.buffer(bootstrap_config,copyLen)[:]=ffi.buffer(data.bootstrap_config,copyLen)[:]
         newData.bootstrap_config = bootstrap_config
         
         containers = ffi.new('ContainerInfo[]',data.access_container_entry.containers_len)
-        #copyLen=int(ffi.sizeof(data.access_container_entry.containers)*data.access_container_entry.containers_len)
-        ffi.buffer(containers,data.access_container_entry.containers_len)[:]=ffi.buffer(data.access_container_entry.containers,data.access_container_entry.containers_len)[:]
+        copyLen=int(ffi.sizeof(ffi.new('ContainerInfo[1]'))*data.access_container_entry.containers_len)
+        ffi.buffer(containers,copyLen)[:]=ffi.buffer(data.access_container_entry.containers,copyLen)[:]
         newData.access_container_entry.containers = containers
         containerNames=[]
         for i in range(data.access_container_entry.containers_len):
@@ -158,8 +158,8 @@ def copy(data,ffi):
         newData = ffi.new(ffi.typeof(data),data[0])
         
         val = ffi.new('uint8_t[]',data.val_len)
-        #copyLen=int(ffi.sizeof(data.val)*data.val_len)
-        ffi.buffer(val,data.val_len)[:]=ffi.buffer(data.val,data.val_len)[:]
+        copyLen=int(ffi.sizeof(ffi.new('uint8_t[1]'))*data.val_len)
+        ffi.buffer(val,copyLen)[:]=ffi.buffer(data.val,copyLen)[:]
         newData.val = val
         
         return newData,[val]
@@ -168,8 +168,8 @@ def copy(data,ffi):
         newData = ffi.new(ffi.typeof(data),data[0])
         
         content = ffi.new('uint8_t[]',data.content_len)
-        #copyLen=int(ffi.sizeof(data.content)*data.content_len)
-        ffi.buffer(content,data.content_len)[:]=ffi.buffer(data.content,data.content_len)[:]
+        copyLen=int(ffi.sizeof(ffi.new('uint8_t[1]'))*data.content_len)
+        ffi.buffer(content,copyLen)[:]=ffi.buffer(data.content,copyLen)[:]
         newData.content = content
         
         return newData,[content]
@@ -178,16 +178,17 @@ def copy(data,ffi):
         newData = ffi.new(ffi.typeof(data),data[0])
         
         val = ffi.new('uint8_t[]',data.key.val_len)
-        #copyLen=int(ffi.sizeof(data.key.val)*data.key.val_len)
-        ffi.buffer(val,data.key.val_len)[:]=ffi.buffer(data.key.val,data.key.val_len)[:]
+        copyLen=int(ffi.sizeof(ffi.new('uint8_t[1]'))*data.key.val_len)
+        ffi.buffer(val,copyLen)[:]=ffi.buffer(data.key.val,copyLen)[:]
         newData.key.val = val
         
         content = ffi.new('uint8_t[]',data.value.content_len)
-        #copyLen=int(ffi.sizeof(data.value.content)*data.value.content_len)
-        ffi.buffer(content,data.value.content_len)[:]=ffi.buffer(data.value.content,data.value.content_len)[:]
+        copyLen=int(ffi.sizeof(ffi.new('uint8_t[1]'))*data.value.content_len)
+        ffi.buffer(content,copyLen)[:]=ffi.buffer(data.value.content,copyLen)[:]
         newData.value.content = content
         
         return newData,[val,content]
+    
     
     else:
         newData = ffi.new(ffi.typeof(data),data[0])
