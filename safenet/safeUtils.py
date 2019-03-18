@@ -9,6 +9,29 @@
 #
 ########################################################################################################################
 
+# push callbacks into other threads to avoid trouble with concurrent access
+from threading import Thread
+from functools import wraps
+def safeThread(*args, **kwargs):
+    if 'timeout' in kwargs.keys():
+        waitSeconds = kwargs['timeout']
+    else:
+        waitSeconds = 5
+    if 'queue' in kwargs.keys():
+        myQueue = kwargs['queue']
+    else:
+        myQueue = None
+        
+    def threader(fun):
+        @wraps(fun)
+        def innerThreader(*args,**kwargs):
+            oneThread = Thread(target=fun,args=args,kwargs=kwargs)
+            oneThread.start()
+            if myQueue:
+                result = myQueue.get(timeout=waitSeconds)
+                return result
+        return innerThreader
+    return threader
 
 # here we start out with a copy function that takes care of the inner values as well
 def copy(data,ffi):
