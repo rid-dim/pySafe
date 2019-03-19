@@ -8,8 +8,8 @@
 
 # (temp) ...
 
-from safenet.logging import setup_logger, logger
+from safenet.log_util import setup_logger, logger
 
-from safenet.app import app
+#from safenet.app import app
 
 #import safenet.localization
