@@ -6,7 +6,8 @@
 /logs/
 
 # the extracted libraries are too large for github
-*.so
+#*.so
+# not if they are compiled with cargo build --release --features=use-mock-routing
 
 # Setuptools distribution folder.
 /dist/
