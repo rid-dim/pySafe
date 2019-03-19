@@ -1,0 +1,22 @@
+
+void auth_init_logging(char* output_file_name_override, void* user_data, void (*o_cb)(void* user_data, FfiResult* result));
+void auth_output_log_path(char* output_file_name, void* user_data, void (*o_cb)(void* user_data, FfiResult* result, char* log_path));
+void create_acc(char* account_locator, char* account_password, char* invitation, void* user_data, void (*o_disconnect_notifier_cb)(void* user_data), void (*o_cb)(void* user_data, FfiResult* result, Authenticator* authenticator));
+void login(char* account_locator, char* account_password, void* user_data, void (*o_disconnect_notifier_cb)(void* user_data), void (*o_cb)(void* user_data, FfiResult* result, Authenticator* authenticaor));
+void auth_reconnect(Authenticator* auth, void* user_data, void (*o_cb)(void* user_data, FfiResult* result));
+void auth_account_info(Authenticator* auth, void* user_data, void (*o_cb)(void* user_data, FfiResult* result, AccountInfo* account_info));
+void auth_exe_file_stem(void* user_data, void (*o_cb)(void* user_data, FfiResult* result, char* filename));
+void auth_set_additional_search_path(char* new_path, void* user_data, void (*o_cb)(void* user_data, FfiResult* result));
+void auth_free(Authenticator* auth);
+void auth_unregistered_decode_ipc_msg(char* msg, void* user_data, void (*o_unregistered)(void* user_data, uint32_t req_id, uint8_t* extra_data, uintptr_t extra_data_len), void (*o_err)(void* user_data, FfiResult* result, char* response));
+void auth_decode_ipc_msg(Authenticator* auth, char* msg, void* user_data, void (*o_auth)(void* user_data, uint32_t req_id, AuthReq* req), void (*o_containers)(void* user_data, uint32_t req_id, ContainersReq* req), void (*o_unregistered)(void* user_data, uint32_t req_id, uint8_t* extra_data, uintptr_t extra_data_len), void (*o_share_mdata)(void* user_data, uint32_t req_id, ShareMDataReq* req, MetadataResponse* metadata, uintptr_t metadata_len), void (*o_err)(void* user_data, FfiResult* result, char* response));
+void encode_share_mdata_resp(Authenticator* auth, ShareMDataReq* req, uint32_t req_id, _Bool is_granted, void* user_data, void (*o_cb)(void* user_data, FfiResult* result, char* response));
+void auth_revoke_app(Authenticator* auth, char* app_id, void* user_data, void (*o_cb)(void* user_data, FfiResult* result, char* response));
+void auth_flush_app_revocation_queue(Authenticator* auth, void* user_data, void (*o_cb)(void* user_data, FfiResult* result));
+void encode_unregistered_resp(uint32_t req_id, _Bool is_granted, void* user_data, void (*o_cb)(void* user_data, FfiResult* result, char* response));
+void encode_auth_resp(Authenticator* auth, AuthReq* req, uint32_t req_id, _Bool is_granted, void* user_data, void (*o_cb)(void* user_data, FfiResult* result, char* response));
+void encode_containers_resp(Authenticator* auth, ContainersReq* req, uint32_t req_id, _Bool is_granted, void* user_data, void (*o_cb)(void* user_data, FfiResult* result, char* response));
+void auth_rm_revoked_app(Authenticator* auth, char* app_id, void* user_data, void (*o_cb)(void* user_data, FfiResult* result));
+void auth_revoked_apps(Authenticator* auth, void* user_data, void (*o_cb)(void* user_data, FfiResult* result, AppExchangeInfo* app_exchange_info, uintptr_t app_exchange_info_len));
+void auth_registered_apps(Authenticator* auth, void* user_data, void (*o_cb)(void* user_data, FfiResult* result, RegisteredApp* registered_app, uintptr_t registered_app_len));
+void auth_apps_accessing_mutable_data(Authenticator* auth, XorNameArray* md_name, uint64_t md_type_tag, void* user_data, void (*o_cb)(void* user_data, FfiResult* result, AppAccess* app_access, uintptr_t app_access_len));

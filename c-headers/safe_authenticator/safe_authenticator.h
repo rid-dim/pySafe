@@ -8,21 +8,55 @@
 // specific language governing permissions and limitations relating to use
 // of the SAFE Network Software.
 
-#ifndef bindgen_safe_authenticator_root
-#define bindgen_safe_authenticator_root
+#ifndef bindgen_safe_authenticatorsafe_authenticatorh
+#define bindgen_safe_authenticatorsafe_authenticatorh
 
-typedef void* Authenticator;
 
-#include "ffi_utils.h"
-#include "safe_core/arrays.h"
-#include "safe_core/ipc/req.h"
-#include "safe_core/safe_core.h"
-#include "safe_authenticator/safe_authenticator.h"
-#include "safe_core/ipc/resp.h"
-#include "safe_authenticator/apps.h"
-#include "safe_authenticator/ipc.h"
-#include "safe_authenticator/logging.h"
-#include "safe_core/nfs.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <stdint.h>
+#include <stdbool.h>
+
+/// Create a registered client. This or any one of the other companion
+/// functions to get an authenticator instance must be called before initiating any
+/// operation allowed by this module. The `user_data` parameter corresponds to the
+/// first parameter of the `o_cb` and `o_disconnect_notifier_cb` callbacks.
+void create_acc(char const* account_locator, char const* account_password, char const* invitation, void* user_data, void (*o_disconnect_notifier_cb)(void* user_data), void (*o_cb)(void* user_data, FfiResult const* result, Authenticator* authenticator));
+
+/// Log into a registered account. This or any one of the other companion
+/// functions to get an authenticator instance must be called before initiating
+/// any operation allowed for authenticator. The `user_data` parameter corresponds to the
+/// first parameter of the `o_cb` and `o_disconnect_notifier_cb` callbacks.
+void login(char const* account_locator, char const* account_password, void* user_data, void (*o_disconnect_notifier_cb)(void* user_data), void (*o_cb)(void* user_data, FfiResult const* result, Authenticator* authenticaor));
+
+/// Try to restore a failed connection with the network.
+void auth_reconnect(Authenticator* auth, void* user_data, void (*o_cb)(void* user_data, FfiResult const* result));
+
+/// Get the account usage statistics.
+void auth_account_info(Authenticator* auth, void* user_data, void (*o_cb)(void* user_data, FfiResult const* result, AccountInfo const* account_info));
+
+/// Returns the expected name for the application executable without an extension.
+void auth_exe_file_stem(void* user_data, void (*o_cb)(void* user_data, FfiResult const* result, char const* filename));
+
+/// Sets the additional path in `config_file_handler` to search for files.
+void auth_set_additional_search_path(char const* new_path, void* user_data, void (*o_cb)(void* user_data, FfiResult const* result));
+
+/// Discard and clean up the previously allocated authenticator instance.
+/// Use this only if the authenticator is obtained from one of the auth
+/// functions in this crate (`create_acc` or `login`).
+/// Using `auth` after a call to this function is undefined behaviour.
+void auth_free(Authenticator* auth);
+
+/// Returns true if this crate was compiled against mock-routing.
+bool auth_is_mock(void);
+
+
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif

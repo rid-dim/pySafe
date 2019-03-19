@@ -8,33 +8,60 @@
 // specific language governing permissions and limitations relating to use
 // of the SAFE Network Software.
 
-#ifndef bindgen_safe_app_root
-#define bindgen_safe_app_root
+#ifndef bindgen_safe_appsafe_apph
+#define bindgen_safe_appsafe_apph
 
-typedef void* App;
 
-#include "safe_core/arrays.h"
-#include "ffi_utils.h"
-#include "safe_app/logging.h"
-#include "safe_core/nfs.h"
-#include "safe_app/object_cache.h"
-#include "safe_app/crypto.h"
-#include "safe_app/immutable_data.h"
-#include "safe_app/cipher_opt.h"
-#include "safe_app/mutable_data/entry_actions.h"
-#include "safe_core/ipc/req.h"
-#include "safe_app/test_utils.h"
-#include "safe_app/mutable_data/permissions.h"
-#include "safe_core/safe_core.h"
-#include "safe_app/mdata_info.h"
-#include "safe_core/ipc/resp.h"
-#include "safe_app/mutable_data/metadata.h"
-#include "safe_app/ipc.h"
-#include "safe_app/mutable_data/entries.h"
-#include "safe_app/safe_app.h"
-#include "safe_app/mutable_data.h"
-#include "safe_app/nfs.h"
-#include "safe_app/access_container.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <stdint.h>
+#include <stdbool.h>
+
+/// Create unregistered app.
+/// The `user_data` parameter corresponds to the first parameter of the
+/// `o_cb` and `o_disconnect_notifier_cb` callbacks.
+void app_unregistered(uint8_t const* bootstrap_config, uintptr_t bootstrap_config_len, void* user_data, void (*o_disconnect_notifier_cb)(void* user_data), void (*o_cb)(void* user_data, FfiResult const* result, App* app));
+
+/// Create a registered app.
+/// The `user_data` parameter corresponds to the first parameter of the
+/// `o_cb` and `o_disconnect_notifier_cb` callbacks.
+void app_registered(char const* app_id, AuthGranted const* auth_granted, void* user_data, void (*o_disconnect_notifier_cb)(void* user_data), void (*o_cb)(void* user_data, FfiResult const* result, App* app));
+
+/// Try to restore a failed connection with the network.
+void app_reconnect(App* app, void* user_data, void (*o_cb)(void* user_data, FfiResult const* result));
+
+/// Get the account usage statistics (mutations done and mutations available).
+void app_account_info(App* app, void* user_data, void (*o_cb)(void* user_data, FfiResult const* result, AccountInfo const* account_info));
+
+/// Returns the expected name for the application executable without an extension
+void app_exe_file_stem(void* user_data, void (*o_cb)(void* user_data, FfiResult const* result, char const* filename));
+
+/// Sets the additional path in `config_file_handler` to search for files
+void app_set_additional_search_path(char const* new_path, void* user_data, void (*o_cb)(void* user_data, FfiResult const* result));
+
+/// Discard and clean up the previously allocated app instance.
+/// Use this only if the app is obtained from one of the auth
+/// functions in this crate. Using `app` after a call to this
+/// function is undefined behaviour.
+void app_free(App* app);
+
+/// Resets the object cache. Removes all objects currently in the object cache
+/// and invalidates all existing object handles.
+void app_reset_object_cache(App* app, void* user_data, void (*o_cb)(void* user_data, FfiResult const* result));
+
+/// Returns the name of the app's container.
+void app_container_name(char const* app_id, void* user_data, void (*o_cb)(void* user_data, FfiResult const* result, char const* container_name));
+
+/// Returns true if this crate was compiled against mock-routing.
+bool app_is_mock(void);
+
+
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif

@@ -1,4 +1,4 @@
-pySafe
+safenet
 ----
 
 Build Status master:
@@ -24,7 +24,7 @@ The package (will) include an importable and installable module, as well as util
 
 Designed to be minimally dependent; only cffi is not included in the base python install.  We do however use features that currently require python 3.6+ . With enough interest, we could probably back port it, but this will depend on our chosen asynchronous implementation.
 
-Currently in development, so it is quite raw.
+Currently under construction - so please don't criticize but just open a pull request ;)
 
 
 
