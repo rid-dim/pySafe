@@ -55,5 +55,7 @@ SAFEAUTHFILE = os.path.join(BINPATH, AUTHLIB)
 SAFECRUSTCONFIG=os.path.join(BINPATH,'python3.crust.config')
 
 # Review this after the autogenerators
-SAFEFUNCHEADERS=os.path.join(HEADERPATH,'safe_c_ffi_funcs.h')
-SAFEDATAHEADERS=os.path.join(HEADERPATH,'safe_c_ffi_data.h')
+APP_FUNCHEADERS=os.path.join(HEADERPATH,'safe_app_function_declarations')
+APP_DATAHEADERS=os.path.join(HEADERPATH,'safe_app_datatype_declarations')
+AUTH_FUNCHEADERS=os.path.join(HEADERPATH,'safe_authenticator_function_declarations')
+AUTH_DATAHEADERS=os.path.join(HEADERPATH,'safe_authenticator_datatype_declarations')

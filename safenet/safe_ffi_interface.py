@@ -19,7 +19,8 @@
 ########################################################################################################################
 import safenet.localization
 from cffi import FFI
-ffi = FFI()
+ffi_app = FFI()
+ffi_auth = FFI()
 
 _c_functions = {}
 _c_structs = {}
@@ -84,14 +85,18 @@ def print_dtypes():
 #
 #############################
 
-_func_defs=__get_file_contents(safenet.localization.SAFEFUNCHEADERS)
-_struct_defs=__get_file_contents(safenet.localization.SAFEDATAHEADERS)
+_func_defs_app=__get_file_contents(safenet.localization.APP_FUNCHEADERS)
+_struct_defs_app=__get_file_contents(safenet.localization.APP_DATAHEADERS)
+_func_defs_auth=__get_file_contents(safenet.localization.AUTH_FUNCHEADERS)
+_struct_defs_auth=__get_file_contents(safenet.localization.AUTH_DATAHEADERS)
 #todo check/write tests for windows path compatibility of above
 
-ffi.cdef(_struct_defs)
-ffi.cdef(_func_defs)
-lib_app = ffi.dlopen(safenet.localization.SAFEAPPFILE)
-lib_auth = ffi.dlopen(safenet.localization.SAFEAUTHFILE)
+ffi_app.cdef(_struct_defs_app)
+ffi_app.cdef(_func_defs_app)
+lib_app = ffi_app.dlopen(safenet.localization.SAFEAPPFILE)
+ffi_auth.cdef(_struct_defs_auth)
+ffi_auth.cdef(_func_defs_auth)
+lib_auth = ffi_auth.dlopen(safenet.localization.SAFEAUTHFILE)
 
 
 # Now, all c header definitions are available, and callable through lib_app and lib_auth.
@@ -100,8 +105,11 @@ lib_auth = ffi.dlopen(safenet.localization.SAFEAUTHFILE)
 
 
 # Helper to make signatures available for pretty printing. Maybe not necessary.
-for f in __split_to_lines(_func_defs):
+for f in __split_to_lines(_struct_defs_app):
     __register_func_sig(f)
+for f in __split_to_lines(_struct_defs_auth):
+    __register_func_sig(f)
+
 
 
 if __name__=='__main__':

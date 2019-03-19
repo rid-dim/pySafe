@@ -14,8 +14,8 @@ import safenet.localization
 import os
 
 # If the log directory does not exist, create it
-if not os.path.exists(pySafe.localization.LOGPATH):
-    os.mkdir(pySafe.localization.LOGPATH)
+if not os.path.exists(safenet.localization.LOGPATH):
+    os.mkdir(safenet.localization.LOGPATH)
 
 #
 logfile = os.path.join(safenet.localization.LOGPATH, 'log.txt')
@@ -26,7 +26,7 @@ logfile = os.path.join(safenet.localization.LOGPATH, 'log.txt')
 
 logger = None
 logstream = None
-logname = 'pySafe'
+logname = 'safenet'
 
 DEBUG = logging.DEBUG
 INFO = logging.INFO

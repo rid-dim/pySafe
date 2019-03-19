@@ -10,4 +10,6 @@
 
 from safenet.logging import setup_logger, logger
 
-from safenet.connection import Connection
+from safenet.app import app
+
+#import safenet.localization
