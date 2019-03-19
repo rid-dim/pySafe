@@ -42,8 +42,8 @@ HEADERPATH = os.path.dirname(__file__)+os.sep+'extracted_headers'
 
 LINUX_AUTHLIB = 'libsafe_authenticator.so'
 LINUX_APPLIB = 'libsafe_app.so'
-WIN_AUTHLIB = 'NOT_IMPLEMENTED'
-WIN_APPLIB = 'NOT_IMPLEMENTED'
+WIN_AUTHLIB = 'libsafe_authenticator.dll'
+WIN_APPLIB = 'libsafe_app.dll'
 
 APPLIB = LINUX_APPLIB if platform.system() == 'Linux' else WIN_APPLIB
 AUTHLIB = LINUX_AUTHLIB if platform.system() == 'Linux' else WIN_AUTHLIB
