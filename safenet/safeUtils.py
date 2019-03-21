@@ -14,6 +14,7 @@ from threading import Thread
 from functools import wraps
 import multihash
 import cid
+import safenet.interface
 
 def safeThread(*args, **kwargs):
     '''
@@ -39,6 +40,16 @@ def safeThread(*args, **kwargs):
     return threader
 
 
+def ensure_correct_form(*args):
+    result = []
+    for idx, arg in enumerate(args):
+        if not isinstance(arg, safenet.interface.InterfacesWithSafe):
+            if arg is None:
+                pass
+            elif isinstance(arg, str):
+                arg = bytes(arg, encoding='utf-8')
+            result.append(arg)
+    return result
 
 def getXorAddresOfMutable(data, ffi):
     xorName_asBytes = ffi.buffer(data.name)[:]
