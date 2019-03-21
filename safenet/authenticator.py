@@ -9,7 +9,7 @@ class Authenticator(base.FullAuthenticator):
         self.bind_ffi_methods()
 
     ## Now, public methods here
-    def login(self,sec,pwd):
+    def login(self,sec,pwd, o_cb):
         self._login(sec,pwd,self.ffi_auth.NULL)
 
 class CustomAuthenticator(base.BindableBase):
@@ -30,5 +30,5 @@ if __name__ == '__main__':
     A = Authenticator()
     A._auth_exe_file_stem(A.ffi_auth.NULL)
     A._auth_set_additional_search_path(A.ffi_auth.new('char[]',b'../compiled_binaries/'),A.ffi_auth.NULL)
-    A._login(b'dxdGr9Xo8jEHvKUz',b'PhoticZoneIGetARush', A.ffi_auth.NULL)
+    A.login(b'a',b'd', A.ffi_auth.NULL)
     print(A.queue.qsize())
