@@ -16,14 +16,16 @@ import multihash
 import cid
 
 def safeThread(*args, **kwargs):
-    if 'timeout' in kwargs.keys():
-        waitSeconds = kwargs['timeout']
-    else:
-        waitSeconds = 5
-    if 'queue' in kwargs.keys():
-        myQueue = kwargs['queue']
-    else:
-        myQueue = None
+    '''
+    A decorator function to align python calls with the internal threads of the rust library.
+    :param kwargs: can be used to pass a default timeout or a specific queue instance
+    :return: a python function running in its own thread.
+    '''
+
+    ## These work because the function defaults to the outer namespace.  Perhaps cleaner to put inside innerThreader?
+    ## cleaner use of kwargs
+    waitSeconds = kwargs.get('timeout', 5)
+    myQueue = kwargs.get('queue', None)
         
     def threader(fun):
         @wraps(fun)
@@ -36,18 +38,14 @@ def safeThread(*args, **kwargs):
         return innerThreader
     return threader
 
-def getXorAddresOfMutable(data):
+
+
+def getXorAddresOfMutable(data, ffi):
     xorName_asBytes = ffi.buffer(data.name)[:]
     myHash = multihash.encode(xorName_asBytes,'sha3-256')
     myCid = cid.make_cid(1,'dag-pb',myHash)
     encodedAddress = myCid.encode('base32').decode()
     return 'safe://' + encodedAddress + ':' + str(data.type_tag)
-
-class lib:
-    def __init__(self,authlib,applib,fromBytes=None):
-        self.safe_authenticator = authlib
-        self.safe_app = applib
-        
         
 def getffiMutable(asBytes,ffi):
     ffiMutable=ffi.new('MDataInfo *')

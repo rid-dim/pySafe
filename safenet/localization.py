@@ -1,20 +1,22 @@
 ########################################################################################################################
-#
 # Localization
 #
-# Simple utilities to find and standardize naming of project directories.  Keeps things simpler when moving accross
-# machines
+# Utilities to initialize the package correctly on different machines and OSes.   Some light utilities for finding
+#    files, and checks to ensure that the OS correct binaries are the ones actually linked to by the interface.
+#
+# If the correct binaries are not found, this module will kill the program with an error showing which ones were not
+#    correct.
 #
 # Needs a serious pass later when we start allowing configurable options etc..
 #
 ########################################################################################################################
+
 import platform
 import os
 
-
+### Helper Functions
 def find_bin_dir():
     pass
-
 
 def _lvl_down(path):
     '''
@@ -29,10 +31,10 @@ def _lvl_up(path, up_dir):
     return os.path.join(path, up_dir)
 
 def get_mod_loc(module):
+    # __file__ is relative to localization.py location
     return os.path.dirname(module.__file__)
 
-
-# __file__ is relative to localization.py result
+### Detect and set up binary and OS specific configuration.
 
 # todo These variables must always return the correct library location.. Test test test
 
@@ -45,11 +47,27 @@ LINUX_APPLIB = 'libsafe_app.so'
 WIN_AUTHLIB = 'libsafe_authenticator.dll'
 WIN_APPLIB = 'libsafe_app.dll'
 
-APPLIB = LINUX_APPLIB if platform.system() == 'Linux' else WIN_APPLIB
-AUTHLIB = LINUX_AUTHLIB if platform.system() == 'Linux' else WIN_AUTHLIB
+# Select the platform specific libraries, and test if they exist.
+APPLIB,AUTHLIB = None, None
+if platform.system() == 'Linux':
+    APPLIB, AUTHLIB = LINUX_APPLIB, LINUX_AUTHLIB
+if platform.system() == 'Windows':
+    APPLIB, AUTHLIB = WIN_APPLIB, WIN_AUTHLIB
 
 SAFEAPPFILE = os.path.join(BINPATH, APPLIB)
 SAFEAUTHFILE = os.path.join(BINPATH, AUTHLIB)
+
+# Make sure the appropriate files exist
+filecheck=True
+for item in [SAFEAPPFILE,SAFEAUTHFILE]:
+    if not os.path.exists(item):
+        print (f'{item} not found')
+        filecheck=False
+
+if not filecheck:
+    print(f'---\nThe above SAFE binaries for {platform.system()} are missing.\n'
+          f'..Ensure they are in {BINPATH} and try again')
+    exit(1)
 
 # Eventually need a utility to find this.
 SAFECRUSTCONFIG=os.path.join(BINPATH,'python3.crust.config')
