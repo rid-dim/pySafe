@@ -12,6 +12,9 @@
 # push callbacks into other threads to avoid trouble with concurrent access
 from threading import Thread
 from functools import wraps
+import multihash
+import cid
+
 def safeThread(*args, **kwargs):
     if 'timeout' in kwargs.keys():
         waitSeconds = kwargs['timeout']
@@ -33,6 +36,12 @@ def safeThread(*args, **kwargs):
         return innerThreader
     return threader
 
+def getXorAddresOfMutable(data):
+    xorName_asBytes = ffi.buffer(data.name)[:]
+    myHash = multihash.encode(xorName_asBytes,'sha3-256')
+    myCid = cid.make_cid(1,'dag-pb',myHash)
+    encodedAddress = myCid.encode('base32').decode()
+    return 'safe://' + encodedAddress + ':' + str(data.type_tag)
 
 class lib:
     def __init__(self,authlib,applib,fromBytes=None):
