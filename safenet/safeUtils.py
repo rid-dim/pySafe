@@ -16,18 +16,16 @@ import multihash
 import cid
 
 def safeThread(*args, **kwargs):
-    if 'timeout' in kwargs.keys():
-        waitSeconds = kwargs['timeout']
-    else:
-        waitSeconds = 5
-    if 'queue' in kwargs.keys():
-        myQueue = kwargs['queue']
-    else:
-        myQueue = None
-        
+    '''
+    A decorator function to align python calls with the internal threads of the rust library.
+    :param kwargs: can be used to pass a default timeout or a specific queue instance
+    :return: a python function running in its own thread.
+    '''
     def threader(fun):
         @wraps(fun)
         def innerThreader(*args,**kwargs):
+            waitSeconds = kwargs.get('timeout', 5)
+            myQueue = kwargs.get('queue', None)
             oneThread = Thread(target=fun,args=args,kwargs=kwargs)
             oneThread.start()
             if myQueue:
