@@ -51,8 +51,8 @@ if __name__ == '__main__':
     A = Authenticator()
     def printfilestem(one,two,stem):
         print(A.ffi.string(stem))
-    A.auth_exe_file_stem(A.ffi_auth.NULL, printfilestem)
-    A.auth_set_additional_search_path(A.ffi_auth.new('char[]',b'D:/Programming/pySafe/compiled_binaries/'),A.ffi_auth.NULL)
 
-    # Note again that login was never defined or bound, and can be called with regular strings :)
-    A.login('secret','password', A.ffi_auth.NULL, A.login_cb)
+    # Note again that these methods were never defined, and can be called with regular strings and python objects:)
+    A.auth_exe_file_stem(None, printfilestem)
+    A.auth_set_additional_search_path('D:/Programming/pySafe/compiled_binaries/',None)
+    A.login('secret','password', None, A.login_cb)

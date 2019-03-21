@@ -42,10 +42,13 @@ def safeThread(*args, **kwargs):
 
 def ensure_correct_form(*args):
     result = []
+    ffi=None
     for idx, arg in enumerate(args):
-        if not isinstance(arg, safenet.interface.InterfacesWithSafe):
+        if idx==0:
+            ffi=arg
+        elif not isinstance(arg, safenet.interface.InterfacesWithSafe):
             if arg is None:
-                pass
+                arg=ffi.NULL
             elif isinstance(arg, str):
                 arg = bytes(arg, encoding='utf-8')
             result.append(arg)

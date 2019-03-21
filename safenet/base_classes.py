@@ -9,9 +9,14 @@ available_auth_defs={item for item in dir(safe_auth_defs) if not item.startswith
 available_app_defs={item for item in dir(safe_auth_defs) if not item.startswith('_') and not item.startswith('safeU')}
 
 class AutoInvoke():
-    def __init__(self,f):
+    def __init__(self,f,ffi):
         self.f=f
+        self.ffi=ffi
     def __call__(self, *args, **kwargs):
+        # First we add the ffi, which is picked off by the ensure correct form function and used
+        # to cdef the appropriate datatypes for each argument, which is then passed to the underlying
+        # function, which should always be a ffi function.
+        args=[self.ffi]+[a for a in args]
         self.f(*ensure_correct_form(*args),**kwargs)
 
 class BindableBase(interface.InterfacesWithSafe):
@@ -46,7 +51,7 @@ class BindableBase(interface.InterfacesWithSafe):
         # wrapper function that calls the underlying _ffi method with the arguments cleaned.
         # wonderfully useful, but may be a bad idea.
         if item in self.ffi_auth_methods.keys() or item in self.ffi_app_methods.keys() and hasattr(self,f'_{item}'):
-            return AutoInvoke(getattr(self,f'_{item}'))
+            return AutoInvoke(getattr(self,f'_{item}'),self.ffi)
 
 
 
