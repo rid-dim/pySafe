@@ -12,6 +12,9 @@
 # push callbacks into other threads to avoid trouble with concurrent access
 from threading import Thread
 from functools import wraps
+import multihash
+import cid
+
 def safeThread(*args, **kwargs):
     if 'timeout' in kwargs.keys():
         waitSeconds = kwargs['timeout']
@@ -32,6 +35,63 @@ def safeThread(*args, **kwargs):
                 return result
         return innerThreader
     return threader
+
+def getXorAddresOfMutable(data):
+    xorName_asBytes = ffi.buffer(data.name)[:]
+    myHash = multihash.encode(xorName_asBytes,'sha3-256')
+    myCid = cid.make_cid(1,'dag-pb',myHash)
+    encodedAddress = myCid.encode('base32').decode()
+    return 'safe://' + encodedAddress + ':' + str(data.type_tag)
+
+class lib:
+    def __init__(self,authlib,applib,fromBytes=None):
+        self.safe_authenticator = authlib
+        self.safe_app = applib
+        
+        
+def getffiMutable(asBytes,ffi):
+    ffiMutable=ffi.new('MDataInfo *')
+    writeBuffer = ffi.buffer(ffiMutable)
+    writeBuffer[:]=asBytes
+    return ffiMutable
+        
+def checkResult(result,ffi):
+    if result.error_code != 0:
+        errorDescription = ffi.string(result.description)
+        print('Following Error occured: ' + str(errorDescription))
+        print('Error code: ' + str(result.error_code))
+    else:
+        print('action succeeded')
+        
+def AppExchangeInfo(id=b'noId',scope=b'noScope',name=b'noName',vendor=b'nobody',ffi=None):
+    id = ffi.new('char[]',id)
+    scope = ffi.new('char[]',scope)
+    name = ffi.new('char[]',name)
+    vendor = ffi.new('char[]',vendor)
+
+    myStruct = ffi.new('AppExchangeInfo *',[id,scope,name,vendor])
+    
+    return myStruct, [id, scope, name, vendor]
+        
+def PermissionSet(read=True,insert=True,update=True,delete=True,manage_permissions=True,ffi=None):
+    return ffi.new('PermissionSet *',[read,insert,update,delete,manage_permissions])
+
+def ContainerPermissions(name=b'noName',access=None,ffi=None):
+    containerName = ffi.new('char[]',name)
+    if not access:
+        access = PermissionSet(ffi=ffi)
+    container = ffi.new('ContainerPermissions *',[containerName,access[0]])
+    
+    return container, [containerName,access]
+
+def AuthReq(permissions,containers_len,containers_cap,id=b'noId',scope=b'pythonscript',
+            name=b'noName',vendor=b'nobody',app_container=True,ffi=None):
+    
+    newExChangeInfo,infopayload = AppExchangeInfo(id,scope,name,vendor,ffi=ffi)
+    
+    authReq = ffi.new('AuthReq *',[newExChangeInfo[0],app_container,permissions,containers_len,containers_cap])
+    
+    return authReq, [newExChangeInfo,infopayload]
 
 # here we start out with a copy function that takes care of the inner values as well
 def copy(data,ffi):
