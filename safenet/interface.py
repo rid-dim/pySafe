@@ -8,7 +8,7 @@
 #   'compiling' mode at some point in the future
 # .. maybe merge someday
 #
-# includes safe_ffi_interface.py wholesale..
+# it is used by base_classes, which then underlie the high level interfaces
 #
 ########################################################################################################################
 
