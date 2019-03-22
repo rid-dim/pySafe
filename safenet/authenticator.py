@@ -16,7 +16,13 @@ import getpass
 import queue
 
 class Authenticator(base.FullAuthenticator):
-    # Auto binds all auth methods
+    '''
+    A python interface to the SAFE authenticator object
+    At present, introspection fails because of the auto-binding.  For further reference on methods:
+    https://github.com/maidsafe/safe_client_libs/wiki
+    safenet/safe_auth_defs.py
+    '''
+
     def __init__(self):
         self.queue = queue.Queue()  # Each object has it's own queue for ffi calls
         self._setup()
@@ -41,25 +47,14 @@ class Authenticator(base.FullAuthenticator):
     def login_cb(result):
         print('login result', result)
 
-class CustomAuthenticator(base.BindableBase):
-    # This way only the individually specified ffi funcs are bound
-    # Don't know why one would want to do this yet.
-    ffi_auth_methods={'auth_init_logging' : 5}
 
-    def __init__(self):
-        self.queue = queue.Queue()  # Each object has it's own queue for ffi calls
-        self.bind_ffi_methods()
-
-    ## Now, public methods here
-
-
+# now there is only one
+#Authenticator=Authenticator()
 
 if __name__ == '__main__':
-    # we test it!
     A = Authenticator()
+
     def printfilestem(one,two,stem):
         print(A.ffi_auth.string(stem))
-
     # Note again that these methods were never defined, and can be called with regular strings and python objects:)
-
-    A.login(A.ffi_app.new('secret'),A.ffi_auth.new('password'), None, None)
+    A.login('secret','password', None, None)

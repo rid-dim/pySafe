@@ -1,4 +1,6 @@
 # Demonstrating the simplest possible use, logging in
 
 import safenet
-print(dir(safenet))
+
+myAuth=safenet.Authenticator()
+myAuth.login('a','b',None)
