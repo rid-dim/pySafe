@@ -39,7 +39,6 @@ class CustomAuthenticator(base.BindableBase):
     ffi_auth_methods={'auth_init_logging' : 5}
 
     def __init__(self):
-        self.ffi=self.ffi_auth      # Uses Authlib exclusively. Do any classes use both?
         self.queue = queue.Queue()  # Each object has it's own queue for ffi calls
         self.bind_ffi_methods()
 
@@ -54,6 +53,6 @@ if __name__ == '__main__':
         print(A.ffi_auth.string(stem))
 
     # Note again that these methods were never defined, and can be called with regular strings and python objects:)
+    A.auth_set_additional_search_path(A.global_config.GLOBAL_BINPATH, None)
     A.auth_exe_file_stem(None, printfilestem)
-    A.auth_set_additional_search_path('D:/Programming/pySafe/compiled_binaries/',None)
-    A.login('secret','password', None, A.login_cb)
+    A.login(A.ffi_app.new('char[]',b'secret'),A.ffi_auth.new('char[]',b'password'), None, None)

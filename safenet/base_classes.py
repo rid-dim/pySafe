@@ -27,6 +27,7 @@ class BindableBase(interface.InterfacesWithSafe):
     '''
     ffi_auth_methods = {}
     ffi_app_methods = {}
+    global_config = config
 
     # cleaner method
     ensure_correct_form=ensure_correct_form

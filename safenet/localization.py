@@ -13,6 +13,7 @@
 
 import platform
 import os
+import safenet.config
 
 ### Helper Functions
 def find_bin_dir():
@@ -41,6 +42,10 @@ def get_mod_loc(module):
 BINPATH = os.path.dirname(_lvl_down(__file__))+os.sep+'compiled_binaries'
 LOGPATH = os.path.dirname(_lvl_down(__file__)) + os.sep + 'logs'
 HEADERPATH = os.path.dirname(__file__)+os.sep+'extracted_headers'
+
+# Inject this into the config file
+if safenet.config.GLOBAL_BINPATH is None:
+    safenet.config.GLOBAL_BINPATH=os.path.abspath(BINPATH)
 
 LINUX_AUTHLIB = 'libsafe_authenticator.so'
 LINUX_APPLIB = 'libsafe_app.so'
@@ -77,3 +82,5 @@ APP_FUNCHEADERS=os.path.join(HEADERPATH,'safe_app_function_declarations')
 APP_DATAHEADERS=os.path.join(HEADERPATH,'safe_app_datatype_declarations')
 AUTH_FUNCHEADERS=os.path.join(HEADERPATH,'safe_authenticator_function_declarations')
 AUTH_DATAHEADERS=os.path.join(HEADERPATH,'safe_authenticator_datatype_declarations')
+
+safenet.config.GLOBAL_BINPATH=os.path.abspath(BINPATH)

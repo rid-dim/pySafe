@@ -17,7 +17,7 @@
 #
 ########################################################################################################################
 
-import safenet.localization
+import safenet.localization as localization
 from cffi import FFI
 from functools import partial
 
@@ -50,8 +50,30 @@ def __register_func_sig(f, d):
     d[f]=rest
 
 #############################
-#  Utility methods
+#  At this point, we load the data and register it.
 #############################
+
+_func_defs_app=__get_file_contents(localization.APP_FUNCHEADERS)
+_struct_defs_app=__get_file_contents(localization.APP_DATAHEADERS)
+_func_defs_auth=__get_file_contents(localization.AUTH_FUNCHEADERS)
+_struct_defs_auth=__get_file_contents(localization.AUTH_DATAHEADERS)
+
+ffi_app.cdef(_struct_defs_app)
+ffi_app.cdef(_func_defs_app)
+lib_app = ffi_app.dlopen(localization.SAFEAPPFILE)
+
+ffi_auth.cdef(_struct_defs_auth)
+ffi_auth.cdef(_func_defs_auth)
+lib_auth = ffi_auth.dlopen(localization.SAFEAUTHFILE)
+
+# Now, all c header definitions are available, and callable through lib_app and lib_auth.
+# Again, this is ABI-Inline mode for cffi, and it can be 'slow and fraught with errors'.. we see!
+
+#############################
+#  For development help, store the bound functions and structs and their signatures. This section may disappear later
+#############################
+
+#  Utility methods for printing and signatures
 
 def print_funcs(ffi_name,d):
     '''
@@ -77,29 +99,6 @@ def print_dtypes():
     pass
     # may be nice to implement later for debugging
 
-#############################
-#  At this point, we load the data and register it.
-#############################
-
-_func_defs_app=__get_file_contents(safenet.localization.APP_FUNCHEADERS)
-_struct_defs_app=__get_file_contents(safenet.localization.APP_DATAHEADERS)
-_func_defs_auth=__get_file_contents(safenet.localization.AUTH_FUNCHEADERS)
-_struct_defs_auth=__get_file_contents(safenet.localization.AUTH_DATAHEADERS)
-
-ffi_app.cdef(_struct_defs_app)
-ffi_app.cdef(_func_defs_app)
-lib_app = ffi_app.dlopen(safenet.localization.SAFEAPPFILE)
-
-ffi_auth.cdef(_struct_defs_auth)
-ffi_auth.cdef(_func_defs_auth)
-lib_auth = ffi_auth.dlopen(safenet.localization.SAFEAUTHFILE)
-
-# Now, all c header definitions are available, and callable through lib_app and lib_auth.
-# Again, this is ABI-Inline mode for cffi, and it can be 'slow and fraught with errors'.. we see!
-
-#############################
-#  For development help, store the bound functions and structs and their signatures. This section may disappear later
-#############################
 
 _app_c_functions = {}
 _app_c_structs = {}
