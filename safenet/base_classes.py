@@ -32,6 +32,10 @@ class BindableBase(interface.InterfacesWithSafe):
     ensure_correct_form=ensure_correct_form
 
     def bind_ffi_methods(self):
+        if not isinstance(self.ffi_app_methods, dict):
+            self.ffi_app_methods={item:None for item in self.ffi_app_methods}
+        if not isinstance(self.ffi_auth_methods, dict):
+            self.ffi_auth_methods={item:None for item in self.ffi_auth_methods}
         for meth, timeout in self.ffi_auth_methods.items():
             self.bind_ffi_method(meth,timeout, safe_auth_defs)
         for meth, timeout in self.ffi_app_methods.items():
@@ -65,3 +69,9 @@ class FullAuthenticator(BindableBase):
 
 class FullApp(BindableBase):
     ffi_app_methods = {item: config.GLOBAL_DEFAULT_TIMEOUT for item in available_app_defs}
+
+class StandardApp(BindableBase):
+    ffi_app_methods  = safe_app_defs._APP_DEFS
+
+class StandardImmutableData(BindableBase):
+    ffi_app_methods = safe_app_defs._IDATA_DEFS

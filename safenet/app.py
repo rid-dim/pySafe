@@ -12,14 +12,14 @@
 # This brings all the c interfaces into this module ..  at this point still clean code
 import safenet.base_classes as base
 import safenet.authenticator as authenticator
-import safenet.mutableData as mutableData
-import safenet.immutableData as immutableData
+import safenet.mutabledata as mutableData
+import safenet.immutabledata as immutableData
 
 import queue
 
 # From here on in is just a very basic 'working' example
 # todo we need heavy thought on how to structure the various classes.
-class App(base.FullApp):
+class App(base.StandardApp):
     def __init__(self,
                  name='SAFE_Connection',
                  version='0.0.0',
@@ -31,7 +31,7 @@ class App(base.FullApp):
         self.url = addr
         self.authenticator = authenticator.Authenticator()
         #self.mutableData = mutableData.mutableData(self.lib.safe_authenticator, self.lib.safe_app, self.ffi_app)
-        #self.immutableData = immutableData.immutableData(self.lib.safe_authenticator, self.lib.safe_app, self.ffi_app)
+        self.immutableData = immutableData.ImmutableData()
 
         #self.ffi=self.ffi_app       # Uses Authlib exclusively. Do any classes use both? No longer needed as ffi
                                      # defs know the correct one.  Only enable for convenience

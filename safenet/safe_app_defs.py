@@ -2,7 +2,243 @@
 ### safe_app lib
 
 import safenet.safeUtils as safeUtils
+_APP_DEFS=["access_container_refresh_access_info", "sign_pub_key_new", "encode_auth_req", "file_close",
+            "encrypt", "decrypt_sealed_box", "encode_share_mdata_req", "sign_sec_key_new", "app_free",
+            "access_container_fetch", "access_container_get_container_mdata_info",
+            "app_set_additional_search_path", "dir_delete_file", "enc_pub_key_get",
+            "app_reset_object_cache", "app_exe_file_stem", "sign_pub_key_get", "enc_pub_key_new",
+            "app_pub_enc_key", "app_registered", "cipher_opt_new_plaintext", "sha3_hash", "test_create_app",
+            "test_create_app_with_access", "encode_unregistered_req", "app_pub_sign_key",
+            "sign_sec_key_free", "app_container_name", "dir_update_file", "enc_secret_key_free",
+            "enc_generate_key_pair", "decrypt", "file_read", "app_account_info", "app_unregistered",
+            "cipher_opt_new_symmetric", "enc_secret_key_new", "file_size", "dir_fetch_file",
+            "encrypt_sealed_box", "app_output_log_path", "dir_insert_file", "app_reconnect",
+            "sign_generate_key_pair", "verify", "app_init_logging", "generate_nonce", "decode_ipc_msg",
+            "sign_sec_key_get", "sign", "enc_pub_key_free", "enc_secret_key_get",
+            "test_simulate_network_disconnect", "encode_containers_req", "cipher_opt_new_asymmetric",
+            "file_open", "file_write", "sign_pub_key_free", "cipher_opt_free"]
 
+_IDATA_DEFS=["idata_new_self_encryptor", "idata_write_to_self_encryptor", "idata_close_self_encryptor",
+            "idata_fetch_self_encryptor", "idata_serialised_size", "idata_size",
+            "idata_read_from_self_encryptor", "idata_self_encryptor_writer_free",
+            "idata_self_encryptor_reader_free"]
+
+
+################################################################################################
+# IDATA DEFS
+################################################################################################
+def idata_new_self_encryptor(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _idata_new_self_encryptor(app, user_data, o_cb=None):
+        """
+            App*, [any], [function], [custom ffi lib]
+            App* app, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, SEWriterHandle se_h)
+        """
+
+        @self.ffi.callback("void(void* ,FfiResult* ,SEWriterHandle)")
+        def _idata_new_self_encryptor_o_cb(user_data, result, se_h):
+            safeUtils.checkResult(result, self.ffi)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, se_h)
+
+        self.lib.safe_app.idata_new_self_encryptor(app, user_data, _idata_new_self_encryptor_o_cb)
+
+
+    self._idata_new_self_encryptor = _idata_new_self_encryptor
+
+def idata_write_to_self_encryptor(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _idata_write_to_self_encryptor(app, se_h, data, data_len, user_data, o_cb=None):
+        """
+            App*, SEWriterHandle, uint8_t*, uintptr_t, [any], [function], [custom ffi lib]
+            App* app, SEWriterHandle se_h, uint8_t* data, uintptr_t data_len, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result)
+        """
+
+        @self.ffi.callback("void(void* ,FfiResult*)")
+        def _idata_write_to_self_encryptor_o_cb(user_data, result):
+            safeUtils.checkResult(result, self.ffi)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result)
+
+        self.lib.safe_app.idata_write_to_self_encryptor(app, se_h, data, data_len, user_data, _idata_write_to_self_encryptor_o_cb)
+
+
+    self._idata_write_to_self_encryptor = _idata_write_to_self_encryptor
+
+def idata_close_self_encryptor(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _idata_close_self_encryptor(app, se_h, cipher_opt_h, user_data, o_cb=None):
+        """
+            App*, SEWriterHandle, CipherOptHandle, [any], [function], [custom ffi lib]
+            App* app, SEWriterHandle se_h, CipherOptHandle cipher_opt_h, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, XorNameArray* name)
+        """
+
+        @self.ffi.callback("void(void* ,FfiResult* ,XorNameArray*)")
+        def _idata_close_self_encryptor_o_cb(user_data, result, name):
+            safeUtils.checkResult(result, self.ffi)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, name)
+
+        self.lib.safe_app.idata_close_self_encryptor(app, se_h, cipher_opt_h, user_data, _idata_close_self_encryptor_o_cb)
+
+
+    self._idata_close_self_encryptor = _idata_close_self_encryptor
+
+def idata_fetch_self_encryptor(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _idata_fetch_self_encryptor(app, name, user_data, o_cb=None):
+        """
+            App*, XorNameArray*, [any], [function], [custom ffi lib]
+            App* app, XorNameArray* name, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, SEReaderHandle se_h)
+        """
+
+        @self.ffi.callback("void(void* ,FfiResult* ,SEReaderHandle)")
+        def _idata_fetch_self_encryptor_o_cb(user_data, result, se_h):
+            safeUtils.checkResult(result, self.ffi)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, se_h)
+
+        self.lib.safe_app.idata_fetch_self_encryptor(app, name, user_data, _idata_fetch_self_encryptor_o_cb)
+
+
+    self._idata_fetch_self_encryptor = _idata_fetch_self_encryptor
+
+def idata_serialised_size(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _idata_serialised_size(app, name, user_data, o_cb=None):
+        """
+            App*, XorNameArray*, [any], [function], [custom ffi lib]
+            App* app, XorNameArray* name, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, uint64_t serialised_size)
+        """
+
+        @self.ffi.callback("void(void* ,FfiResult* ,uint64_t)")
+        def _idata_serialised_size_o_cb(user_data, result, serialised_size):
+            safeUtils.checkResult(result, self.ffi)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, serialised_size)
+
+        self.lib.safe_app.idata_serialised_size(app, name, user_data, _idata_serialised_size_o_cb)
+
+
+    self._idata_serialised_size = _idata_serialised_size
+
+def idata_size(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _idata_size(app, se_h, user_data, o_cb=None):
+        """
+            App*, SEReaderHandle, [any], [function], [custom ffi lib]
+            App* app, SEReaderHandle se_h, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, uint64_t size)
+        """
+
+        @self.ffi.callback("void(void* ,FfiResult* ,uint64_t)")
+        def _idata_size_o_cb(user_data, result, size):
+            safeUtils.checkResult(result, self.ffi)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, size)
+
+        self.lib.safe_app.idata_size(app, se_h, user_data, _idata_size_o_cb)
+
+
+    self._idata_size = _idata_size
+
+def idata_read_from_self_encryptor(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _idata_read_from_self_encryptor(app, se_h, from_pos, len, user_data, o_cb=None):
+        """
+            App*, SEReaderHandle, uint64_t, uint64_t, [any], [function], [custom ffi lib]
+            App* app, SEReaderHandle se_h, uint64_t from_pos, uint64_t len, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, uint8_t* data, uintptr_t data_len)
+        """
+
+        @self.ffi.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
+        def _idata_read_from_self_encryptor_o_cb(user_data, result, data, data_len):
+            safeUtils.checkResult(result, self.ffi)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, data, data_len)
+
+        self.lib.safe_app.idata_read_from_self_encryptor(app, se_h, from_pos, len, user_data,
+                                                         _idata_read_from_self_encryptor_o_cb)
+
+
+    self._idata_read_from_self_encryptor = _idata_read_from_self_encryptor
+
+def idata_self_encryptor_writer_free(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _idata_self_encryptor_writer_free(app, handle, user_data, o_cb=None):
+        """
+            App*, SEWriterHandle, [any], [function], [custom ffi lib]
+            App* app, SEWriterHandle handle, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result)
+        """
+
+        @self.ffi.callback("void(void* ,FfiResult*)")
+        def _idata_self_encryptor_writer_free_o_cb(user_data, result):
+            safeUtils.checkResult(result, self.ffi)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result)
+
+        self.lib.safe_app.idata_self_encryptor_writer_free(app, handle, user_data, _idata_self_encryptor_writer_free_o_cb)
+
+
+    self._idata_self_encryptor_writer_free = _idata_self_encryptor_writer_free
+
+def idata_self_encryptor_reader_free(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _idata_self_encryptor_reader_free(app, handle, user_data, o_cb=None):
+        """
+            App*, SEReaderHandle, [any], [function], [custom ffi lib]
+            App* app, SEReaderHandle handle, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result)
+        """
+
+        @self.ffi.callback("void(void* ,FfiResult*)")
+        def _idata_self_encryptor_reader_free_o_cb(user_data, result):
+            safeUtils.checkResult(result, self.ffi)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result)
+
+        self.lib.safe_app.idata_self_encryptor_reader_free(app, handle, user_data, _idata_self_encryptor_reader_free_o_cb)
+
+
+    self._idata_self_encryptor_reader_free = _idata_self_encryptor_reader_free
+
+
+################################################################################################
+# APP DEFS
+################################################################################################
 def test_create_app(self, timeout):
     @safeUtils.safeThread(timeout=timeout, queue=self.queue)
     def _test_create_app(app_id, user_data, o_cb=None):

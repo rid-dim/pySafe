@@ -20,7 +20,7 @@ def stump_code_for_overriding_ffi_call(obj,f):
     if hasattr(obj,ffif):
         func=getattr(obj,ffif)
         ffif_docstr=func.__doc__.split('\n')
-        doc=['   """']
+        doc=['    """']
         doc.append(f'    {ffif_docstr[1]}')
         doc.append(f'    {ffif_docstr[2]}')
         doc.append(f'    """"')
@@ -32,8 +32,20 @@ def stump_code_for_overriding_ffi_call(obj,f):
     return code
     #ffi_app_methods = {}
 
+def generate_used_bindings_variable(obj):
+    app_listing='","'.join([item for item in obj.ffi_app_methods.keys()])
+    auth_listing='","'.join([item for item in obj.ffi_auth_methods.keys()])
+    string1=f'ffi_auth_methods = ["{auth_listing}"]'
+    string2=f'ffi_auth_methods = ["{app_listing}"]'
+
+    return '\n'.join([string1,string2])
+
 
 if __name__ == '__main__':
-    import safenet.authenticator as auth
-    A=auth.Authenticator()
-    print(stump_code_for_overriding_ffi_calls(A))
+    #import safenet.authenticator as auth
+    #A=auth.Authenticator()
+    #print(stump_code_for_overriding_ffi_calls(A))
+
+    import safenet.app as app
+    A=app.App()
+    print(generate_used_bindings_variable(A))
