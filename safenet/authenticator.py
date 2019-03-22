@@ -18,7 +18,8 @@ import queue
 class Authenticator(base.FullAuthenticator):
     # Auto binds all auth methods
     def __init__(self):
-        self.ffi=self.ffi_auth      # Uses Authlib exclusively. Do any classes use both?
+        #self.ffi=self.ffi_auth      # Uses Authlib exclusively. Do any classes use both? No longer needed as ffi
+                                     # defs know the correct one.  Only enable for convenience
         self.queue = queue.Queue()  # Each object has it's own queue for ffi calls
         self.bind_ffi_methods()
 
@@ -50,7 +51,7 @@ if __name__ == '__main__':
     # we test it!
     A = Authenticator()
     def printfilestem(one,two,stem):
-        print(A.ffi.string(stem))
+        print(A.ffi_auth.string(stem))
 
     # Note again that these methods were never defined, and can be called with regular strings and python objects:)
     A.auth_exe_file_stem(None, printfilestem)

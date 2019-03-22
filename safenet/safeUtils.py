@@ -15,6 +15,7 @@ from functools import wraps
 import multihash
 import cid
 import safenet.interface
+import safenet.config
 
 def safeThread(*args, **kwargs):
     '''
@@ -50,7 +51,7 @@ def ensure_correct_form(*args):
             if arg is None:
                 arg=ffi.NULL
             elif isinstance(arg, str):
-                arg = bytes(arg, encoding='utf-8')
+                arg = bytes(arg, encoding=safenet.config.GLOBAL_DEFAULT_ENCODING)
             result.append(arg)
     return result
 
