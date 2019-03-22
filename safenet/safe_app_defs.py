@@ -1,7 +1,7 @@
 ### Experiments with ffi_binding separation
 ### safe_app lib
 
-import safenet.safeUtils as safeUtils
+import safenet.safe_utils as safeUtils
 _APP_DEFS=["access_container_refresh_access_info", "sign_pub_key_new", "encode_auth_req", "file_close",
             "encrypt", "decrypt_sealed_box", "encode_share_mdata_req", "sign_sec_key_new", "app_free",
             "access_container_fetch", "access_container_get_container_mdata_info",
@@ -23,6 +23,900 @@ _IDATA_DEFS=["idata_new_self_encryptor", "idata_write_to_self_encryptor", "idata
             "idata_read_from_self_encryptor", "idata_self_encryptor_writer_free",
             "idata_self_encryptor_reader_free"]
 
+_MDATA_DEFS = ["mdata_entries_len","mdata_list_values","mdata_entries_new","mdata_info_random_private",
+               "mdata_entries_get","mdata_entry_actions_new","mdata_entries","mdata_get_version",
+               "mdata_list_permissions","mdata_permissions_get","mdata_encode_metadata","mdata_list_permission_sets",
+               "mdata_info_encrypt_entry_value","mdata_permissions_insert","mdata_info_new_private",
+               "mdata_info_deserialise","mdata_info_random_public","mdata_list_entries","mdata_permissions_new",
+               "mdata_entry_actions_update","mdata_mutate_entries","mdata_info_decrypt","mdata_info_encrypt_entry_key",
+               "mdata_put","mdata_serialised_size","mdata_info_serialise","mdata_set_user_permissions",
+               "mdata_entries_free","mdata_list_keys","mdata_permissions_free","mdata_permissions_len",
+               "mdata_del_user_permissions","mdata_entry_actions_delete","mdata_list_user_permissions",
+               "mdata_entry_actions_insert","mdata_get_value","mdata_entries_insert","mdata_entry_actions_free"]
+
+################################################################################################
+# MDATA DEFS
+################################################################################################
+
+def mdata_encode_metadata(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_encode_metadata(metadata, user_data, o_cb=None):
+        """
+            MetadataResponse*, [any], [function], [custom ffi lib]
+            MetadataResponse* metadata, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, uint8_t* encoded, uintptr_t encoded_len)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
+        def _mdata_encode_metadata_o_cb(user_data, result, encoded, encoded_len):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, encoded, encoded_len)
+
+        self.lib.safe_app.mdata_encode_metadata(metadata, user_data, _mdata_encode_metadata_o_cb)
+
+
+    self._mdata_encode_metadata = _mdata_encode_metadata
+
+def mdata_list_keys(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_list_keys(app, info, user_data, o_cb=None):
+        """
+            App*, MDataInfo*, [any], [function], [custom ffi lib]
+            App* app, MDataInfo* info, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, MDataKey* keys, uintptr_t keys_len)
+        """
+        print('strange')
+
+        # @self.ffi_app.callback("void(void* ,FfiResult* ,MDataKey* ,uintptr_t)")
+        @self.ffi_app.callback("void(void* ,FfiResult* ,MDataKey* ,unsigned long)")
+        def _mdata_list_keys_o_cb(user_data, result, keys, keys_len):
+            print('no')
+            safeUtils.checkResult(result, self.ffi_app)
+            # self.queue.put(ffi.string(result.keys))
+            if o_cb:
+                o_cb(user_data, result, keys, keys_len)
+
+        print('hmhmm')
+
+        self.lib.safe_app.mdata_list_keys(app, info, user_data, _mdata_list_keys_o_cb)
+
+
+    self._mdata_list_keys = _mdata_list_keys
+
+def mdata_info_new_private(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_info_new_private(name, type_tag, secret_key, nonce, user_data, o_cb=None):
+        """
+            XorNameArray*, uint64_t, SymSecretKey*, SymNonce*, [any], [function], [custom ffi lib]
+            XorNameArray* name, uint64_t type_tag, SymSecretKey* secret_key, SymNonce* nonce, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, MDataInfo* mdata_info)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,MDataInfo*)")
+        def _mdata_info_new_private_o_cb(user_data, result, mdata_info):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, mdata_info)
+
+        self.lib.safe_app.mdata_info_new_private(name, type_tag, secret_key, nonce, user_data, _mdata_info_new_private_o_cb)
+
+
+    self._mdata_info_new_private = _mdata_info_new_private
+
+def mdata_info_random_public(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_info_random_public(type_tag, user_data, o_cb=None):
+        """
+            uint64_t, [any], [function], [custom ffi lib]
+            uint64_t type_tag, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, MDataInfo* mdata_info)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,MDataInfo*)")
+        def _mdata_info_random_public_o_cb(user_data, result, mdata_info):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, mdata_info)
+
+        self.lib.safe_app.mdata_info_random_public(type_tag, user_data, _mdata_info_random_public_o_cb)
+
+
+    self._mdata_info_random_public = _mdata_info_random_public
+
+def mdata_info_random_private(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_info_random_private(type_tag, user_data, o_cb=None):
+        """
+            uint64_t, [any], [function], [custom ffi lib]
+            uint64_t type_tag, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, MDataInfo* mdata_info)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,MDataInfo*)")
+        def _mdata_info_random_private_o_cb(user_data, result, mdata_info):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, mdata_info)
+
+        self.lib.safe_app.mdata_info_random_private(type_tag, user_data, _mdata_info_random_private_o_cb)
+
+
+    self._mdata_info_random_private = _mdata_info_random_private
+
+def mdata_info_encrypt_entry_key(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_info_encrypt_entry_key(info, input, input_len, user_data, o_cb=None):
+        """
+            MDataInfo*, uint8_t*, uintptr_t, [any], [function], [custom ffi lib]
+            MDataInfo* info, uint8_t* input, uintptr_t input_len, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, uint8_t* enc_entry_key, uintptr_t enc_entry_key_len)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
+        def _mdata_info_encrypt_entry_key_o_cb(user_data, result, enc_entry_key, enc_entry_key_len):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, enc_entry_key, enc_entry_key_len)
+
+        self.lib.safe_app.mdata_info_encrypt_entry_key(info, input, input_len, user_data, _mdata_info_encrypt_entry_key_o_cb)
+
+
+    self._mdata_info_encrypt_entry_key = _mdata_info_encrypt_entry_key
+
+def mdata_info_encrypt_entry_value(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_info_encrypt_entry_value(info, input, input_len, user_data, o_cb=None):
+        """
+            MDataInfo*, uint8_t*, uintptr_t, [any], [function], [custom ffi lib]
+            MDataInfo* info, uint8_t* input, uintptr_t input_len, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, uint8_t* enc_entry_value, uintptr_t enc_entry_value_len)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
+        def _mdata_info_encrypt_entry_value_o_cb(user_data, result, enc_entry_value, enc_entry_value_len):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, enc_entry_value, enc_entry_value_len)
+
+        self.lib.safe_app.mdata_info_encrypt_entry_value(info, input, input_len, user_data, _mdata_info_encrypt_entry_value_o_cb)
+
+
+    self._mdata_info_encrypt_entry_value = _mdata_info_encrypt_entry_value
+
+def mdata_info_decrypt(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_info_decrypt(info, input, input_len, user_data, o_cb=None):
+        """
+            MDataInfo*, uint8_t*, uintptr_t, [any], [function], [custom ffi lib]
+            MDataInfo* info, uint8_t* input, uintptr_t input_len, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, uint8_t* mdata_info_decrypt, uintptr_t mdata_info_decrypt_len)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
+        def _mdata_info_decrypt_o_cb(user_data, result, mdata_info_decrypt, mdata_info_decrypt_len):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, mdata_info_decrypt, mdata_info_decrypt_len)
+
+        self.lib.safe_app.mdata_info_decrypt(info, input, input_len, user_data, _mdata_info_decrypt_o_cb)
+
+
+    self._mdata_info_decrypt = _mdata_info_decrypt
+
+def mdata_info_serialise(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_info_serialise(info, user_data, o_cb=None):
+        """
+            MDataInfo*, [any], [function], [custom ffi lib]
+            MDataInfo* info, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, uint8_t* encoded, uintptr_t encoded_len)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
+        def _mdata_info_serialise_o_cb(user_data, result, encoded, encoded_len):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, encoded, encoded_len)
+
+        self.lib.safe_app.mdata_info_serialise(info, user_data, _mdata_info_serialise_o_cb)
+
+
+    self._mdata_info_serialise = _mdata_info_serialise
+
+def mdata_info_deserialise(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_info_deserialise(encoded_ptr, encoded_len, user_data, o_cb=None):
+        """
+            uint8_t*, uintptr_t, [any], [function], [custom ffi lib]
+            uint8_t* encoded_ptr, uintptr_t encoded_len, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, MDataInfo* mdata_info)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,MDataInfo*)")
+        def _mdata_info_deserialise_o_cb(user_data, result, mdata_info):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, mdata_info)
+
+        self.lib.safe_app.mdata_info_deserialise(encoded_ptr, encoded_len, user_data, _mdata_info_deserialise_o_cb)
+
+    self._mdata_info_deserialise = _mdata_info_deserialise
+
+def mdata_put(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_put(app, info, permissions_h, entries_h, user_data, o_cb=None):
+        """
+            App*, MDataInfo*, MDataPermissionsHandle, MDataEntriesHandle, [any], [function], [custom ffi lib]
+            App* app, MDataInfo* info, MDataPermissionsHandle permissions_h, MDataEntriesHandle entries_h, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult*)")
+        def _mdata_put_o_cb(user_data, result):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result)
+
+        self.lib.safe_app.mdata_put(app, info, permissions_h, entries_h, user_data, _mdata_put_o_cb)
+
+
+    self._mdata_put = _mdata_put
+
+def mdata_get_version(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_get_version(app, info, user_data, o_cb=None):
+        """
+            App*, MDataInfo*, [any], [function], [custom ffi lib]
+            App* app, MDataInfo* info, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, uint64_t version)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,uint64_t)")
+        def _mdata_get_version_o_cb(user_data, result, version):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, version)
+
+        self.lib.safe_app.mdata_get_version(app, info, user_data, _mdata_get_version_o_cb)
+
+
+    self._mdata_get_version = _mdata_get_version
+
+def mdata_serialised_size(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_serialised_size(app, info, user_data, o_cb=None):
+        """
+            App*, MDataInfo*, [any], [function], [custom ffi lib]
+            App* app, MDataInfo* info, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, uint64_t serialised_size)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,uint64_t)")
+        def _mdata_serialised_size_o_cb(user_data, result, serialised_size):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, serialised_size)
+
+        self.lib.safe_app.mdata_serialised_size(app, info, user_data, _mdata_serialised_size_o_cb)
+
+
+    self._mdata_serialised_size = _mdata_serialised_size
+
+def mdata_get_value(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_get_value(app, info, key, key_len, user_data, o_cb=None):
+        """
+            App*, MDataInfo*, uint8_t*, uintptr_t, [any], [function], [custom ffi lib]
+            App* app, MDataInfo* info, uint8_t* key, uintptr_t key_len, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, uint8_t* content, uintptr_t content_len, uint64_t version)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t ,uint64_t)")
+        def _mdata_get_value_o_cb(user_data, result, content, content_len, version):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, content, content_len, version)
+
+        self.lib.safe_app.mdata_get_value(app, info, key, key_len, user_data, _mdata_get_value_o_cb)
+
+
+    self._mdata_get_value = _mdata_get_value
+
+def mdata_entries(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_entries(app, info, user_data, o_cb=None):
+        """
+            App*, MDataInfo*, [any], [function], [custom ffi lib]
+            App* app, MDataInfo* info, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, MDataEntriesHandle entries_h)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,MDataEntriesHandle)")
+        def _mdata_entries_o_cb(user_data, result, entries_h):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, entries_h)
+
+        self.lib.safe_app.mdata_entries(app, info, user_data, _mdata_entries_o_cb)
+
+
+    self._mdata_entries = _mdata_entries
+
+def mdata_list_values(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_list_values(app, info, user_data, o_cb=None):
+        """
+            App*, MDataInfo*, [any], [function], [custom ffi lib]
+            App* app, MDataInfo* info, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, MDataValue* values, uintptr_t values_len)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,MDataValue* ,uintptr_t)")
+        def _mdata_list_values_o_cb(user_data, result, values, values_len):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put(self.ffi_app.string(values))
+            if o_cb:
+                o_cb(user_data, result, values, values_len)
+
+        self.lib.safe_app.mdata_list_values(app, info, user_data, _mdata_list_values_o_cb)
+
+
+    self._mdata_list_values = _mdata_list_values
+
+def mdata_mutate_entries(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_mutate_entries(app, info, actions_h, user_data, o_cb=None):
+        """
+            App*, MDataInfo*, MDataEntryActionsHandle, [any], [function], [custom ffi lib]
+            App* app, MDataInfo* info, MDataEntryActionsHandle actions_h, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult*)")
+        def _mdata_mutate_entries_o_cb(user_data, result):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result)
+
+        self.lib.safe_app.mdata_mutate_entries(app, info, actions_h, user_data, _mdata_mutate_entries_o_cb)
+
+
+    self._mdata_mutate_entries = _mdata_mutate_entries
+
+def mdata_list_permissions(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_list_permissions(app, info, user_data, o_cb=None):
+        """
+            App*, MDataInfo*, [any], [function], [custom ffi lib]
+            App* app, MDataInfo* info, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, MDataPermissionsHandle perm_h)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,MDataPermissionsHandle)")
+        def _mdata_list_permissions_o_cb(user_data, result, perm_h):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, perm_h)
+
+        self.lib.safe_app.mdata_list_permissions(app, info, user_data, _mdata_list_permissions_o_cb)
+
+    self._mdata_list_permissions = _mdata_list_permissions
+
+def mdata_list_user_permissions(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_list_user_permissions(app, info, user_h, user_data, o_cb=None):
+        """
+            App*, MDataInfo*, SignPubKeyHandle, [any], [function], [custom ffi lib]
+            App* app, MDataInfo* info, SignPubKeyHandle user_h, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, PermissionSet* perm_set)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,PermissionSet*)")
+        def _mdata_list_user_permissions_o_cb(user_data, result, perm_set):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, perm_set)
+
+        self.lib.safe_app.mdata_list_user_permissions(app, info, user_h, user_data, _mdata_list_user_permissions_o_cb)
+
+
+    self._mdata_list_user_permissions = _mdata_list_user_permissions
+
+def mdata_set_user_permissions(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_set_user_permissions(app, info, user_h, permission_set, version, user_data, o_cb=None):
+        """
+            App*, MDataInfo*, SignPubKeyHandle, PermissionSet*, uint64_t, [any], [function], [custom ffi lib]
+            App* app, MDataInfo* info, SignPubKeyHandle user_h, PermissionSet* permission_set, uint64_t version, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult*)")
+        def _mdata_set_user_permissions_o_cb(user_data, result):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result)
+
+        self.lib.safe_app.mdata_set_user_permissions(app, info, user_h, permission_set, version, user_data,
+                                              _mdata_set_user_permissions_o_cb)
+
+    self._mdata_set_user_permissions = _mdata_set_user_permissions
+
+def mdata_del_user_permissions(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_del_user_permissions(app, info, user_h, version, user_data, o_cb=None):
+        """
+            App*, MDataInfo*, SignPubKeyHandle, uint64_t, [any], [function], [custom ffi lib]
+            App* app, MDataInfo* info, SignPubKeyHandle user_h, uint64_t version, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult*)")
+        def _mdata_del_user_permissions_o_cb(user_data, result):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result)
+
+        self.lib.safe_app.mdata_del_user_permissions(app, info, user_h, version, user_data, _mdata_del_user_permissions_o_cb)
+
+
+    self._mdata_del_user_permissions = _mdata_del_user_permissions
+
+def mdata_permissions_new(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_permissions_new(app, user_data, o_cb=None):
+        """
+            App*, [any], [function], [custom ffi lib]
+            App* app, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, MDataPermissionsHandle perm_h)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,MDataPermissionsHandle)")
+        def _mdata_permissions_new_o_cb(user_data, result, perm_h):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, perm_h)
+
+        self.lib.safe_app.mdata_permissions_new(app, user_data, _mdata_permissions_new_o_cb)
+
+
+    self._mdata_permissions_new = _mdata_permissions_new
+
+def mdata_permissions_len(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_permissions_len(app, permissions_h, user_data, o_cb=None):
+        """
+            App*, MDataPermissionsHandle, [any], [function], [custom ffi lib]
+            App* app, MDataPermissionsHandle permissions_h, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, uintptr_t size)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,uintptr_t)")
+        def _mdata_permissions_len_o_cb(user_data, result, size):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, size)
+
+        self.lib.safe_app.mdata_permissions_len(app, permissions_h, user_data, _mdata_permissions_len_o_cb)
+
+
+    self._mdata_permissions_len = _mdata_permissions_len
+
+def mdata_permissions_get(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_permissions_get(app, permissions_h, user_h, user_data, o_cb=None):
+        """
+            App*, MDataPermissionsHandle, SignPubKeyHandle, [any], [function], [custom ffi lib]
+            App* app, MDataPermissionsHandle permissions_h, SignPubKeyHandle user_h, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, PermissionSet* perm_set)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,PermissionSet*)")
+        def _mdata_permissions_get_o_cb(user_data, result, perm_set):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, perm_set)
+
+        self.lib.safe_app.mdata_permissions_get(app, permissions_h, user_h, user_data, _mdata_permissions_get_o_cb)
+
+
+    self._mdata_permissions_get = _mdata_permissions_get
+
+def mdata_list_permission_sets(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_list_permission_sets(app, permissions_h, user_data, o_cb=None):
+        """
+            App*, MDataPermissionsHandle, [any], [function], [custom ffi lib]
+            App* app, MDataPermissionsHandle permissions_h, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, UserPermissionSet* user_perm_sets, uintptr_t user_perm_sets_len)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,UserPermissionSet* ,uintptr_t)")
+        def _mdata_list_permission_sets_o_cb(user_data, result, user_perm_sets, user_perm_sets_len):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, user_perm_sets, user_perm_sets_len)
+
+        self.lib.safe_app.mdata_list_permission_sets(app, permissions_h, user_data, _mdata_list_permission_sets_o_cb)
+
+
+    self._mdata_list_permission_sets = _mdata_list_permission_sets
+
+def mdata_permissions_insert(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_permissions_insert(app, permissions_h, user_h, permission_set, user_data, o_cb=None):
+        """
+            App*, MDataPermissionsHandle, SignPubKeyHandle, PermissionSet*, [any], [function], [custom ffi lib]
+            App* app, MDataPermissionsHandle permissions_h, SignPubKeyHandle user_h, PermissionSet* permission_set, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult*)")
+        def _mdata_permissions_insert_o_cb(user_data, result):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result)
+
+        self.lib.safe_app.mdata_permissions_insert(app, permissions_h, user_h, permission_set, user_data,
+                                            _mdata_permissions_insert_o_cb)
+
+
+    self._mdata_permissions_insert = _mdata_permissions_insert
+
+def mdata_permissions_free(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_permissions_free(app, permissions_h, user_data, o_cb=None):
+        """
+            App*, MDataPermissionsHandle, [any], [function], [custom ffi lib]
+            App* app, MDataPermissionsHandle permissions_h, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult*)")
+        def _mdata_permissions_free_o_cb(user_data, result):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result)
+
+        self.lib.safe_app.mdata_permissions_free(app, permissions_h, user_data, _mdata_permissions_free_o_cb)
+
+
+    self._mdata_permissions_free = _mdata_permissions_free
+
+def mdata_entry_actions_new(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_entry_actions_new(app, user_data, o_cb=None):
+        """
+            App*, [any], [function], [custom ffi lib]
+            App* app, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, MDataEntryActionsHandle entry_actions_h)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,MDataEntryActionsHandle)")
+        def _mdata_entry_actions_new_o_cb(user_data, result, entry_actions_h):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, entry_actions_h)
+
+        self.lib.safe_app.mdata_entry_actions_new(app, user_data, _mdata_entry_actions_new_o_cb)
+
+
+    self._mdata_entry_actions_new = _mdata_entry_actions_new
+
+def mdata_entry_actions_insert(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_entry_actions_insert(app, actions_h, key, key_len, value, value_len, user_data, o_cb=None):
+        """
+            App*, MDataEntryActionsHandle, uint8_t*, uintptr_t, uint8_t*, uintptr_t, [any], [function], [custom ffi lib]
+            App* app, MDataEntryActionsHandle actions_h, uint8_t* key, uintptr_t key_len, uint8_t* value, uintptr_t value_len, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult*)")
+        def _mdata_entry_actions_insert_o_cb(user_data, result):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result)
+
+        self.lib.safe_app.mdata_entry_actions_insert(app, actions_h, key, key_len, value, value_len, user_data,
+                                              _mdata_entry_actions_insert_o_cb)
+
+
+    self._mdata_entry_actions_insert = _mdata_entry_actions_insert
+
+def mdata_entry_actions_update(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_entry_actions_update(app, actions_h, key, key_len, value, value_len, entry_version, user_data, o_cb=None):
+        """
+            App*, MDataEntryActionsHandle, uint8_t*, uintptr_t, uint8_t*, uintptr_t, uint64_t, [any], [function], [custom ffi lib]
+            App* app, MDataEntryActionsHandle actions_h, uint8_t* key, uintptr_t key_len, uint8_t* value, uintptr_t value_len, uint64_t entry_version, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult*)")
+        def _mdata_entry_actions_update_o_cb(user_data, result):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result)
+
+        self.lib.safe_app.mdata_entry_actions_update(app, actions_h, key, key_len, value, value_len,
+                                                     entry_version, user_data, _mdata_entry_actions_update_o_cb)
+
+    self._mdata_entry_actions_update = _mdata_entry_actions_update
+
+def mdata_entry_actions_delete(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_entry_actions_delete(app, actions_h, key, key_len, entry_version, user_data, o_cb=None):
+        """
+            App*, MDataEntryActionsHandle, uint8_t*, uintptr_t, uint64_t, [any], [function], [custom ffi lib]
+            App* app, MDataEntryActionsHandle actions_h, uint8_t* key, uintptr_t key_len, uint64_t entry_version, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult*)")
+        def _mdata_entry_actions_delete_o_cb(user_data, result):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result)
+
+        self.lib.safe_app.mdata_entry_actions_delete(app, actions_h, key, key_len, entry_version, user_data,
+                                              _mdata_entry_actions_delete_o_cb)
+
+
+    self._mdata_entry_actions_delete = _mdata_entry_actions_delete
+
+def mdata_entry_actions_free(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_entry_actions_free(app, actions_h, user_data, o_cb=None):
+        """
+            App*, MDataEntryActionsHandle, [any], [function], [custom ffi lib]
+            App* app, MDataEntryActionsHandle actions_h, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult*)")
+        def _mdata_entry_actions_free_o_cb(user_data, result):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result)
+
+        self.lib.safe_app.mdata_entry_actions_free(app, actions_h, user_data, _mdata_entry_actions_free_o_cb)
+
+
+    self._mdata_entry_actions_free = _mdata_entry_actions_free
+
+def mdata_entries_new(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_entries_new(app, user_data, o_cb=None):
+        """
+            App*, [any], [function], [custom ffi lib]
+            App* app, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, MDataEntriesHandle entries_h)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,MDataEntriesHandle)")
+        def _mdata_entries_new_o_cb(user_data, result, entries_h):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, entries_h)
+
+        self.lib.safe_app.mdata_entries_new(app, user_data, _mdata_entries_new_o_cb)
+
+
+    self._mdata_entries_new = _mdata_entries_new
+
+def mdata_entries_insert(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_entries_insert(app, entries_h, key, key_len, value, value_len, user_data, o_cb=None):
+        """
+            App*, MDataEntriesHandle, uint8_t*, uintptr_t, uint8_t*, uintptr_t, [any], [function], [custom ffi lib]
+            App* app, MDataEntriesHandle entries_h, uint8_t* key, uintptr_t key_len, uint8_t* value, uintptr_t value_len, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult*)")
+        def _mdata_entries_insert_o_cb(user_data, result):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result)
+
+        self.lib.safe_app.mdata_entries_insert(app, entries_h, key, key_len, value, value_len, user_data,
+                                        _mdata_entries_insert_o_cb)
+
+
+    self._mdata_entries_insert = _mdata_entries_insert
+
+def mdata_entries_len(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_entries_len(app, entries_h, user_data, o_cb=None):
+        """
+            App*, MDataEntriesHandle, [any], [function], [custom ffi lib]
+            App* app, MDataEntriesHandle entries_h, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, uintptr_t len)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,uintptr_t)")
+        def _mdata_entries_len_o_cb(user_data, result, len):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, len)
+
+        self.lib.safe_app.mdata_entries_len(app, entries_h, user_data, _mdata_entries_len_o_cb)
+
+
+    self._mdata_entries_len = _mdata_entries_len
+
+def mdata_entries_get(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_entries_get(app, entries_h, key, key_len, user_data, o_cb=None):
+        """
+            App*, MDataEntriesHandle, uint8_t*, uintptr_t, [any], [function], [custom ffi lib]
+            App* app, MDataEntriesHandle entries_h, uint8_t* key, uintptr_t key_len, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, uint8_t* content, uintptr_t content_len, uint64_t version)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t ,uint64_t)")
+        def _mdata_entries_get_o_cb(user_data, result, content, content_len, version):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, content, content_len, version)
+
+        self.lib.safe_app.mdata_entries_get(app, entries_h, key, key_len, user_data, _mdata_entries_get_o_cb)
+
+
+    self._mdata_entries_get = _mdata_entries_get
+
+def mdata_list_entries(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_list_entries(app, entries_h, user_data, o_cb=None):
+        """
+            App*, MDataEntriesHandle, [any], [function], [custom ffi lib]
+            App* app, MDataEntriesHandle entries_h, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result, MDataEntry* entries, uintptr_t entries_len)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult* ,MDataEntry* ,uintptr_t)")
+        def _mdata_list_entries_o_cb(user_data, result, entries, entries_len):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result, entries, entries_len)
+
+        self.lib.safe_app.mdata_list_entries(app, entries_h, user_data, _mdata_list_entries_o_cb)
+
+
+    self._mdata_list_entries = _mdata_list_entries
+
+def mdata_entries_free(self, timeout):
+    @safeUtils.safeThread(timeout=timeout, queue=self.queue)
+    def _mdata_entries_free(app, entries_h, user_data, o_cb=None):
+        """
+            App*, MDataEntriesHandle, [any], [function], [custom ffi lib]
+            App* app, MDataEntriesHandle entries_h, void* user_data
+
+            > callback functions:
+            (*o_cb)(void* user_data, FfiResult* result)
+        """
+
+        @self.ffi_app.callback("void(void* ,FfiResult*)")
+        def _mdata_entries_free_o_cb(user_data, result):
+            safeUtils.checkResult(result, self.ffi_app)
+            self.queue.put('gotResult')
+            if o_cb:
+                o_cb(user_data, result)
+
+        self.lib.safe_app.mdata_entries_free(app, entries_h, user_data, _mdata_entries_free_o_cb)
+
+    self._mdata_entries_free = _mdata_entries_free
 
 ################################################################################################
 # IDATA DEFS

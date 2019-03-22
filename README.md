@@ -22,9 +22,13 @@ The design goal of pySafe is to provide a full python interface to SAFE network,
 
 The package (will) include an importable and installable module, as well as utilities to generate the bindings and hopefully eventually some example applications beyond 'hello world'.
 
-Designed to be minimally dependent; only cffi is not included in the base python install.  We do however use features that currently require python 3.6+ . With enough interest, we could probably back port it, but this will depend on our chosen asynchronous implementation.
+Designed to be minimally dependent, however the following modules are not included in the base python install:
 
-Currently under construction - so please don't criticize but just open a pull request ;)
+-cffi, py-cid, multihash  
+
+We use features that currently require python 3.6+ . With enough interest, we could probably back port it, but this will depend on our chosen asynchronous implementation.
+
+Under heavy development - so please don't criticize but just open a pull request ;)
 
 
 
@@ -33,8 +37,9 @@ Currently under construction - so please don't criticize but just open a pull re
 
 - sh ./upg_local.sh
 
-- On Windows: upg_local.bat (note that at present you will have to compile your own binaries.  Windows support is a ways off yet)
+- On Windows: upg_local.bat (we now feature Windows compatibility)
 
+- On Mac: well, the way localization is coded should work, but we need someone to compile the binaries on mac and test!
 
 Contributing
 ----

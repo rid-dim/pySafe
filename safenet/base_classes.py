@@ -2,7 +2,7 @@ import safenet.interface as interface
 import safenet.safe_auth_defs as safe_auth_defs
 import safenet.safe_app_defs as safe_app_defs
 import safenet.config as config
-from safenet.safeUtils import ensure_correct_form
+from safenet.safe_utils import ensure_correct_form
 import safenet.dev_introspect as introspect
 
 # Find the bindable methods
@@ -76,3 +76,6 @@ class StandardApp(BindableBase):
 
 class StandardImmutableData(BindableBase):
     ffi_app_methods = safe_app_defs._IDATA_DEFS
+
+class StandardMutableData(BindableBase):
+    ffi_app_methods = safe_app_defs._MDATA_DEFS

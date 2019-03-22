@@ -18,10 +18,17 @@ import queue
 class Authenticator(base.FullAuthenticator):
     # Auto binds all auth methods
     def __init__(self):
-        #self.ffi=self.ffi_auth      # Uses Authlib exclusively. Do any classes use both? No longer needed as ffi
-                                     # defs know the correct one.  Only enable for convenience
         self.queue = queue.Queue()  # Each object has it's own queue for ffi calls
+        self._setup()
+
+    def _setup(self):
+        '''
+        Does the basic priming of the authenticator and libraries.  Really only needs be done once per connection
+        session
+        '''
         self.bind_ffi_methods()
+        self.auth_set_additional_search_path(self.global_config.GLOBAL_BINPATH, None)
+        self.auth_exe_file_stem(None, None)
 
     ## Now, public methods here
 
@@ -36,6 +43,7 @@ class Authenticator(base.FullAuthenticator):
 
 class CustomAuthenticator(base.BindableBase):
     # This way only the individually specified ffi funcs are bound
+    # Don't know why one would want to do this yet.
     ffi_auth_methods={'auth_init_logging' : 5}
 
     def __init__(self):
@@ -53,6 +61,5 @@ if __name__ == '__main__':
         print(A.ffi_auth.string(stem))
 
     # Note again that these methods were never defined, and can be called with regular strings and python objects:)
-    A.auth_set_additional_search_path(A.global_config.GLOBAL_BINPATH, None)
-    A.auth_exe_file_stem(None, printfilestem)
-    A.login(A.ffi_app.new('char[]',b'secret'),A.ffi_auth.new('char[]',b'password'), None, None)
+
+    A.login(A.ffi_app.new('secret'),A.ffi_auth.new('password'), None, None)

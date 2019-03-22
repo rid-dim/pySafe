@@ -46,6 +46,10 @@ if __name__ == '__main__':
     #A=auth.Authenticator()
     #print(stump_code_for_overriding_ffi_calls(A))
 
-    import safenet.app as app
-    A=app.App()
+    #import safenet.app as app
+    #A=app.App()
+    #print(generate_used_bindings_variable(A))
+
+    import safenet.mutabledata as app
+    A=app.MutableData()
     print(generate_used_bindings_variable(A))

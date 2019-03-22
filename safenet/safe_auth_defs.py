@@ -1,7 +1,7 @@
 ### Experiments with ffi_binding separation
 ### safe_auth lib
 
-import safenet.safeUtils as safeUtils
+import safenet.safe_utils as safeUtils
 
 def auth_init_logging(self, timeout):
     @safeUtils.safeThread(timeout=timeout,queue=self.queue)

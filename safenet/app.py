@@ -12,8 +12,8 @@
 # This brings all the c interfaces into this module ..  at this point still clean code
 import safenet.base_classes as base
 import safenet.authenticator as authenticator
-import safenet.mutabledata as mutableData
-import safenet.immutabledata as immutableData
+import safenet.mutabledata as mutabledata
+import safenet.immutabledata as immutabledata
 
 import queue
 
@@ -30,11 +30,9 @@ class App(base.StandardApp):
         self.vendor = vendor
         self.url = addr
         self.authenticator = authenticator.Authenticator()
-        #self.mutableData = mutableData.mutableData(self.lib.safe_authenticator, self.lib.safe_app, self.ffi_app)
-        self.immutableData = immutableData.ImmutableData()
+        self.mutableData = mutabledata.MutableData()
+        self.immutableData = immutabledata.ImmutableData()
 
-        #self.ffi=self.ffi_app       # Uses Authlib exclusively. Do any classes use both? No longer needed as ffi
-                                     # defs know the correct one.  Only enable for convenience
         self.queue = queue.Queue()   # Each object has it's own queue for ffi calls
         self.bind_ffi_methods()
 
