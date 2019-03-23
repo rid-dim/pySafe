@@ -3,7 +3,6 @@ import safenet.safe_auth_defs as safe_auth_defs
 import safenet.safe_app_defs as safe_app_defs
 import safenet.config as config
 from safenet.safe_utils import ensure_correct_form
-import safenet.dev_introspect as introspect
 
 # Find the bindable methods
 available_auth_defs={item for item in dir(safe_auth_defs) if not item.startswith('_') and not item.startswith('safeU')}

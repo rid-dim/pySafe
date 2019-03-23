@@ -13,7 +13,7 @@
 ########################################################################################################################
 
 from safenet.safe_ffi_interface import lib_app,lib_auth,print_app_funcs,print_auth_funcs, ffi_app,ffi_auth
-
+from safenet.log_util import logger
 
 '''
 This brings in:
@@ -42,7 +42,6 @@ class InterfacesWithSafe:
     ffi_app=ffi_app
     ffi_auth=ffi_auth
     lib=lib(lib_auth,lib_app)
-
 
 
 if __name__=='__main__':
