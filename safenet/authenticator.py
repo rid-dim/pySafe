@@ -4,7 +4,8 @@
 #
 # This file encapsulates the interface for the authenticator library.
 #
-# The authenticator is a critical component of any app, and is required for many tasks.
+# The authenticator is a critical component of any app, and is required for many tasks. Later, it may be a design
+# decision access this through another abstraction (e.g. session or connection)
 #
 # The implementations for the various functions should be the last place in the library you will see ffi.
 #  Higher level abstractions should be able to use the public methods with pure python objects
@@ -24,6 +25,7 @@ class Authenticator(base.FullAuthenticator):
     '''
 
     def __init__(self):
+        self.is_setup=False
         self.queue = queue.Queue()  # Each object has it's own queue for ffi calls
         self._setup()
 
@@ -35,13 +37,17 @@ class Authenticator(base.FullAuthenticator):
         self.bind_ffi_methods()
         self.auth_set_additional_search_path(self.global_config.GLOBAL_BINPATH, None)
         self.auth_exe_file_stem(None, None)
+        self.is_setup=True
 
-    ## Now, public methods here
+    # Public methods of this class override the auto bound ffi methods and are generally necessary where simple
+    # string and null pointer conversion of python objects are not sufficient.  Default functionality is equivalent to:
+    #  def login(self, secret, password, userdata=None, o_cb=None):
+    #     self._login(*self.ensure_correct_form(secret, password, userdata, self.login_cb))
+    # A full listing of the class methods automatically bound can be found in safe_auth_defs.py
 
-    # Note, the autoinvoke takes care of the bound ffi_methods, not necessary to explicitly define a function unless
-    # we want behaviour different than the following:
-    # def login(self, secret, password, userdata=None, o_cb=None):
-        # self._login(*self.ensure_correct_form(secret, password, userdata, self.login_cb))
+
+
+    # Callback methods
 
     @staticmethod
     def login_cb(result):

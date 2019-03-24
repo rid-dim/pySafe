@@ -1,6 +1,6 @@
 ########################################################################################################################
 #
-# pySafe - Authenticator Interface
+# pySafe - App Interface
 #
 # This is really just a stub  ... files like this should be able to import the interface and just go, but code structure
 # really needs some thought
@@ -9,16 +9,12 @@
 #
 ########################################################################################################################
 
-# This brings all the c interfaces into this module ..  at this point still clean code
 import safenet.base_classes as base
 import safenet.authenticator as authenticator
 import safenet.mutabledata as mutabledata
 import safenet.immutabledata as immutabledata
-
 import queue
 
-# From here on in is just a very basic 'working' example
-# todo we need heavy thought on how to structure the various classes.
 class App(base.StandardApp):
     def __init__(self,
                  name='SAFE_Connection',
@@ -36,8 +32,11 @@ class App(base.StandardApp):
         self.queue = queue.Queue()   # Each object has it's own queue for ffi calls
         self.bind_ffi_methods()
 
-        ## Now, public methods here
-        
+    # Public methods of this class override the auto bound ffi methods and are generally necessary where simple
+    # string and null pointer conversion of python objects are not sufficient.  Default functionality is equivalent to:
+    #  def login(self, secret, password, userdata=None, o_cb=None):
+    #     self._login(*self.ensure_correct_form(secret, password, userdata, self.login_cb))
+    # A full listing of the class methods automatically bound can be found in safe_app_defs.py (_APP_DEFS)
         
 if __name__ == '__main__':
     # we test it!

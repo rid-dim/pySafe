@@ -1,8 +1,9 @@
 from collections import defaultdict
 from pathlib import Path
+
 mod_path = Path(__file__).parent
-INDATA=(mod_path / '../extracted_headers/safe_authenticator_datatype_declarations').resolve()
-INFUNCS=(mod_path / '../extracted_headers/safe_authenticator_function_declarations').resolve()
+INDATA=(mod_path / '../safenet/extracted_headers/safe_authenticator_datatype_declarations').resolve()
+INFUNCS=(mod_path / '../safenet/extracted_headers/safe_authenticator_function_declarations').resolve()
 OUTFILE='dataclass_template.py'
 
 #   Proof of concept auto-templater

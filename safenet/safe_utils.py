@@ -12,10 +12,13 @@
 # push callbacks into other threads to avoid trouble with concurrent access
 from threading import Thread
 from functools import wraps
+import inspect
 import multihash
 import cid
 import safenet.interface
-import safenet.config
+import safenet.config as config
+import logging
+log=logging.getLogger(config.GLOBAL_LOGGER_NAME).getChild('ffi_in')
 
 def safeThread(*args, **kwargs):
     '''
@@ -51,9 +54,22 @@ def ensure_correct_form(*args):
             if arg is None:
                 arg=ffi.NULL
             elif isinstance(arg, str):
-                arg = bytes(arg, encoding=safenet.config.GLOBAL_DEFAULT_ENCODING)
+                arg = bytes(arg, encoding=config.GLOBAL_DEFAULT_ENCODING)
             result.append(arg)
     return result
+
+class _IncrementingUserData(object):
+    def __init__(self, initial=0):
+        self._var = initial
+
+    @property
+    def assign(self):
+        self._var += 1
+        return safenet.interface.ffi_auth.new('uint8_t',self._var)
+
+    def __str__(self):
+        return str(self.var)
+IncrementingUserData=_IncrementingUserData()
 
 def getXorAddresOfMutable(data, ffi):
     xorName_asBytes = ffi.buffer(data.name)[:]
@@ -68,14 +84,15 @@ def getffiMutable(asBytes,ffi):
     writeBuffer[:]=asBytes
     return ffiMutable
         
-def checkResult(result,ffi):
+def checkResult(result,ffi,userdata):
     if result.error_code != 0:
         errorDescription = ffi.string(result.description)
-        print('Following Error occured: ' + str(errorDescription))
-        print('Error code: ' + str(result.error_code))
+        log.critical(f'rust call (id=NotImplemented):' + errorDescription.decode('utf-8'))
+        log.critical('rust call error code: ' + str(result.error_code))
     else:
-        print('action succeeded')
-        
+        calling_func = inspect.stack()[1].function
+        log.info(f'action succeeded: < {calling_func}')
+
 def AppExchangeInfo(id=b'noId',scope=b'noScope',name=b'noName',vendor=b'nobody',ffi=None):
     id = ffi.new('char[]',id)
     scope = ffi.new('char[]',scope)
@@ -128,7 +145,7 @@ def copy(data,ffi):
         
         user_metadata_ptr = ffi.new('uint8_t[]',data.user_metadata_len)
         copyLen=int(ffi.sizeof(ffi.new('uint8_t[1]'))*data.user_metadata_len)
-        ffi.buffer(user_metadata_ptr,copyLenn)[:]=ffi.buffer(data.user_metadata_ptr,copyLen)[:]
+        ffi.buffer(user_metadata_ptr,copyLen)[:]=ffi.buffer(data.user_metadata_ptr,copyLen)[:]
         newData.user_metadata_ptr = user_metadata_ptr
         
         return newData,[user_metadata_ptr]

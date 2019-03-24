@@ -15,31 +15,18 @@ import safenet.config as cfg
 import os
 import sys
 
+# Set widest possible console on windows systems
+os.system("mode con lines=60 cols=128")
+
 # If the log directory does not exist, create it
 if not os.path.exists(safenet.localization.LOGPATH):
     os.mkdir(safenet.localization.LOGPATH)
 
 logfile = os.path.join(safenet.localization.LOGPATH, 'log.txt')
 
-############
+###################################
 # Formatters and other definitions
-############
-
-class MockLogger():
-    '''
-    Intercepts any logging call and prints the message.  Default, possible to convert all print statements to logs with
-    no change in syntax between levels of logging from print to super detailed.
-    '''
-    def __getattr__(self, item):
-        return self
-    def __call__(self, *args, **kwargs):
-        if len(args)>0:
-            print(args[0])
-        else:
-            print('Mock logger called with no message')
-
-logger=MockLogger()
-logger_set_up = False
+###################################
 
 DEBUG = logging.DEBUG
 INFO = logging.INFO
@@ -48,14 +35,16 @@ ERROR = logging.ERROR
 CRITICAL = logging.CRITICAL
 
 # Formatting Styles
+printformatter = logging.Formatter('%(message)s')
 simpleformatter = logging.Formatter('[%(asctime)s] %(name)s:%(levelname)s -> %(message)s', datefmt='%I:%M:%S %p')
 deluxeformatter = logging.Formatter("[%(asctime)s] %(name)-8s [%(levelname)8s] %(message)-74s ", "%H:%M:%S")
-debugformatter = logging.Formatter("[%(asctime)s%(msecs)03d] %(name)-8s [%(levelname)8s] %(message)-64s (%(filename)s:%(lineno)s)",
+debugformatter = logging.Formatter("[%(asctime)s%(msecs)03d] %(name)-11s:%(threadName)-10s(%(filename)18s:%(lineno)4s) [%(levelname)8s] %(message)-64s",
                                    "%H:%M:%S.")
 
 formats = {'simple': simpleformatter,
            'deluxe': deluxeformatter,
-           'debug': debugformatter}
+           'debug': debugformatter,
+           'print': printformatter}
 
 levels = {'debug'   : DEBUG,
           'info'    : INFO,
@@ -67,32 +56,47 @@ levels = {'debug'   : DEBUG,
 # LOGGING FUNCTIONS
 ############
 
-def setup_logger(log_to_file=True, log_to_stdout=False, stream=sys.stdout):
-    global logger
+def print_only_setup():
+    '''
+    a default setup that makes all logs look like normal print statements
+    '''
+    log=logging.getLogger(cfg.GLOBAL_LOGGER_NAME)
+    logstream = logging.StreamHandler(stream=sys.stdout)
+    log.setLevel(levels.get(cfg.GLOBAL_MASTER_HIGHPASS))
+    logstream.setFormatter(printformatter)
+    log.addHandler(logstream)
+
+print_only_setup()
+
+def setup_logger(**kwargs):
     logger = logging.getLogger(cfg.GLOBAL_LOGGER_NAME)
 
     internal_handlers=[]  # double stdout bugfix
 
-    # Read styles and detail levels from config.py
-    file_style = formats.get(cfg.GLOBAL_FILE_LOG_FORMAT,debugformatter)
-    std_style = formats.get(cfg.GLOBAL_STD_LOG_FORMAT,debugformatter)
+    # Read styles and detail levels from config.py, with any passed in kwargs overriding
+    stream=kwargs.get('stream',sys.stdout)
+    file_style = kwargs.get('file_style', formats.get(cfg.GLOBAL_FILE_LOG_FORMAT,debugformatter))
+    std_style = kwargs.get('std_style', formats.get(cfg.GLOBAL_STD_LOG_FORMAT,debugformatter))
 
-    file_level = levels.get(cfg.GLOBAL_FILE_LOG_HIGHPASS, DEBUG)
-    std_level = levels.get(cfg.GLOBAL_STD_LOG_HIGHPASS, DEBUG)
-    master_level = levels.get(cfg.GLOBAL_MASTER_HIGHPASS, DEBUG)
+    file_level = kwargs.get('file_level',levels.get(cfg.GLOBAL_FILE_LOG_HIGHPASS, DEBUG))
+    std_level = kwargs.get('file_level',levels.get(cfg.GLOBAL_STD_LOG_HIGHPASS, DEBUG))
+    master_level = kwargs.get('master_level',levels.get(cfg.GLOBAL_MASTER_HIGHPASS, DEBUG))
+
+    enable_file=kwargs.get('enable_file',cfg.GLOBAL_ENABLE_FILE_LOGGING)
+    enable_stream=kwargs.get('enable_stream',cfg.GLOBAL_ENABLE_FILE_LOGGING)
 
     #  This controls the first filter .. any message above this threshold can be further filtered at the
     #  stream and file levels seperately
     logger.setLevel(master_level)
 
-    if cfg.GLOBAL_ENABLE_STD_LOGGING:
+    if enable_stream:
         logstream = logging.StreamHandler(stream=stream)
         logstream.setLevel(std_level)
         logstream.setFormatter(std_style)
         logger.addHandler(logstream)
         internal_handlers.append(logstream)
 
-    if cfg.GLOBAL_ENABLE_FILE_LOGGING:
+    if enable_file:
         try:
             system_logfile = logging.FileHandler(logfile, mode='w')
             system_logfile.setLevel(file_level)
@@ -105,9 +109,10 @@ def setup_logger(log_to_file=True, log_to_stdout=False, stream=sys.stdout):
     logger.handlers=internal_handlers
     global logger_set_up
     logger_set_up=True
+    logger.debug(f'logger initialized. File: {enable_file}, Stream: {enable_stream}')
 
-if not logger_set_up and cfg.GLOBAL_AUTO_INIT_LOGGING:
+if cfg.GLOBAL_AUTO_INIT_LOGGING:
     setup_logger()
 
 if __name__ == '__main__':
-    logger.error('Testing: 1,2,3')
+    pass

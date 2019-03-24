@@ -13,15 +13,15 @@
 ########################################################################################################################
 
 from safenet.safe_ffi_interface import lib_app,lib_auth,print_app_funcs,print_auth_funcs, ffi_app,ffi_auth
-from safenet.log_util import logger
 
 '''
 This brings in:
 lib_app:        the opened safe_app FFI object, bound to right system binaries 
+ffi_app:        the ffi which is used to cdef new objects for interacting with lib_app 
 lib_auth:       the opened safe_auth FFI object, bound to right system binaries
+ffi_auth:       the ffi which is used to cdef new objects for interacting with lib_auth
 print_x_funcs():  print all defined c functions for ffi interface 'x' (auth, app)  
 '''
-
 
 ## Keep for now.. todo delete when confident
 print('SAFE python-rust interface generated, bound and available')
@@ -44,6 +44,4 @@ class InterfacesWithSafe:
     lib=lib(lib_auth,lib_app)
 
 
-if __name__=='__main__':
-    print(InterfacesWithSafe.lib_app)
 
