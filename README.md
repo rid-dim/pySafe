@@ -14,7 +14,8 @@ Build Status dev:
 |[![Build Status](https://travis-ci.org/rid-dim/pySafe.svg?branch=dev)](https://travis-ci.org/rid-dim/pySafe?branch=dev)|[![Build status](https://ci.appveyor.com/api/projects/status/qyx4b75u9mxrla1g/branch/dev?svg=true)](https://ci.appveyor.com/project/rid-dim/pysafe/branch/dev)|[![docs](https://readthedocs.org/projects/pysafe/badge/?version=dev)](http://pysafe.readthedocs.io/en/dev)|
 
 
-python interface for the C FFI API of the SAFE Network (www.maidsafe.net)
+A Python interface for the C FFI API of the SAFE Network (www.maidsafe.net)
+---
 
 contributors: rid-dim, duncankushnir
 
@@ -31,6 +32,10 @@ We use features that currently require python 3.6+ . With enough interest, we co
 Under heavy development - so please don't criticize but just open a pull request ;)
 
 
+Installing into an environment
+---
+
+First, clone the repo.  We are currently working to find an acceptable PyPi name to enable pip/easy install
 
 
 - On linux, running upg_local.sh will pip update your local environment to the current pySafe state (any python prog can import pySafe, sym-linked to the development directory):

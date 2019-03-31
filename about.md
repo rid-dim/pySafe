@@ -1,7 +1,8 @@
 Programming goals
 -----
+Java - API equivalence to speed up onboarding
 
-For now, we try a flat structure.. the project is simple enough at present that we probably don't need sub modules
+For now, a flat structure.. the project is simple enough at present that we probably don't need sub modules
 
 The structure is still fluid: At present, this is on a 'simplest thing that works' basis for the following goals.
 - pypi available
@@ -15,8 +16,10 @@ Other thoughts about design:
 
 should we split it up into authenticator / application or just make one module that uses both libs and can act as both ..?
 (actually it is kind of hard to find a motivation to have it split ...)
+  
   (DUNCAN: to have useful functionality we need both in the same package)
-
+  
+  (DUNCAN: current thoughts are to make a session object (e.g. JAVA api) that encapsulates both)
 
 
 TODO's are in tasklist.md
