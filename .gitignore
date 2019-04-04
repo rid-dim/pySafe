@@ -21,3 +21,6 @@
 
 # jupyter checkpoints
 *checkpoint.ipynb
+
+# experimental files
+safenet/local_experiments/
