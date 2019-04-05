@@ -1,6 +1,7 @@
 import safenet.interface as interface
 import safenet.safe_auth_defs as safe_auth_defs
 import safenet.safe_app_defs as safe_app_defs
+import safenet.safe_sysUri_defs as safe_sysUri_defs
 import safenet.config as config
 from safenet.safe_utils import ensure_correct_form, safeThread, IncrementingUserData
 
@@ -11,6 +12,8 @@ log = logging.getLogger(config.GLOBAL_LOGGER_NAME)
 # Find the bindable methods
 available_auth_defs={item for item in dir(safe_auth_defs) if not item.startswith('_') and not item.startswith('safeU')}
 available_app_defs={item for item in dir(safe_app_defs) if not item.startswith('_') and not item.startswith('safeU')}
+available_sysUri_defs={item for item in dir(safe_sysUri_defs) if not item.startswith('_') and not item.startswith('safeU')}
+
 
 class AutoInvoke():
     '''
@@ -37,6 +40,7 @@ class BindableBase(interface.InterfacesWithSafe, HasLogger):
     '''
     ffi_auth_methods = {}
     ffi_app_methods = {}
+    ffi_sysUri_methods = {}
     global_config = config
     UserData=IncrementingUserData
 
@@ -49,11 +53,15 @@ class BindableBase(interface.InterfacesWithSafe, HasLogger):
             self.ffi_app_methods={item:None for item in self.ffi_app_methods}
         if not isinstance(self.ffi_auth_methods, dict):
             self.ffi_auth_methods={item:None for item in self.ffi_auth_methods}
+        if not isinstance(self.ffi_sysUri_methods, dict):
+            self.ffi_sysUri_methods={item:None for item in self.ffi_sysUri_methods}
 
         for meth, timeout in self.ffi_auth_methods.items():
             self.bind_ffi_method(meth,timeout, safe_auth_defs)
         for meth, timeout in self.ffi_app_methods.items():
             self.bind_ffi_method(meth,timeout, safe_app_defs)
+        for meth, timeout in self.ffi_sysUri_methods.items():
+            self.bind_ffi_method(meth,timeout, safe_sysUri_defs)
 
     def bind_ffi_method(self, methodname, timeout, lib):
         '''
@@ -80,6 +88,8 @@ class BindableBase(interface.InterfacesWithSafe, HasLogger):
             return AutoInvoke(getattr(self,f'_{item}'),self.ffi_app)
         elif item in self.ffi_auth_methods.keys() and hasattr(self,f'_{item}'):
             return AutoInvoke(getattr(self, f'_{item}'), self.ffi_auth)
+        elif item in self.ffi_sysUri_methods.keys() and hasattr(self,f'_{item}'):
+            return AutoInvoke(getattr(self, f'_{item}'), self.ffi_sysUri)
         else:
             raise AttributeError(item)
 
@@ -103,3 +113,8 @@ class StandardImmutableData(BindableBase):
 class StandardMutableData(BindableBase):
     # All the mdata methods
     ffi_app_methods = safe_app_defs._MDATA_DEFS
+
+class SysUri(BindableBase):
+    # All the mdata methods
+    ffi_sysUri_methods = {item:config.GLOBAL_DEFAULT_TIMEOUT for item in available_sysUri_defs}
+

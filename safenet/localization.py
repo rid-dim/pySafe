@@ -49,22 +49,25 @@ if safenet.config.GLOBAL_BINPATH is None:
 
 LINUX_AUTHLIB = 'libsafe_authenticator.so'
 LINUX_APPLIB = 'libsafe_app.so'
+LINUX_SYSURILIB = 'libsystem_uri.so'
 WIN_AUTHLIB = 'libsafe_authenticator.dll'
 WIN_APPLIB = 'libsafe_app.dll'
+WIN_SYSURILIB = 'libsystem_uri.dll'
 
 # Select the platform specific libraries, and test if they exist.
 APPLIB,AUTHLIB = None, None
 if platform.system() == 'Linux':
-    APPLIB, AUTHLIB = LINUX_APPLIB, LINUX_AUTHLIB
+    APPLIB, AUTHLIB, SYSURILIB = LINUX_APPLIB, LINUX_AUTHLIB, LINUX_SYSURILIB
 if platform.system() == 'Windows':
-    APPLIB, AUTHLIB = WIN_APPLIB, WIN_AUTHLIB
+    APPLIB, AUTHLIB, SYSURILIB = WIN_APPLIB, WIN_AUTHLIB, WIN_SYSURILIB
 
 SAFEAPPFILE = os.path.join(BINPATH, APPLIB)
 SAFEAUTHFILE = os.path.join(BINPATH, AUTHLIB)
+SAFESYSURIFILE = os.path.join(BINPATH, SYSURILIB)
 
 # Make sure the appropriate files exist
 filecheck=True
-for item in [SAFEAPPFILE,SAFEAUTHFILE]:
+for item in [SAFEAPPFILE,SAFEAUTHFILE,SAFESYSURIFILE]:
     if not os.path.exists(item):
         print (f'{item} not found')
         filecheck=False
@@ -82,5 +85,7 @@ APP_FUNCHEADERS=os.path.join(HEADERPATH,'safe_app_function_declarations')
 APP_DATAHEADERS=os.path.join(HEADERPATH,'safe_app_datatype_declarations')
 AUTH_FUNCHEADERS=os.path.join(HEADERPATH,'safe_authenticator_function_declarations')
 AUTH_DATAHEADERS=os.path.join(HEADERPATH,'safe_authenticator_datatype_declarations')
+SYSURI_FUNCHEADERS=os.path.join(HEADERPATH,'system_uri_function_declarations')
+SYSURI_DATAHEADERS=os.path.join(HEADERPATH,'safe_app_datatype_declarations')
 
 safenet.config.GLOBAL_BINPATH=os.path.abspath(BINPATH)
