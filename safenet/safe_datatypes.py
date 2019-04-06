@@ -15,6 +15,7 @@
 ########################################################################################################################
 
 from safenet.interface import ffi_auth,ffi_app
+#from safenet.base_classes import PySafeDataObject
 
 #ffi_inits={'char*':'char[]'}
 
@@ -22,15 +23,15 @@ from safenet.interface import ffi_auth,ffi_app
 class PySafeDataObject():
 
     _structname = ''  # store the ffi definition_name
-    _ffi=None         # A container for the cffi object
+    _cdata_obj=None         # A container for the cffi object
 
     @property
-    def ffi(self):
-        if self._ffi is None:
-            self._ffi = self. to_ffi()
-        return self._ffi
+    def cdata(self):
+        if self._cdata_obj is None:
+            self._cdata_obj = self.to_cdata()
+        return self._cdata_obj
 
-    def to_ffi(self):
+    def to_cdata(self):
         '''
         :return: a cffi object corresponding to a c struct of the same name e.g. 'AppExchangeInfo'
         '''
@@ -43,7 +44,7 @@ class PySafeDataObject():
         raise NotImplementedError('to_json must be overridden')
 
     @staticmethod
-    def from_ffi():
+    def from_cdata():
         raise NotImplementedError('from_ffi must be overridden')
 
     @staticmethod
