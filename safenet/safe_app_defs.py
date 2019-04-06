@@ -88,13 +88,13 @@ def mdata_list_keys(self, timeout, log, thread_decorator):
         # @self.ffi_app.callback("void(void* ,FfiResult* ,MDataKey* ,uintptr_t)")
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataKey* ,unsigned long)")
         def _mdata_list_keys_o_cb(user_data, result, keys, keys_len):
-            print('no')
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            # self.queue.put(ffi.string(result.keys))
+            returnString = self.ffi.string(keys)
+            log.debug(f'got {returnString}')
+            self.queue.put(self.ffi.string(keys))
             if o_cb:
                 o_cb(user_data, result, keys, keys_len)
 
-        print('hmhmm')
 
         self.lib.safe_app.mdata_list_keys(app, info, user_data, _mdata_list_keys_o_cb)
 
@@ -412,11 +412,27 @@ def mdata_list_values(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataValue* ,uintptr_t)")
         def _mdata_list_values_o_cb(user_data, result, values, values_len):
-            safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put(self.ffi_app.string(values))
-            if o_cb:
-                o_cb(user_data, result, values, values_len)
-
+            #safeUtils.checkResult(result, self.ffi_app, user_data)
+            #returnString = self.ffi_app.string(values.content)
+            #print(returnString)
+            log.debug(f'got a result')
+            #self.queue.put(values)
+            #if o_cb:
+            #    o_cb(user_data, result, values, values_len)
+    
+        log.debug(f'checking if the ffi exists')
+        log.debug(f'{self.ffi_app}')
+        log.debug(f'{self.ffi_app.callback}')
+        log.debug(f'{self.lib.safe_app}')
+        log.debug(f'{self.lib.safe_app.mdata_list_values}')
+        log.debug(f'attempting to return mdataValues')
+        log.debug(f'app has type {app}')
+        log.debug(f'info has type {info}')
+        log.debug(f'info has type {info.type_tag}')
+        buf = self.ffi_app.buffer(info.name)[:]
+        log.debug(f'info has type {buf}')
+        log.debug(f'user_data has type {user_data}')
+        log.debug(f'_mdata_list_values_o_cb has type {_mdata_list_values_o_cb}')
         self.lib.safe_app.mdata_list_values(app, info, user_data, _mdata_list_values_o_cb)
 
 
@@ -550,10 +566,11 @@ def mdata_permissions_new(self, timeout, log, thread_decorator):
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataPermissionsHandle)")
         def _mdata_permissions_new_o_cb(user_data, result, perm_h):
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put('gotResult')
+            self.queue.put(perm_h)
             if o_cb:
                 o_cb(user_data, result, perm_h)
 
+        log.debug(f'attempting to get a permission handle with userdata {user_data} and app {app}')
         self.lib.safe_app.mdata_permissions_new(app, user_data, _mdata_permissions_new_o_cb)
 
 
@@ -806,10 +823,11 @@ def mdata_entries_new(self, timeout, log, thread_decorator):
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataEntriesHandle)")
         def _mdata_entries_new_o_cb(user_data, result, entries_h):
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put('gotResult')
+            self.queue.put(entries_h)
             if o_cb:
                 o_cb(user_data, result, entries_h)
-
+        
+        log.debug(f'attempting to get a entries handle with userdata {user_data} and app {app}')
         self.lib.safe_app.mdata_entries_new(app, user_data, _mdata_entries_new_o_cb)
 
 

@@ -23,6 +23,7 @@ import base64
 import os
 import random
 import string
+import tempfile
 
 class SysUri(base.SysUri):
     '''
@@ -39,29 +40,29 @@ class SysUri(base.SysUri):
     def quickSetup(self,authReq,encodedRequest,icon=b''):
         schemeName=b'safe-'+base64.b64encode(self.ffi_sysUri.string(authReq.app.id)).strip(b'=')
         reqHandlerFilename = ''.join(random.choices(string.ascii_letters + string.digits, k=42)) + '.py'
-        pathToHandler=(os.getcwd()+'/' + reqHandlerFilename).encode()
- 
-        exec_args=self.ffi_sysUri.new('char[]',b'python')
-        exec_args2=self.ffi_sysUri.new('char[]',pathToHandler)
-        exec_args_1 = self.ffi_sysUri.new('char*[]',[exec_args,exec_args2])
-        bundle = self.ffi_sysUri.string(authReq.app.id)
-        vendor = self.ffi_sysUri.string(authReq.app.vendor)
-        name = self.ffi_sysUri.string(authReq.app.name)
-        self.install(*safeUtils.ensure_correct_form(self.ffi_sysUri,
-                                                    bundle,
-                                                    vendor,
-                                                    name,
-                                                    exec_args_1,
-                                                    2,
-                                                    icon,
-                                                    schemeName,
-                                                    None))
-        
-        port = random.randint(1024, 49151)
-        self.log.info(f'filename is: {reqHandlerFilename} and port number is: {port}')
-        
-        encodedReturnVal = safeUtils.catchSysUriCall(self.open_uri, (b'safe-auth://'+encodedRequest,None),port,reqHandlerFilename,safeUtils.writeRequestHandler)
-        os.remove(reqHandlerFilename)
+        with tempfile.NamedTemporaryFile() as f:
+            pathToHandler=(f.name).encode()
+     
+            exec_args=self.ffi_sysUri.new('char[]',b'python')
+            exec_args2=self.ffi_sysUri.new('char[]',pathToHandler)
+            exec_args_1 = self.ffi_sysUri.new('char*[]',[exec_args,exec_args2])
+            bundle = self.ffi_sysUri.string(authReq.app.id)
+            vendor = self.ffi_sysUri.string(authReq.app.vendor)
+            name = self.ffi_sysUri.string(authReq.app.name)
+            self.install(*safeUtils.ensure_correct_form(self.ffi_sysUri,
+                                                        bundle,
+                                                        vendor,
+                                                        name,
+                                                        exec_args_1,
+                                                        2,
+                                                        icon,
+                                                        schemeName,
+                                                        None))
+            
+            port = random.randint(1024, 49151)
+            self.log.info(f'filename is: {pathToHandler} and port number is: {port}')
+            
+            encodedReturnVal = safeUtils.catchSysUriCall(self.open_uri, (b'safe-auth://'+encodedRequest,None),port,pathToHandler,safeUtils.writeRequestHandler)
         return encodedReturnVal.split(':')[-1]
 
 
