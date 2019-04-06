@@ -2,8 +2,10 @@ from collections import defaultdict
 from pathlib import Path
 
 mod_path = Path(__file__).parent
-INDATA=(mod_path / '../safenet/extracted_headers/safe_authenticator_datatype_declarations').resolve()
-INFUNCS=(mod_path / '../safenet/extracted_headers/safe_authenticator_function_declarations').resolve()
+AUTH_DATA=(mod_path / '../safenet/extracted_headers/safe_authenticator_datatype_declarations').resolve()
+AUTH_FUNCS=(mod_path / '../safenet/extracted_headers/safe_authenticator_function_declarations').resolve()
+APP_DATA=(mod_path / '../safenet/extracted_headers/safe_app_datatype_declarations').resolve()
+APP_FUNCS=(mod_path / '../safenet/extracted_headers/safe_app_function_declarations').resolve()
 OUTFILE='dataclass_template.py'
 
 #   Proof of concept auto-templater
@@ -140,7 +142,7 @@ def extract_functions(functionlines):
     return funcs
 
 def parse_data_header():
-    data_header=__getlines(INDATA)
+    data_header=__getlines(AUTH_DATA)
     data_entities_raw=yield_data_entities(data_header)
     data_entities=fix_spacing(data_entities_raw)
     defs,enums,structs=extract_data_entities(data_entities)
@@ -150,7 +152,7 @@ def parse_data_header():
     return (defs,enums,structs)
 
 def parse_functions():
-    func_header=__getlines(INFUNCS)
+    func_header=__getlines(AUTH_FUNCS)
     func_entities_raw=yield_data_entities(func_header)
     funcs=extract_functions(func_entities_raw)
     return funcs
@@ -371,7 +373,60 @@ def def_to_python_cffi_binding(name,data,libname):
     result.append(f'self._{name} = _{name}')
     return '\n'.join(result)
 
+def structure_struct_line(item):
+    item = item[16:].strip().split('}')
+    params, name = item[0].strip().split(), item[1].strip()
+    return name, group_list(params,2)
+
+def struct_classes_from_file(fname):
+    fdict={}
+    result=[]
+
+    text=__getlines(fname)
+    for item in yield_data_entities(text):
+        if item.startswith('typedef struct {'):
+            name,paramlist=structure_struct_line(item)
+            sig=[i[1] for i in paramlist]
+            docstr=[f'{i[1]} : {i[0]}' for i in paramlist]
+            fdict[name] = (sig,docstr)
+    for name,parts in fdict.items():
+        classtext = []
+        classtext.append(f'class {name}:')
+        classtext.append(f'    _ffi = None')
+        classtext.append(f'    def __init__({", ".join(fdict[name][0])}):')
+        classtext.append(f'        """"')
+        for item in parts[1]:
+            classtext.append(f'            {item}')
+        classtext.append(f'        """"')
+        classtext.append('')
+        for item in parts[0]:
+            classtext.append(f'        self.{item} = {item}')
+
+        classtext.append('')
+        classtext.append(f'    ')
+
+        classtext.append('')
+
+        result.extend(classtext)
+        for i in classtext:
+            print(i)
+
+    return result
+
+def generate_struct_classes():
+    result=['# APP DATA TYPES']
+    result.extend(struct_classes_from_file(APP_DATA))
+    result.append('')
+    result.append('# AUTHENTICATOR DATA TYPES')
+    result.extend(struct_classes_from_file(AUTH_DATA))
+    return '\n'.join(result)
+
 if __name__=='__main__':
     # Write a graph file of our choice
     #write_graph_file('test_out','cyto')
-    generate_cb_templates()
+
+    # Autogenerate_cb_templates
+    #generate_cb_templates()
+
+    # Autogenerate_struct_classes
+    generate_struct_classes()
