@@ -1495,7 +1495,6 @@ def encode_auth_req(self, timeout, log, thread_decorator):
 
         self.lib.safe_app.encode_auth_req(req, user_data, _encode_auth_req_o_cb)
 
-
     self._encode_auth_req = _encode_auth_req
 
 def encode_containers_req(self, timeout, log, thread_decorator):

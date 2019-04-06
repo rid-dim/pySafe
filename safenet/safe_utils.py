@@ -21,6 +21,8 @@ import safenet.interface
 import safenet.config as config
 import logging
 log=logging.getLogger(config.GLOBAL_LOGGER_NAME).getChild('ffi_in')
+log_werkzeug = logging.getLogger('werkzeug')
+log_werkzeug.setLevel(logging.ERROR)
 
 def safeThread(*args, **kwargs):
     '''
@@ -85,8 +87,8 @@ class _IncrementingUserData(object):
         return str(self.var)
 IncrementingUserData=_IncrementingUserData()
 
-def catchSysUriCall(libFunction,libargs,port,writeFileFunction):
-    writeFileFunction(port)    
+def catchSysUriCall(libFunction,libargs,port,fileName,writeFileFunction):
+    writeFileFunction(port,fileName)    
     
     def getAuthResponse(localQueue):
         @Request.application
@@ -96,7 +98,7 @@ def catchSysUriCall(libFunction,libargs,port,writeFileFunction):
             shutdown()
             return Response("thanks for the fish")
 
-        run_simple("localhost",port,application,ssl_context='adhoc');#,passthrough_errors=True)
+        run_simple("localhost",port,application,ssl_context='adhoc',use_evalex=False)
 
     myQueue = queue.Queue()
     t = Thread(name='authGetter', target=getAuthResponse, args=([myQueue]))
@@ -107,9 +109,8 @@ def catchSysUriCall(libFunction,libargs,port,writeFileFunction):
     t.join()
     return myQueue.get_nowait()
 
-def writeRequestHandler(port):
-    return
-    with open('requestHandler.py','w') as f:
+def writeRequestHandler(port,requestFileName):
+    with open(requestFileName,'w') as f:
         f.write(f'''import sys\nimport requests\nrequests.put('https://localhost:{port}/',params={{'response': sys.argv[1]}},verify=False, timeout=2)''')
 
 def getXorAddresOfMutable(data, ffi):
