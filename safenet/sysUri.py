@@ -18,6 +18,11 @@
 
 import safenet.base_classes as base
 import queue
+import safenet.safe_utils as safeUtils
+import base64
+import os
+import random
+import time
 
 class SysUri(base.SysUri):
     '''
@@ -30,6 +35,28 @@ class SysUri(base.SysUri):
     def __init__(self):
         self.queue = queue.Queue()  # Each object has it's own queue for ffi calls
         self.bind_ffi_methods()
+        
+    def quickSetup(self,authReq,encodedRequest,icon=b''):
+        schemeName=b'safe-'+base64.b64encode(self.ffi_sysUri.string(authReq.app.id)).strip(b'=')
+        pathToHandler=(os.getcwd()+'/requestHandler.py').encode()
+
+        self.log.debug('prepared scheme and path to handler')        
+        exec_args=self.ffi_sysUri.new('char[]',b'python')
+        exec_args2=self.ffi_sysUri.new('char[]',pathToHandler)
+        exec_args_1 = self.ffi_sysUri.new('char*[2]',[exec_args,exec_args2])
+        self.install(*safeUtils.ensure_correct_form(self.ffi_sysUri,
+                                                    self.ffi_sysUri.string(authReq.app.id),
+                                                    self.ffi_sysUri.string(authReq.app.vendor),
+                                                    self.ffi_sysUri.string(authReq.app.name),
+                                                    exec_args_1,
+                                                    2,
+                                                    b'',
+                                                    schemeName,
+                                                    None))
+        port = random.randint(1024, 49151)
+        port = 15918
+        
+        return safeUtils.catchSysUriCall(self.open_uri, (b'safe-auth://'+encodedRequest,None),port,safeUtils.writeRequestHandler)
 
 
 if __name__ == '__main__':

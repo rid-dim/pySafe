@@ -13,6 +13,7 @@ install_requires = [
     "multihash"
     "py-cid"
     "requests"
+    "base64"
 ]
 
 setup(name='safenet',
