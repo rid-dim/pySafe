@@ -39,7 +39,6 @@ class SysUri(base.SysUri):
         
     def quickSetup(self,authReq,encodedRequest,icon=b''):
         schemeName=b'safe-'+base64.b64encode(self.ffi_sysUri.string(authReq.app.id)).strip(b'=')
-        reqHandlerFilename = ''.join(random.choices(string.ascii_letters + string.digits, k=42)) + '.py'
         with tempfile.NamedTemporaryFile() as f:
             pathToHandler=(f.name).encode()
      

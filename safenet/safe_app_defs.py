@@ -410,8 +410,8 @@ def mdata_list_values(self, timeout, log, thread_decorator):
             (*o_cb)(void* user_data, FfiResult* result, MDataValue* values, uintptr_t values_len)
         """
 
-        @self.ffi_app.callback("void(void* ,FfiResult* ,MDataValue* ,uintptr_t)")
-        def _mdata_list_values_o_cb(user_data, result, values, values_len):
+        @self.ffi_app.callback("void(void* ,FfiResult* ,MDataValue* ,uint64_t)")
+        def noWay(user_data, result, values, values_len):
             #safeUtils.checkResult(result, self.ffi_app, user_data)
             #returnString = self.ffi_app.string(values.content)
             #print(returnString)
@@ -419,21 +419,13 @@ def mdata_list_values(self, timeout, log, thread_decorator):
             #self.queue.put(values)
             #if o_cb:
             #    o_cb(user_data, result, values, values_len)
-    
-        log.debug(f'checking if the ffi exists')
-        log.debug(f'{self.ffi_app}')
-        log.debug(f'{self.ffi_app.callback}')
-        log.debug(f'{self.lib.safe_app}')
-        log.debug(f'{self.lib.safe_app.mdata_list_values}')
-        log.debug(f'attempting to return mdataValues')
-        log.debug(f'app has type {app}')
-        log.debug(f'info has type {info}')
-        log.debug(f'info has type {info.type_tag}')
-        buf = self.ffi_app.buffer(info.name)[:]
-        log.debug(f'info has type {buf}')
-        log.debug(f'user_data has type {user_data}')
-        log.debug(f'_mdata_list_values_o_cb has type {_mdata_list_values_o_cb}')
-        self.lib.safe_app.mdata_list_values(app, info, user_data, _mdata_list_values_o_cb)
+        print(self)
+        print(self.ffi_app)
+        print(self.ffi_app.callback)
+        
+        #self.lib.safe_app.mdata_list_values(app, info, user_data, noWay)
+        
+        log.warning(f'i even called the lib without errors')
 
 
     self._mdata_list_values = _mdata_list_values
