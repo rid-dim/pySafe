@@ -12,7 +12,7 @@
 #
 ########################################################################################################################
 
-from safenet.safe_ffi_interface import lib_app,lib_auth,print_app_funcs,print_auth_funcs, ffi_app,ffi_auth
+from safenet.safe_ffi_interface import lib_app,lib_auth,lib_sysUri,print_app_funcs,print_auth_funcs,print_sysUri_funcs, ffi_app,ffi_auth,ffi_sysUri
 
 '''
 This brings in:
@@ -31,9 +31,10 @@ class lib:
     To integrate rid's proof of concept on a first pass.   Possibly better to delete and simply assign them directly
     in InterfacesWithSafe
     '''
-    def __init__(self,authlib,applib):
+    def __init__(self,authlib,applib,sysUrilib):
         self.safe_authenticator = authlib
         self.safe_app = applib
+        self.safe_sysUri = sysUrilib
 
 class InterfacesWithSafe:
     '''
@@ -41,7 +42,8 @@ class InterfacesWithSafe:
     '''
     ffi_app=ffi_app
     ffi_auth=ffi_auth
-    lib=lib(lib_auth,lib_app)
+    ffi_sysUri=ffi_sysUri
+    lib=lib(lib_auth,lib_app,lib_sysUri)
 
 
 

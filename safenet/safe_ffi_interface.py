@@ -24,6 +24,7 @@ from functools import partial
 # We first initialize separate ffi interfaces for the app and auth libraries.  The symbols with loaded dlls come later
 ffi_app = FFI()
 ffi_auth = FFI()
+ffi_sysUri = FFI()
 
 
 #############################
@@ -57,6 +58,8 @@ _func_defs_app=__get_file_contents(localization.APP_FUNCHEADERS)
 _struct_defs_app=__get_file_contents(localization.APP_DATAHEADERS)
 _func_defs_auth=__get_file_contents(localization.AUTH_FUNCHEADERS)
 _struct_defs_auth=__get_file_contents(localization.AUTH_DATAHEADERS)
+_func_defs_sysUri=__get_file_contents(localization.SYSURI_FUNCHEADERS)
+_struct_defs_sysUri=__get_file_contents(localization.SYSURI_DATAHEADERS)
 
 ffi_app.cdef(_struct_defs_app)
 ffi_app.cdef(_func_defs_app)
@@ -65,6 +68,10 @@ lib_app = ffi_app.dlopen(localization.SAFEAPPFILE)
 ffi_auth.cdef(_struct_defs_auth)
 ffi_auth.cdef(_func_defs_auth)
 lib_auth = ffi_auth.dlopen(localization.SAFEAUTHFILE)
+
+ffi_sysUri.cdef(_struct_defs_sysUri)
+ffi_sysUri.cdef(_func_defs_sysUri)
+lib_sysUri = ffi_sysUri.dlopen(localization.SAFESYSURIFILE)
 
 # Now, all c header definitions are available, and callable through lib_app and lib_auth.
 # Again, this is ABI-Inline mode for cffi, and it can be 'slow and fraught with errors'.. we see!
@@ -104,6 +111,8 @@ _app_c_functions = {}
 _app_c_structs = {}
 _auth_c_functions = {}
 _auth_c_structs = {}
+_sysUri_c_functions = {}
+_sysUri_c_structs = {}
 
 for f in __split_to_lines(_func_defs_app):
     if f:
@@ -113,10 +122,16 @@ for f in __split_to_lines(_func_defs_auth):
     if f:
         __register_func_sig(f, _auth_c_functions)
 
+for f in __split_to_lines(_func_defs_sysUri):
+    if f:
+        __register_func_sig(f, _sysUri_c_functions)
+
 print_app_funcs = partial(print_funcs,'lib_app',_app_c_functions)
 print_auth_funcs = partial(print_funcs,'lib_authenticator',_auth_c_functions)
+print_sysUri_funcs = partial(print_funcs,'lib_sysUri',_sysUri_c_functions)
 
 if __name__=='__main__':
     print_app_funcs()
     print_auth_funcs()
+    print_sysUri_funcs()
 

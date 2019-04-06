@@ -9,9 +9,11 @@
 #
 ########################################################################################################################
 
-# push callbacks into other threads to avoid trouble with concurrent access
+from werkzeug.wrappers import Request, Response
+from werkzeug.serving import run_simple
 from threading import Thread
 from functools import wraps
+import queue
 import inspect
 import multihash
 import cid
@@ -19,6 +21,8 @@ import safenet.interface
 import safenet.config as config
 import logging
 log=logging.getLogger(config.GLOBAL_LOGGER_NAME).getChild('ffi_in')
+log_werkzeug = logging.getLogger('werkzeug')
+log_werkzeug.setLevel(logging.ERROR)
 
 def safeThread(*args, **kwargs):
     '''
@@ -26,15 +30,11 @@ def safeThread(*args, **kwargs):
     :param kwargs: can be used to pass a default timeout or a specific queue instance
     :return: a python function running in its own thread.
     '''
-
-    ## These work because the function defaults to the outer namespace.  Perhaps cleaner to put inside innerThreader?
-    ## cleaner use of kwargs
-    waitSeconds = kwargs.get('timeout', 5)
-    myQueue = kwargs.get('queue', None)
-        
     def threader(fun):
         @wraps(fun)
         def innerThreader(*args,**kwargs):
+            waitSeconds = kwargs.get('timeout', 5)
+            myQueue = kwargs.get('queue', None)
             oneThread = Thread(target=fun,args=args,kwargs=kwargs)
             oneThread.start()
             if myQueue:
@@ -43,20 +43,36 @@ def safeThread(*args, **kwargs):
         return innerThreader
     return threader
 
-
-def ensure_correct_form(*args):
-    result = []
-    ffi=None
+def ensure_correct_form(*args,**kwargs):
+    return_args = []
+    ffi = kwargs.get('ffi',None)
+    
+    def correctForm(oneVal,ffi):
+        if not isinstance(oneVal, safenet.interface.InterfacesWithSafe):
+            if oneVal is None:
+                oneVal=ffi.NULL
+            if isinstance(oneVal, str):
+                oneVal = bytes(oneVal, encoding=config.GLOBAL_DEFAULT_ENCODING)
+            return oneVal
+        
     for idx, arg in enumerate(args):
-        if idx==0:
+        if idx==0 and not ffi:
             ffi=arg
-        elif not isinstance(arg, safenet.interface.InterfacesWithSafe):
-            if arg is None:
-                arg=ffi.NULL
-            elif isinstance(arg, str):
-                arg = bytes(arg, encoding=config.GLOBAL_DEFAULT_ENCODING)
-            result.append(arg)
-    return result
+        else:
+            arg = correctForm(arg,ffi)
+            if arg is not None:
+                return_args.append(arg)
+                
+    kwargs = {item:kwargs[item] for item in kwargs if not item == 'ffi'}
+    for item in kwargs:
+        kwargs[item] = correctForm(kwargs[item],ffi)
+        
+    if return_args and kwargs:
+        return return_args, kwargs
+    elif kwargs:
+        return kwargs
+    else:
+        return return_args
 
 class _IncrementingUserData(object):
     def __init__(self, initial=0):
@@ -71,6 +87,32 @@ class _IncrementingUserData(object):
         return str(self.var)
 IncrementingUserData=_IncrementingUserData()
 
+def catchSysUriCall(libFunction,libargs,port,fileName,writeFileFunction):
+    writeFileFunction(port,fileName)    
+    
+    def getAuthResponse(localQueue):
+        @Request.application
+        def application(request):
+            localQueue.put(request.args['response'])
+            shutdown = request.environ.get('werkzeug.server.shutdown')
+            shutdown()
+            return Response("thanks for the fish")
+
+        run_simple("localhost",port,application,ssl_context='adhoc',use_evalex=False)
+
+    myQueue = queue.Queue()
+    t = Thread(name='authGetter', target=getAuthResponse, args=([myQueue]))
+    t.start()
+    
+    libFunction(*libargs)
+    
+    t.join()
+    return myQueue.get_nowait()
+
+def writeRequestHandler(port,requestFileName):
+    with open(requestFileName,'w') as f:
+        f.write(f'''import sys\nimport requests\nrequests.put('https://localhost:{port}/',params={{'response': sys.argv[1]}},verify=False, timeout=2)''')
+
 def getXorAddresOfMutable(data, ffi):
     xorName_asBytes = ffi.buffer(data.name)[:]
     myHash = multihash.encode(xorName_asBytes,'sha3-256')
@@ -83,6 +125,7 @@ def getffiMutable(asBytes,ffi):
     writeBuffer = ffi.buffer(ffiMutable)
     writeBuffer[:]=asBytes
     return ffiMutable
+    
         
 def checkResult(result,ffi,userdata):
     if result.error_code != 0:
@@ -93,6 +136,7 @@ def checkResult(result,ffi,userdata):
         calling_func = inspect.stack()[1].function
         log.info(f'action succeeded: < {calling_func}')
 
+
 def AppExchangeInfo(id=b'noId',scope=b'noScope',name=b'noName',vendor=b'nobody',ffi=None):
     id = ffi.new('char[]',id)
     scope = ffi.new('char[]',scope)
@@ -102,9 +146,11 @@ def AppExchangeInfo(id=b'noId',scope=b'noScope',name=b'noName',vendor=b'nobody',
     myStruct = ffi.new('AppExchangeInfo *',[id,scope,name,vendor])
     
     return myStruct, [id, scope, name, vendor]
+
         
 def PermissionSet(read=True,insert=True,update=True,delete=True,manage_permissions=True,ffi=None):
     return ffi.new('PermissionSet *',[read,insert,update,delete,manage_permissions])
+
 
 def ContainerPermissions(name=b'noName',access=None,ffi=None):
     containerName = ffi.new('char[]',name)
@@ -114,6 +160,7 @@ def ContainerPermissions(name=b'noName',access=None,ffi=None):
     
     return container, [containerName,access]
 
+
 def AuthReq(permissions,containers_len,containers_cap,id=b'noId',scope=b'pythonscript',
             name=b'noName',vendor=b'nobody',app_container=True,ffi=None):
     
@@ -122,6 +169,7 @@ def AuthReq(permissions,containers_len,containers_cap,id=b'noId',scope=b'pythons
     authReq = ffi.new('AuthReq *',[newExChangeInfo[0],app_container,permissions,containers_len,containers_cap])
     
     return authReq, [newExChangeInfo,infopayload]
+
 
 # here we start out with a copy function that takes care of the inner values as well
 def copy(data,ffi):

@@ -13,6 +13,7 @@ import safenet.base_classes as base
 import safenet.authenticator as authenticator
 import safenet.mutabledata as mutabledata
 import safenet.immutabledata as immutabledata
+import safenet.sysUri as sysUri
 import queue
 
 class App(base.StandardApp):
@@ -28,6 +29,7 @@ class App(base.StandardApp):
         self.authenticator = authenticator.Authenticator()
         self.mutableData = mutabledata.MutableData()
         self.immutableData = immutabledata.ImmutableData()
+        self.sysUri = sysUri.SysUri()
 
         self.queue = queue.Queue()   # Each object has it's own queue for ffi calls
         self.bind_ffi_methods()

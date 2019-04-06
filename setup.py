@@ -10,6 +10,10 @@ recommended = {
 
 install_requires = [
     "cffi>=1.11.5"
+    "multihash"
+    "py-cid"
+    "requests"
+    "base64"
 ]
 
 setup(name='safenet',
