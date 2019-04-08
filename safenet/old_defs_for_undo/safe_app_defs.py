@@ -62,14 +62,11 @@ def mdata_encode_metadata(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
-        def assign_mdata_encode_metadata_o_cb(user_data, result, encoded, encoded_len):
+        def _mdata_encode_metadata_o_cb(user_data, result, encoded, encoded_len):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, encoded, encoded_len)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_encode_metadata_o_cb = assign_mdata_encode_metadata_o_cb
 
         self.lib.safe_app.mdata_encode_metadata(metadata, user_data, _mdata_encode_metadata_o_cb)
 
@@ -90,16 +87,13 @@ def mdata_list_keys(self, timeout, log, thread_decorator):
 
         # @self.ffi_app.callback("void(void* ,FfiResult* ,MDataKey* ,uintptr_t)")
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataKey* ,unsigned long)")
-        def assign_mdata_list_keys_o_cb(user_data, result, keys, keys_len):
+        def _mdata_list_keys_o_cb(user_data, result, keys, keys_len):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             returnString = self.ffi.string(keys)
             log.debug(f'got {returnString}')
             self.queue.put(self.ffi.string(keys))
             if o_cb:
                 o_cb(user_data, result, keys, keys_len)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_list_keys_o_cb = assign_mdata_list_keys_o_cb
 
 
         self.lib.safe_app.mdata_list_keys(app, info, user_data, _mdata_list_keys_o_cb)
@@ -119,14 +113,11 @@ def mdata_info_new_private(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataInfo*)")
-        def assign_mdata_info_new_private_o_cb(user_data, result, mdata_info):
+        def _mdata_info_new_private_o_cb(user_data, result, mdata_info):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, mdata_info)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_info_new_private_o_cb = assign_mdata_info_new_private_o_cb
 
         self.lib.safe_app.mdata_info_new_private(name, type_tag, secret_key, nonce, user_data, _mdata_info_new_private_o_cb)
 
@@ -145,14 +136,11 @@ def mdata_info_random_public(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataInfo*)")
-        def assign_mdata_info_random_public_o_cb(user_data, result, mdata_info):
+        def _mdata_info_random_public_o_cb(user_data, result, mdata_info):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, mdata_info)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_info_random_public_o_cb = assign_mdata_info_random_public_o_cb
 
         self.lib.safe_app.mdata_info_random_public(type_tag, user_data, _mdata_info_random_public_o_cb)
 
@@ -171,14 +159,11 @@ def mdata_info_random_private(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataInfo*)")
-        def assign_mdata_info_random_private_o_cb(user_data, result, mdata_info):
+        def _mdata_info_random_private_o_cb(user_data, result, mdata_info):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, mdata_info)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_info_random_private_o_cb = assign_mdata_info_random_private_o_cb
 
         self.lib.safe_app.mdata_info_random_private(type_tag, user_data, _mdata_info_random_private_o_cb)
 
@@ -197,14 +182,11 @@ def mdata_info_encrypt_entry_key(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
-        def assign_mdata_info_encrypt_entry_key_o_cb(user_data, result, enc_entry_key, enc_entry_key_len):
+        def _mdata_info_encrypt_entry_key_o_cb(user_data, result, enc_entry_key, enc_entry_key_len):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, enc_entry_key, enc_entry_key_len)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_info_encrypt_entry_key_o_cb = assign_mdata_info_encrypt_entry_key_o_cb
 
         self.lib.safe_app.mdata_info_encrypt_entry_key(info, input, input_len, user_data, _mdata_info_encrypt_entry_key_o_cb)
 
@@ -223,14 +205,11 @@ def mdata_info_encrypt_entry_value(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
-        def assign_mdata_info_encrypt_entry_value_o_cb(user_data, result, enc_entry_value, enc_entry_value_len):
+        def _mdata_info_encrypt_entry_value_o_cb(user_data, result, enc_entry_value, enc_entry_value_len):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, enc_entry_value, enc_entry_value_len)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_info_encrypt_entry_value_o_cb = assign_mdata_info_encrypt_entry_value_o_cb
 
         self.lib.safe_app.mdata_info_encrypt_entry_value(info, input, input_len, user_data, _mdata_info_encrypt_entry_value_o_cb)
 
@@ -249,14 +228,11 @@ def mdata_info_decrypt(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
-        def assign_mdata_info_decrypt_o_cb(user_data, result, mdata_info_decrypt, mdata_info_decrypt_len):
+        def _mdata_info_decrypt_o_cb(user_data, result, mdata_info_decrypt, mdata_info_decrypt_len):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, mdata_info_decrypt, mdata_info_decrypt_len)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_info_decrypt_o_cb = assign_mdata_info_decrypt_o_cb
 
         self.lib.safe_app.mdata_info_decrypt(info, input, input_len, user_data, _mdata_info_decrypt_o_cb)
 
@@ -275,14 +251,11 @@ def mdata_info_serialise(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
-        def assign_mdata_info_serialise_o_cb(user_data, result, encoded, encoded_len):
+        def _mdata_info_serialise_o_cb(user_data, result, encoded, encoded_len):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, encoded, encoded_len)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_info_serialise_o_cb = assign_mdata_info_serialise_o_cb
 
         self.lib.safe_app.mdata_info_serialise(info, user_data, _mdata_info_serialise_o_cb)
 
@@ -301,14 +274,11 @@ def mdata_info_deserialise(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataInfo*)")
-        def assign_mdata_info_deserialise_o_cb(user_data, result, mdata_info):
+        def _mdata_info_deserialise_o_cb(user_data, result, mdata_info):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, mdata_info)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_info_deserialise_o_cb = assign_mdata_info_deserialise_o_cb
 
         self.lib.safe_app.mdata_info_deserialise(encoded_ptr, encoded_len, user_data, _mdata_info_deserialise_o_cb)
 
@@ -326,14 +296,11 @@ def mdata_put(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_mdata_put_o_cb(user_data, result):
+        def _mdata_put_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_put_o_cb = assign_mdata_put_o_cb
 
         self.lib.safe_app.mdata_put(app, info, permissions_h, entries_h, user_data, _mdata_put_o_cb)
 
@@ -352,14 +319,11 @@ def mdata_get_version(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint64_t)")
-        def assign_mdata_get_version_o_cb(user_data, result, version):
+        def _mdata_get_version_o_cb(user_data, result, version):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, version)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_get_version_o_cb = assign_mdata_get_version_o_cb
 
         self.lib.safe_app.mdata_get_version(app, info, user_data, _mdata_get_version_o_cb)
 
@@ -378,14 +342,11 @@ def mdata_serialised_size(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint64_t)")
-        def assign_mdata_serialised_size_o_cb(user_data, result, serialised_size):
+        def _mdata_serialised_size_o_cb(user_data, result, serialised_size):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, serialised_size)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_serialised_size_o_cb = assign_mdata_serialised_size_o_cb
 
         self.lib.safe_app.mdata_serialised_size(app, info, user_data, _mdata_serialised_size_o_cb)
 
@@ -404,14 +365,11 @@ def mdata_get_value(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t ,uint64_t)")
-        def assign_mdata_get_value_o_cb(user_data, result, content, content_len, version):
+        def _mdata_get_value_o_cb(user_data, result, content, content_len, version):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, content, content_len, version)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_get_value_o_cb = assign_mdata_get_value_o_cb
 
         self.lib.safe_app.mdata_get_value(app, info, key, key_len, user_data, _mdata_get_value_o_cb)
 
@@ -430,14 +388,11 @@ def mdata_entries(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataEntriesHandle)")
-        def assign_mdata_entries_o_cb(user_data, result, entries_h):
+        def _mdata_entries_o_cb(user_data, result, entries_h):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, entries_h)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_entries_o_cb = assign_mdata_entries_o_cb
 
         self.lib.safe_app.mdata_entries(app, info, user_data, _mdata_entries_o_cb)
 
@@ -456,7 +411,7 @@ def mdata_list_values(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataValue* ,uint64_t)")
-        def assignnoWay(user_data, result, values, values_len):
+        def noWay(user_data, result, values, values_len):
             #safeUtils.checkResult(result, self.ffi_app, user_data)
             #returnString = self.ffi_app.string(values.content)
             #print(returnString)
@@ -471,9 +426,6 @@ def mdata_list_values(self, timeout, log, thread_decorator):
         #self.lib.safe_app.mdata_list_values(app, info, user_data, noWay)
         
         log.warning(f'i even called the lib without errors')
-
-        # To ensure the reference is made before passing to ffi
-        noWay = assignnoWay
 
 
     self._mdata_list_values = _mdata_list_values
@@ -490,14 +442,11 @@ def mdata_mutate_entries(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_mdata_mutate_entries_o_cb(user_data, result):
+        def _mdata_mutate_entries_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_mutate_entries_o_cb = assign_mdata_mutate_entries_o_cb
 
         self.lib.safe_app.mdata_mutate_entries(app, info, actions_h, user_data, _mdata_mutate_entries_o_cb)
 
@@ -516,14 +465,11 @@ def mdata_list_permissions(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataPermissionsHandle)")
-        def assign_mdata_list_permissions_o_cb(user_data, result, perm_h):
+        def _mdata_list_permissions_o_cb(user_data, result, perm_h):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, perm_h)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_list_permissions_o_cb = assign_mdata_list_permissions_o_cb
 
         self.lib.safe_app.mdata_list_permissions(app, info, user_data, _mdata_list_permissions_o_cb)
 
@@ -541,14 +487,11 @@ def mdata_list_user_permissions(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,PermissionSet*)")
-        def assign_mdata_list_user_permissions_o_cb(user_data, result, perm_set):
+        def _mdata_list_user_permissions_o_cb(user_data, result, perm_set):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, perm_set)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_list_user_permissions_o_cb = assign_mdata_list_user_permissions_o_cb
 
         self.lib.safe_app.mdata_list_user_permissions(app, info, user_h, user_data, _mdata_list_user_permissions_o_cb)
 
@@ -567,14 +510,11 @@ def mdata_set_user_permissions(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_mdata_set_user_permissions_o_cb(user_data, result):
+        def _mdata_set_user_permissions_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_set_user_permissions_o_cb = assign_mdata_set_user_permissions_o_cb
 
         self.lib.safe_app.mdata_set_user_permissions(app, info, user_h, permission_set, version, user_data,
                                               _mdata_set_user_permissions_o_cb)
@@ -593,14 +533,11 @@ def mdata_del_user_permissions(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_mdata_del_user_permissions_o_cb(user_data, result):
+        def _mdata_del_user_permissions_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_del_user_permissions_o_cb = assign_mdata_del_user_permissions_o_cb
 
         self.lib.safe_app.mdata_del_user_permissions(app, info, user_h, version, user_data, _mdata_del_user_permissions_o_cb)
 
@@ -619,14 +556,11 @@ def mdata_permissions_new(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataPermissionsHandle)")
-        def assign_mdata_permissions_new_o_cb(user_data, result, perm_h):
+        def _mdata_permissions_new_o_cb(user_data, result, perm_h):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put(perm_h)
             if o_cb:
                 o_cb(user_data, result, perm_h)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_permissions_new_o_cb = assign_mdata_permissions_new_o_cb
 
         log.debug(f'attempting to get a permission handle with userdata {user_data} and app {app}')
         self.lib.safe_app.mdata_permissions_new(app, user_data, _mdata_permissions_new_o_cb)
@@ -646,14 +580,11 @@ def mdata_permissions_len(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uintptr_t)")
-        def assign_mdata_permissions_len_o_cb(user_data, result, size):
+        def _mdata_permissions_len_o_cb(user_data, result, size):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, size)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_permissions_len_o_cb = assign_mdata_permissions_len_o_cb
 
         self.lib.safe_app.mdata_permissions_len(app, permissions_h, user_data, _mdata_permissions_len_o_cb)
 
@@ -672,14 +603,11 @@ def mdata_permissions_get(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,PermissionSet*)")
-        def assign_mdata_permissions_get_o_cb(user_data, result, perm_set):
+        def _mdata_permissions_get_o_cb(user_data, result, perm_set):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, perm_set)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_permissions_get_o_cb = assign_mdata_permissions_get_o_cb
 
         self.lib.safe_app.mdata_permissions_get(app, permissions_h, user_h, user_data, _mdata_permissions_get_o_cb)
 
@@ -698,14 +626,11 @@ def mdata_list_permission_sets(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,UserPermissionSet* ,uintptr_t)")
-        def assign_mdata_list_permission_sets_o_cb(user_data, result, user_perm_sets, user_perm_sets_len):
+        def _mdata_list_permission_sets_o_cb(user_data, result, user_perm_sets, user_perm_sets_len):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, user_perm_sets, user_perm_sets_len)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_list_permission_sets_o_cb = assign_mdata_list_permission_sets_o_cb
 
         self.lib.safe_app.mdata_list_permission_sets(app, permissions_h, user_data, _mdata_list_permission_sets_o_cb)
 
@@ -724,14 +649,11 @@ def mdata_permissions_insert(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_mdata_permissions_insert_o_cb(user_data, result):
+        def _mdata_permissions_insert_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_permissions_insert_o_cb = assign_mdata_permissions_insert_o_cb
 
         self.lib.safe_app.mdata_permissions_insert(app, permissions_h, user_h, permission_set, user_data,
                                             _mdata_permissions_insert_o_cb)
@@ -751,14 +673,11 @@ def mdata_permissions_free(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_mdata_permissions_free_o_cb(user_data, result):
+        def _mdata_permissions_free_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_permissions_free_o_cb = assign_mdata_permissions_free_o_cb
 
         self.lib.safe_app.mdata_permissions_free(app, permissions_h, user_data, _mdata_permissions_free_o_cb)
 
@@ -777,14 +696,11 @@ def mdata_entry_actions_new(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataEntryActionsHandle)")
-        def assign_mdata_entry_actions_new_o_cb(user_data, result, entry_actions_h):
+        def _mdata_entry_actions_new_o_cb(user_data, result, entry_actions_h):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, entry_actions_h)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_entry_actions_new_o_cb = assign_mdata_entry_actions_new_o_cb
 
         self.lib.safe_app.mdata_entry_actions_new(app, user_data, _mdata_entry_actions_new_o_cb)
 
@@ -803,14 +719,11 @@ def mdata_entry_actions_insert(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_mdata_entry_actions_insert_o_cb(user_data, result):
+        def _mdata_entry_actions_insert_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_entry_actions_insert_o_cb = assign_mdata_entry_actions_insert_o_cb
 
         self.lib.safe_app.mdata_entry_actions_insert(app, actions_h, key, key_len, value, value_len, user_data,
                                               _mdata_entry_actions_insert_o_cb)
@@ -830,14 +743,11 @@ def mdata_entry_actions_update(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_mdata_entry_actions_update_o_cb(user_data, result):
+        def _mdata_entry_actions_update_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_entry_actions_update_o_cb = assign_mdata_entry_actions_update_o_cb
 
         self.lib.safe_app.mdata_entry_actions_update(app, actions_h, key, key_len, value, value_len,
                                                      entry_version, user_data, _mdata_entry_actions_update_o_cb)
@@ -856,14 +766,11 @@ def mdata_entry_actions_delete(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_mdata_entry_actions_delete_o_cb(user_data, result):
+        def _mdata_entry_actions_delete_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_entry_actions_delete_o_cb = assign_mdata_entry_actions_delete_o_cb
 
         self.lib.safe_app.mdata_entry_actions_delete(app, actions_h, key, key_len, entry_version, user_data,
                                               _mdata_entry_actions_delete_o_cb)
@@ -883,14 +790,11 @@ def mdata_entry_actions_free(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_mdata_entry_actions_free_o_cb(user_data, result):
+        def _mdata_entry_actions_free_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_entry_actions_free_o_cb = assign_mdata_entry_actions_free_o_cb
 
         self.lib.safe_app.mdata_entry_actions_free(app, actions_h, user_data, _mdata_entry_actions_free_o_cb)
 
@@ -909,7 +813,7 @@ def mdata_entries_new(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataEntriesHandle)")
-        def assign_mdata_entries_new_o_cb(user_data, result, entries_h):
+        def _mdata_entries_new_o_cb(user_data, result, entries_h):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put(entries_h)
             if o_cb:
@@ -917,9 +821,6 @@ def mdata_entries_new(self, timeout, log, thread_decorator):
         
         log.debug(f'attempting to get a entries handle with userdata {user_data} and app {app}')
         self.lib.safe_app.mdata_entries_new(app, user_data, _mdata_entries_new_o_cb)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_entries_new_o_cb = assign_mdata_entries_new_o_cb
 
 
     self._mdata_entries_new = _mdata_entries_new
@@ -936,14 +837,11 @@ def mdata_entries_insert(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_mdata_entries_insert_o_cb(user_data, result):
+        def _mdata_entries_insert_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_entries_insert_o_cb = assign_mdata_entries_insert_o_cb
 
         self.lib.safe_app.mdata_entries_insert(app, entries_h, key, key_len, value, value_len, user_data,
                                         _mdata_entries_insert_o_cb)
@@ -963,14 +861,11 @@ def mdata_entries_len(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uintptr_t)")
-        def assign_mdata_entries_len_o_cb(user_data, result, len):
+        def _mdata_entries_len_o_cb(user_data, result, len):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, len)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_entries_len_o_cb = assign_mdata_entries_len_o_cb
 
         self.lib.safe_app.mdata_entries_len(app, entries_h, user_data, _mdata_entries_len_o_cb)
 
@@ -989,14 +884,11 @@ def mdata_entries_get(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t ,uint64_t)")
-        def assign_mdata_entries_get_o_cb(user_data, result, content, content_len, version):
+        def _mdata_entries_get_o_cb(user_data, result, content, content_len, version):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, content, content_len, version)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_entries_get_o_cb = assign_mdata_entries_get_o_cb
 
         self.lib.safe_app.mdata_entries_get(app, entries_h, key, key_len, user_data, _mdata_entries_get_o_cb)
 
@@ -1015,14 +907,11 @@ def mdata_list_entries(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataEntry* ,uintptr_t)")
-        def assign_mdata_list_entries_o_cb(user_data, result, entries, entries_len):
+        def _mdata_list_entries_o_cb(user_data, result, entries, entries_len):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, entries, entries_len)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_list_entries_o_cb = assign_mdata_list_entries_o_cb
 
         self.lib.safe_app.mdata_list_entries(app, entries_h, user_data, _mdata_list_entries_o_cb)
 
@@ -1041,14 +930,11 @@ def mdata_entries_free(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_mdata_entries_free_o_cb(user_data, result):
+        def _mdata_entries_free_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _mdata_entries_free_o_cb = assign_mdata_entries_free_o_cb
 
         self.lib.safe_app.mdata_entries_free(app, entries_h, user_data, _mdata_entries_free_o_cb)
 
@@ -1281,14 +1167,11 @@ def test_create_app(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,App*)")
-        def assign_test_create_app_o_cb(user_data, result, app):
+        def _test_create_app_o_cb(user_data, result, app):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, app)
-
-        # To ensure the reference is made before passing to ffi
-        _test_create_app_o_cb = assign_test_create_app_o_cb
 
         self.lib.safe_app.test_create_app(app_id, user_data, _test_create_app_o_cb)
 
@@ -1307,14 +1190,11 @@ def test_create_app_with_access(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,App*)")
-        def assign_test_create_app_with_access_o_cb(user_data, result, o_app):
+        def _test_create_app_with_access_o_cb(user_data, result, o_app):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, o_app)
-
-        # To ensure the reference is made before passing to ffi
-        _test_create_app_with_access_o_cb = assign_test_create_app_with_access_o_cb
 
         self.lib.safe_app.test_create_app_with_access(auth_req, user_data, _test_create_app_with_access_o_cb)
 
@@ -1333,14 +1213,11 @@ def test_simulate_network_disconnect(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_test_simulate_network_disconnect_o_cb(user_data, result):
+        def _test_simulate_network_disconnect_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _test_simulate_network_disconnect_o_cb = assign_test_simulate_network_disconnect_o_cb
 
         self.lib.safe_app.test_simulate_network_disconnect(app, user_data, _test_simulate_network_disconnect_o_cb)
 
@@ -1359,14 +1236,11 @@ def app_init_logging(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_app_init_logging_o_cb(user_data, result):
+        def _app_init_logging_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _app_init_logging_o_cb = assign_app_init_logging_o_cb
 
         self.lib.safe_app.app_init_logging(output_file_name_override, user_data, _app_init_logging_o_cb)
 
@@ -1385,14 +1259,11 @@ def app_output_log_path(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,char*)")
-        def assign_app_output_log_path_o_cb(user_data, result, log_path):
+        def _app_output_log_path_o_cb(user_data, result, log_path):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, log_path)
-
-        # To ensure the reference is made before passing to ffi
-        _app_output_log_path_o_cb = assign_app_output_log_path_o_cb
 
         self.lib.safe_app.app_output_log_path(output_file_name, user_data, _app_output_log_path_o_cb)
 
@@ -1412,23 +1283,17 @@ def app_unregistered(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void*)")
-        def assign_app_unregistered_o_disconnect_notifier_cb(user_data):
+        def _app_unregistered_o_disconnect_notifier_cb(user_data):
             self.queue.put('gotResult')
             if o_disconnect_notifier_cb:
                 o_disconnect_notifier_cb(user_data)
 
-        # To ensure the reference is made before passing to ffi
-        _app_unregistered_o_disconnect_notifier_cb = assign_app_unregistered_o_disconnect_notifier_cb
-
         @self.ffi_app.callback("void(void* ,FfiResult* ,App*)")
-        def assign_app_unregistered_o_cb(user_data, result, app):
+        def _app_unregistered_o_cb(user_data, result, app):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, app)
-
-        # To ensure the reference is made before passing to ffi
-        _app_unregistered_o_cb = assign_app_unregistered_o_cb
 
         self.lib.safe_app.app_unregistered(bootstrap_config, bootstrap_config_len, user_data,
                                     _app_unregistered_o_disconnect_notifier_cb, _app_unregistered_o_cb)
@@ -1449,23 +1314,17 @@ def app_registered(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void*)")
-        def assign_app_registered_o_disconnect_notifier_cb(user_data):
+        def _app_registered_o_disconnect_notifier_cb(user_data):
             self.queue.put('gotResult')
             if o_disconnect_notifier_cb:
                 o_disconnect_notifier_cb(user_data)
 
-        # To ensure the reference is made before passing to ffi
-        _app_registered_o_disconnect_notifier_cb = assign_app_registered_o_disconnect_notifier_cb
-
         @self.ffi_app.callback("void(void* ,FfiResult* ,App*)")
-        def assign_app_registered_o_cb(user_data, result, app):
+        def _app_registered_o_cb(user_data, result, app):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put(app)
             if o_cb:
                 o_cb(user_data, result, app)
-
-        # To ensure the reference is made before passing to ffi
-        _app_registered_o_cb = assign_app_registered_o_cb
 
         self.lib.safe_app.app_registered(app_id, auth_granted, user_data, _app_registered_o_disconnect_notifier_cb,
                                   _app_registered_o_cb)
@@ -1485,14 +1344,11 @@ def app_reconnect(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_app_reconnect_o_cb(user_data, result):
+        def _app_reconnect_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _app_reconnect_o_cb = assign_app_reconnect_o_cb
 
         self.lib.safe_app.app_reconnect(app, user_data, _app_reconnect_o_cb)
 
@@ -1511,14 +1367,11 @@ def app_account_info(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,AccountInfo*)")
-        def assign_app_account_info_o_cb(user_data, result, account_info):
+        def _app_account_info_o_cb(user_data, result, account_info):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, account_info)
-
-        # To ensure the reference is made before passing to ffi
-        _app_account_info_o_cb = assign_app_account_info_o_cb
 
         self.lib.safe_app.app_account_info(app, user_data, _app_account_info_o_cb)
 
@@ -1537,14 +1390,11 @@ def app_exe_file_stem(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,char*)")
-        def assign_app_exe_file_stem_o_cb(user_data, result, filename):
+        def _app_exe_file_stem_o_cb(user_data, result, filename):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, filename)
-
-        # To ensure the reference is made before passing to ffi
-        _app_exe_file_stem_o_cb = assign_app_exe_file_stem_o_cb
 
         self.lib.safe_app.app_exe_file_stem(user_data, _app_exe_file_stem_o_cb)
 
@@ -1563,14 +1413,11 @@ def app_set_additional_search_path(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_app_set_additional_search_path_o_cb(user_data, result):
+        def _app_set_additional_search_path_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _app_set_additional_search_path_o_cb = assign_app_set_additional_search_path_o_cb
 
         self.lib.safe_app.app_set_additional_search_path(new_path, user_data, _app_set_additional_search_path_o_cb)
 
@@ -1603,14 +1450,11 @@ def app_reset_object_cache(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_app_reset_object_cache_o_cb(user_data, result):
+        def _app_reset_object_cache_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _app_reset_object_cache_o_cb = assign_app_reset_object_cache_o_cb
 
         self.lib.safe_app.app_reset_object_cache(app, user_data, _app_reset_object_cache_o_cb)
 
@@ -1629,14 +1473,11 @@ def app_container_name(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,char*)")
-        def assign_app_container_name_o_cb(user_data, result, container_name):
+        def _app_container_name_o_cb(user_data, result, container_name):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, container_name)
-
-        # To ensure the reference is made before passing to ffi
-        _app_container_name_o_cb = assign_app_container_name_o_cb
 
         self.lib.safe_app.app_container_name(app_id, user_data, _app_container_name_o_cb)
 
@@ -1655,15 +1496,12 @@ def encode_auth_req(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint32_t ,char*)")
-        def assign_encode_auth_req_o_cb(user_data, result, req_id, encoded):
+        def _encode_auth_req_o_cb(user_data, result, req_id, encoded):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             request = self.ffi_app.string(encoded)
             self.queue.put(request)
             if o_cb:
                 o_cb(user_data, result, req_id, encoded)
-
-        # To ensure the reference is made before passing to ffi
-        _encode_auth_req_o_cb = assign_encode_auth_req_o_cb
 
         self.lib.safe_app.encode_auth_req(req, user_data, _encode_auth_req_o_cb)
 
@@ -1681,14 +1519,11 @@ def encode_containers_req(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint32_t ,char*)")
-        def assign_encode_containers_req_o_cb(user_data, result, req_id, encoded):
+        def _encode_containers_req_o_cb(user_data, result, req_id, encoded):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, req_id, encoded)
-
-        # To ensure the reference is made before passing to ffi
-        _encode_containers_req_o_cb = assign_encode_containers_req_o_cb
 
         self.lib.safe_app.encode_containers_req(req, user_data, _encode_containers_req_o_cb)
 
@@ -1707,14 +1542,11 @@ def encode_unregistered_req(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint32_t ,char*)")
-        def assign_encode_unregistered_req_o_cb(user_data, result, req_id, encoded):
+        def _encode_unregistered_req_o_cb(user_data, result, req_id, encoded):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, req_id, encoded)
-
-        # To ensure the reference is made before passing to ffi
-        _encode_unregistered_req_o_cb = assign_encode_unregistered_req_o_cb
 
         self.lib.safe_app.encode_unregistered_req(extra_data, extra_data_len, user_data, _encode_unregistered_req_o_cb)
 
@@ -1733,14 +1565,11 @@ def encode_share_mdata_req(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint32_t ,char*)")
-        def assign_encode_share_mdata_req_o_cb(user_data, result, req_id, encoded):
+        def _encode_share_mdata_req_o_cb(user_data, result, req_id, encoded):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, req_id, encoded)
-
-        # To ensure the reference is made before passing to ffi
-        _encode_share_mdata_req_o_cb = assign_encode_share_mdata_req_o_cb
 
         self.lib.safe_app.encode_share_mdata_req(req, user_data, _encode_share_mdata_req_o_cb)
 
@@ -1765,59 +1594,41 @@ def decode_ipc_msg(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,uint32_t ,AuthGranted*)")
-        def assign_decode_ipc_msg_o_auth(user_data, req_id, auth_granted):
+        def _decode_ipc_msg_o_auth(user_data, req_id, auth_granted):
             self.queue.put(safeUtils.copy(auth_granted, self.ffi_app))
             if o_auth:
                 o_auth(user_data, req_id, auth_granted)
 
-        # To ensure the reference is made before passing to ffi
-        _decode_ipc_msg_o_auth = assign_decode_ipc_msg_o_auth
-
         @self.ffi_app.callback("void(void* ,uint32_t ,uint8_t* ,uintptr_t)")
-        def assign_decode_ipc_msg_o_unregistered(user_data, req_id, serialised_cfg, serialised_cfg_len):
+        def _decode_ipc_msg_o_unregistered(user_data, req_id, serialised_cfg, serialised_cfg_len):
             self.queue.put('gotResult')
             if o_unregistered:
                 o_unregistered(user_data, req_id, serialised_cfg, serialised_cfg_len)
 
-        # To ensure the reference is made before passing to ffi
-        _decode_ipc_msg_o_unregistered = assign_decode_ipc_msg_o_unregistered
-
         @self.ffi_app.callback("void(void* ,uint32_t)")
-        def assign_decode_ipc_msg_o_containers(user_data, req_id):
+        def _decode_ipc_msg_o_containers(user_data, req_id):
             self.queue.put('gotResult')
             if o_containers:
                 o_containers(user_data, req_id)
 
-        # To ensure the reference is made before passing to ffi
-        _decode_ipc_msg_o_containers = assign_decode_ipc_msg_o_containers
-
         @self.ffi_app.callback("void(void* ,uint32_t)")
-        def assign_decode_ipc_msg_o_share_mdata(user_data, req_id):
+        def _decode_ipc_msg_o_share_mdata(user_data, req_id):
             self.queue.put('gotResult')
             if o_share_mdata:
                 o_share_mdata(user_data, req_id)
 
-        # To ensure the reference is made before passing to ffi
-        _decode_ipc_msg_o_share_mdata = assign_decode_ipc_msg_o_share_mdata
-
         @self.ffi_app.callback("void(void*)")
-        def assign_decode_ipc_msg_o_revoked(user_data):
+        def _decode_ipc_msg_o_revoked(user_data):
             self.queue.put('gotResult')
             if o_revoked:
                 o_revoked(user_data)
 
-        # To ensure the reference is made before passing to ffi
-        _decode_ipc_msg_o_revoked = assign_decode_ipc_msg_o_revoked
-
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint32_t)")
-        def assign_decode_ipc_msg_o_err(user_data, result, req_id):
+        def _decode_ipc_msg_o_err(user_data, result, req_id):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_err:
                 o_err(user_data, result, req_id)
-
-        # To ensure the reference is made before passing to ffi
-        _decode_ipc_msg_o_err = assign_decode_ipc_msg_o_err
 
         self.lib.safe_app.decode_ipc_msg(msg, user_data, _decode_ipc_msg_o_auth, _decode_ipc_msg_o_unregistered,
                                   _decode_ipc_msg_o_containers, _decode_ipc_msg_o_share_mdata, _decode_ipc_msg_o_revoked,
@@ -1838,14 +1649,11 @@ def access_container_refresh_access_info(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_access_container_refresh_access_info_o_cb(user_data, result):
+        def _access_container_refresh_access_info_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _access_container_refresh_access_info_o_cb = assign_access_container_refresh_access_info_o_cb
 
         self.lib.safe_app.access_container_refresh_access_info(app, user_data, _access_container_refresh_access_info_o_cb)
 
@@ -1864,14 +1672,11 @@ def access_container_fetch(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,ContainerPermissions* ,uintptr_t)")
-        def assign_access_container_fetch_o_cb(user_data, result, container_perms, container_perms_len):
+        def _access_container_fetch_o_cb(user_data, result, container_perms, container_perms_len):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, container_perms, container_perms_len)
-
-        # To ensure the reference is made before passing to ffi
-        _access_container_fetch_o_cb = assign_access_container_fetch_o_cb
 
         self.lib.safe_app.access_container_fetch(app, user_data, _access_container_fetch_o_cb)
 
@@ -1890,14 +1695,11 @@ def access_container_get_container_mdata_info(self, timeout, log, thread_decorat
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataInfo*)")
-        def assign_access_container_get_container_mdata_info_o_cb(user_data, result, mdata_info):
+        def _access_container_get_container_mdata_info_o_cb(user_data, result, mdata_info):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, mdata_info)
-
-        # To ensure the reference is made before passing to ffi
-        _access_container_get_container_mdata_info_o_cb = assign_access_container_get_container_mdata_info_o_cb
 
         self.lib.safe_app.access_container_get_container_mdata_info(app, name, user_data,
                                                              _access_container_get_container_mdata_info_o_cb)
@@ -1917,14 +1719,11 @@ def dir_fetch_file(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,File* ,uint64_t)")
-        def assign_dir_fetch_file_o_cb(user_data, result, file, version):
+        def _dir_fetch_file_o_cb(user_data, result, file, version):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, file, version)
-
-        # To ensure the reference is made before passing to ffi
-        _dir_fetch_file_o_cb = assign_dir_fetch_file_o_cb
 
         self.lib.safe_app.dir_fetch_file(app, parent_info, file_name, user_data, _dir_fetch_file_o_cb)
 
@@ -1943,14 +1742,11 @@ def dir_insert_file(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_dir_insert_file_o_cb(user_data, result):
+        def _dir_insert_file_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _dir_insert_file_o_cb = assign_dir_insert_file_o_cb
 
         self.lib.safe_app.dir_insert_file(app, parent_info, file_name, file, user_data, _dir_insert_file_o_cb)
 
@@ -1969,14 +1765,11 @@ def dir_update_file(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint64_t)")
-        def assign_dir_update_file_o_cb(user_data, result, new_version):
+        def _dir_update_file_o_cb(user_data, result, new_version):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, new_version)
-
-        # To ensure the reference is made before passing to ffi
-        _dir_update_file_o_cb = assign_dir_update_file_o_cb
 
         self.lib.safe_app.dir_update_file(app, parent_info, file_name, file, version, user_data, _dir_update_file_o_cb)
 
@@ -1995,14 +1788,11 @@ def dir_delete_file(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint64_t)")
-        def assign_dir_delete_file_o_cb(user_data, result, new_version):
+        def _dir_delete_file_o_cb(user_data, result, new_version):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, new_version)
-
-        # To ensure the reference is made before passing to ffi
-        _dir_delete_file_o_cb = assign_dir_delete_file_o_cb
 
         self.lib.safe_app.dir_delete_file(app, parent_info, file_name, version, user_data, _dir_delete_file_o_cb)
 
@@ -2021,14 +1811,11 @@ def file_open(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,FileContextHandle)")
-        def assign_file_open_o_cb(user_data, result, file_h):
+        def _file_open_o_cb(user_data, result, file_h):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, file_h)
-
-        # To ensure the reference is made before passing to ffi
-        _file_open_o_cb = assign_file_open_o_cb
 
         self.lib.safe_app.file_open(app, parent_info, file, open_mode, user_data, _file_open_o_cb)
 
@@ -2047,14 +1834,11 @@ def file_size(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint64_t)")
-        def assign_file_size_o_cb(user_data, result, size):
+        def _file_size_o_cb(user_data, result, size):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, size)
-
-        # To ensure the reference is made before passing to ffi
-        _file_size_o_cb = assign_file_size_o_cb
 
         self.lib.safe_app.file_size(app, file_h, user_data, _file_size_o_cb)
 
@@ -2073,14 +1857,11 @@ def file_read(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
-        def assign_file_read_o_cb(user_data, result, data, data_len):
+        def _file_read_o_cb(user_data, result, data, data_len):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, data, data_len)
-
-        # To ensure the reference is made before passing to ffi
-        _file_read_o_cb = assign_file_read_o_cb
 
         self.lib.safe_app.file_read(app, file_h, position, len, user_data, _file_read_o_cb)
 
@@ -2099,14 +1880,11 @@ def file_write(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_file_write_o_cb(user_data, result):
+        def _file_write_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _file_write_o_cb = assign_file_write_o_cb
 
         self.lib.safe_app.file_write(app, file_h, data, data_len, user_data, _file_write_o_cb)
 
@@ -2125,14 +1903,11 @@ def file_close(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,File*)")
-        def assign_file_close_o_cb(user_data, result, file):
+        def _file_close_o_cb(user_data, result, file):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, file)
-
-        # To ensure the reference is made before passing to ffi
-        _file_close_o_cb = assign_file_close_o_cb
 
         self.lib.safe_app.file_close(app, file_h, user_data, _file_close_o_cb)
 
@@ -2151,14 +1926,11 @@ def app_pub_sign_key(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,SignPubKeyHandle)")
-        def assign_app_pub_sign_key_o_cb(user_data, result, handle):
+        def _app_pub_sign_key_o_cb(user_data, result, handle):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, handle)
-
-        # To ensure the reference is made before passing to ffi
-        _app_pub_sign_key_o_cb = assign_app_pub_sign_key_o_cb
 
         self.lib.safe_app.app_pub_sign_key(app, user_data, _app_pub_sign_key_o_cb)
 
@@ -2177,14 +1949,11 @@ def sign_generate_key_pair(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,SignPubKeyHandle ,SignSecKeyHandle)")
-        def assign_sign_generate_key_pair_o_cb(user_data, result, public_key_h, secret_key_h):
+        def _sign_generate_key_pair_o_cb(user_data, result, public_key_h, secret_key_h):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, public_key_h, secret_key_h)
-
-        # To ensure the reference is made before passing to ffi
-        _sign_generate_key_pair_o_cb = assign_sign_generate_key_pair_o_cb
 
         self.lib.safe_app.sign_generate_key_pair(app, user_data, _sign_generate_key_pair_o_cb)
 
@@ -2203,14 +1972,11 @@ def sign_pub_key_new(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,SignPubKeyHandle)")
-        def assign_sign_pub_key_new_o_cb(user_data, result, handle):
+        def _sign_pub_key_new_o_cb(user_data, result, handle):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, handle)
-
-        # To ensure the reference is made before passing to ffi
-        _sign_pub_key_new_o_cb = assign_sign_pub_key_new_o_cb
 
         self.lib.safe_app.sign_pub_key_new(app, data, user_data, _sign_pub_key_new_o_cb)
 
@@ -2229,14 +1995,11 @@ def sign_pub_key_get(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,SignPublicKey*)")
-        def assign_sign_pub_key_get_o_cb(user_data, result, pub_sign_key):
+        def _sign_pub_key_get_o_cb(user_data, result, pub_sign_key):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, pub_sign_key)
-
-        # To ensure the reference is made before passing to ffi
-        _sign_pub_key_get_o_cb = assign_sign_pub_key_get_o_cb
 
         self.lib.safe_app.sign_pub_key_get(app, handle, user_data, _sign_pub_key_get_o_cb)
 
@@ -2255,14 +2018,11 @@ def sign_pub_key_free(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_sign_pub_key_free_o_cb(user_data, result):
+        def _sign_pub_key_free_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _sign_pub_key_free_o_cb = assign_sign_pub_key_free_o_cb
 
         self.lib.safe_app.sign_pub_key_free(app, handle, user_data, _sign_pub_key_free_o_cb)
 
@@ -2281,14 +2041,11 @@ def sign_sec_key_new(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,SignSecKeyHandle)")
-        def assign_sign_sec_key_new_o_cb(user_data, result, handle):
+        def _sign_sec_key_new_o_cb(user_data, result, handle):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, handle)
-
-        # To ensure the reference is made before passing to ffi
-        _sign_sec_key_new_o_cb = assign_sign_sec_key_new_o_cb
 
         self.lib.safe_app.sign_sec_key_new(app, data, user_data, _sign_sec_key_new_o_cb)
 
@@ -2307,14 +2064,11 @@ def sign_sec_key_get(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,SignSecretKey*)")
-        def assign_sign_sec_key_get_o_cb(user_data, result, pub_sign_key):
+        def _sign_sec_key_get_o_cb(user_data, result, pub_sign_key):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, pub_sign_key)
-
-        # To ensure the reference is made before passing to ffi
-        _sign_sec_key_get_o_cb = assign_sign_sec_key_get_o_cb
 
         self.lib.safe_app.sign_sec_key_get(app, handle, user_data, _sign_sec_key_get_o_cb)
 
@@ -2333,14 +2087,11 @@ def sign_sec_key_free(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_sign_sec_key_free_o_cb(user_data, result):
+        def _sign_sec_key_free_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _sign_sec_key_free_o_cb = assign_sign_sec_key_free_o_cb
 
         self.lib.safe_app.sign_sec_key_free(app, handle, user_data, _sign_sec_key_free_o_cb)
 
@@ -2359,14 +2110,11 @@ def app_pub_enc_key(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,EncryptPubKeyHandle)")
-        def assign_app_pub_enc_key_o_cb(user_data, result, public_key_h):
+        def _app_pub_enc_key_o_cb(user_data, result, public_key_h):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, public_key_h)
-
-        # To ensure the reference is made before passing to ffi
-        _app_pub_enc_key_o_cb = assign_app_pub_enc_key_o_cb
 
         self.lib.safe_app.app_pub_enc_key(app, user_data, _app_pub_enc_key_o_cb)
 
@@ -2385,14 +2133,11 @@ def enc_generate_key_pair(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,EncryptPubKeyHandle ,EncryptSecKeyHandle)")
-        def assign_enc_generate_key_pair_o_cb(user_data, result, public_key_h, secret_key_h):
+        def _enc_generate_key_pair_o_cb(user_data, result, public_key_h, secret_key_h):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, public_key_h, secret_key_h)
-
-        # To ensure the reference is made before passing to ffi
-        _enc_generate_key_pair_o_cb = assign_enc_generate_key_pair_o_cb
 
         self.lib.safe_app.enc_generate_key_pair(app, user_data, _enc_generate_key_pair_o_cb)
 
@@ -2411,14 +2156,11 @@ def enc_pub_key_new(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,EncryptPubKeyHandle)")
-        def assign_enc_pub_key_new_o_cb(user_data, result, public_key_h):
+        def _enc_pub_key_new_o_cb(user_data, result, public_key_h):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, public_key_h)
-
-        # To ensure the reference is made before passing to ffi
-        _enc_pub_key_new_o_cb = assign_enc_pub_key_new_o_cb
 
         self.lib.safe_app.enc_pub_key_new(app, data, user_data, _enc_pub_key_new_o_cb)
 
@@ -2437,14 +2179,11 @@ def enc_pub_key_get(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,AsymPublicKey*)")
-        def assign_enc_pub_key_get_o_cb(user_data, result, pub_enc_key):
+        def _enc_pub_key_get_o_cb(user_data, result, pub_enc_key):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, pub_enc_key)
-
-        # To ensure the reference is made before passing to ffi
-        _enc_pub_key_get_o_cb = assign_enc_pub_key_get_o_cb
 
         self.lib.safe_app.enc_pub_key_get(app, handle, user_data, _enc_pub_key_get_o_cb)
 
@@ -2463,14 +2202,11 @@ def enc_pub_key_free(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_enc_pub_key_free_o_cb(user_data, result):
+        def _enc_pub_key_free_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _enc_pub_key_free_o_cb = assign_enc_pub_key_free_o_cb
 
         self.lib.safe_app.enc_pub_key_free(app, handle, user_data, _enc_pub_key_free_o_cb)
 
@@ -2489,14 +2225,11 @@ def enc_secret_key_new(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,EncryptSecKeyHandle)")
-        def assign_enc_secret_key_new_o_cb(user_data, result, sk_h):
+        def _enc_secret_key_new_o_cb(user_data, result, sk_h):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, sk_h)
-
-        # To ensure the reference is made before passing to ffi
-        _enc_secret_key_new_o_cb = assign_enc_secret_key_new_o_cb
 
         self.lib.safe_app.enc_secret_key_new(app, data, user_data, _enc_secret_key_new_o_cb)
 
@@ -2515,14 +2248,11 @@ def enc_secret_key_get(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,AsymSecretKey*)")
-        def assign_enc_secret_key_get_o_cb(user_data, result, sec_enc_key):
+        def _enc_secret_key_get_o_cb(user_data, result, sec_enc_key):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, sec_enc_key)
-
-        # To ensure the reference is made before passing to ffi
-        _enc_secret_key_get_o_cb = assign_enc_secret_key_get_o_cb
 
         self.lib.safe_app.enc_secret_key_get(app, handle, user_data, _enc_secret_key_get_o_cb)
 
@@ -2541,14 +2271,11 @@ def enc_secret_key_free(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_enc_secret_key_free_o_cb(user_data, result):
+        def _enc_secret_key_free_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _enc_secret_key_free_o_cb = assign_enc_secret_key_free_o_cb
 
         self.lib.safe_app.enc_secret_key_free(app, handle, user_data, _enc_secret_key_free_o_cb)
 
@@ -2567,14 +2294,11 @@ def sign(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
-        def assign_sign_o_cb(user_data, result, signed_data, signed_data_len):
+        def _sign_o_cb(user_data, result, signed_data, signed_data_len):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, signed_data, signed_data_len)
-
-        # To ensure the reference is made before passing to ffi
-        _sign_o_cb = assign_sign_o_cb
 
         self.lib.safe_app.sign(app, data, data_len, sign_sk_h, user_data, _sign_o_cb)
 
@@ -2593,14 +2317,11 @@ def verify(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
-        def assign_verify_o_cb(user_data, result, verified_data, verified_data_len):
+        def _verify_o_cb(user_data, result, verified_data, verified_data_len):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, verified_data, verified_data_len)
-
-        # To ensure the reference is made before passing to ffi
-        _verify_o_cb = assign_verify_o_cb
 
         self.lib.safe_app.verify(app, signed_data, signed_data_len, sign_pk_h, user_data, _verify_o_cb)
 
@@ -2619,14 +2340,11 @@ def encrypt(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
-        def assign_encrypt_o_cb(user_data, result, ciphertext, ciphertext_len):
+        def _encrypt_o_cb(user_data, result, ciphertext, ciphertext_len):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, ciphertext, ciphertext_len)
-
-        # To ensure the reference is made before passing to ffi
-        _encrypt_o_cb = assign_encrypt_o_cb
 
         self.lib.safe_app.encrypt(app, data, data_len, public_key_h, secret_key_h, user_data, _encrypt_o_cb)
 
@@ -2645,14 +2363,11 @@ def decrypt(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
-        def assign_decrypt_o_cb(user_data, result, plaintext, plaintext_len):
+        def _decrypt_o_cb(user_data, result, plaintext, plaintext_len):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, plaintext, plaintext_len)
-
-        # To ensure the reference is made before passing to ffi
-        _decrypt_o_cb = assign_decrypt_o_cb
 
         self.lib.safe_app.decrypt(app, data, data_len, public_key_h, secret_key_h, user_data, _decrypt_o_cb)
 
@@ -2671,14 +2386,11 @@ def encrypt_sealed_box(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
-        def assign_encrypt_sealed_box_o_cb(user_data, result, ciphertext, ciphertext_len):
+        def _encrypt_sealed_box_o_cb(user_data, result, ciphertext, ciphertext_len):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, ciphertext, ciphertext_len)
-
-        # To ensure the reference is made before passing to ffi
-        _encrypt_sealed_box_o_cb = assign_encrypt_sealed_box_o_cb
 
         self.lib.safe_app.encrypt_sealed_box(app, data, data_len, public_key_h, user_data, _encrypt_sealed_box_o_cb)
 
@@ -2697,14 +2409,11 @@ def decrypt_sealed_box(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
-        def assign_decrypt_sealed_box_o_cb(user_data, result, plaintext, plaintext_len):
+        def _decrypt_sealed_box_o_cb(user_data, result, plaintext, plaintext_len):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, plaintext, plaintext_len)
-
-        # To ensure the reference is made before passing to ffi
-        _decrypt_sealed_box_o_cb = assign_decrypt_sealed_box_o_cb
 
         self.lib.safe_app.decrypt_sealed_box(app, data, data_len, public_key_h, secret_key_h, user_data, _decrypt_sealed_box_o_cb)
 
@@ -2723,14 +2432,11 @@ def sha3_hash(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
-        def assign_sha3_hash_o_cb(user_data, result, hash, hash_len):
+        def _sha3_hash_o_cb(user_data, result, hash, hash_len):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, hash, hash_len)
-
-        # To ensure the reference is made before passing to ffi
-        _sha3_hash_o_cb = assign_sha3_hash_o_cb
 
         self.lib.safe_app.sha3_hash(data, data_len, user_data, _sha3_hash_o_cb)
 
@@ -2749,14 +2455,11 @@ def generate_nonce(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,AsymNonce*)")
-        def assign_generate_nonce_o_cb(user_data, result, nonce):
+        def _generate_nonce_o_cb(user_data, result, nonce):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, nonce)
-
-        # To ensure the reference is made before passing to ffi
-        _generate_nonce_o_cb = assign_generate_nonce_o_cb
 
         self.lib.safe_app.generate_nonce(user_data, _generate_nonce_o_cb)
 
@@ -2775,14 +2478,11 @@ def cipher_opt_new_plaintext(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,CipherOptHandle)")
-        def assign_cipher_opt_new_plaintext_o_cb(user_data, result, handle):
+        def _cipher_opt_new_plaintext_o_cb(user_data, result, handle):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, handle)
-
-        # To ensure the reference is made before passing to ffi
-        _cipher_opt_new_plaintext_o_cb = assign_cipher_opt_new_plaintext_o_cb
 
         self.lib.safe_app.cipher_opt_new_plaintext(app, user_data, _cipher_opt_new_plaintext_o_cb)
 
@@ -2801,14 +2501,11 @@ def cipher_opt_new_symmetric(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,CipherOptHandle)")
-        def assign_cipher_opt_new_symmetric_o_cb(user_data, result, handle):
+        def _cipher_opt_new_symmetric_o_cb(user_data, result, handle):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, handle)
-
-        # To ensure the reference is made before passing to ffi
-        _cipher_opt_new_symmetric_o_cb = assign_cipher_opt_new_symmetric_o_cb
 
         self.lib.safe_app.cipher_opt_new_symmetric(app, user_data, _cipher_opt_new_symmetric_o_cb)
 
@@ -2827,14 +2524,11 @@ def cipher_opt_new_asymmetric(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,CipherOptHandle)")
-        def assign_cipher_opt_new_asymmetric_o_cb(user_data, result, handle):
+        def _cipher_opt_new_asymmetric_o_cb(user_data, result, handle):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, handle)
-
-        # To ensure the reference is made before passing to ffi
-        _cipher_opt_new_asymmetric_o_cb = assign_cipher_opt_new_asymmetric_o_cb
 
         self.lib.safe_app.cipher_opt_new_asymmetric(app, peer_encrypt_key_h, user_data, _cipher_opt_new_asymmetric_o_cb)
 
@@ -2853,14 +2547,11 @@ def cipher_opt_free(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
-        def assign_cipher_opt_free_o_cb(user_data, result):
+        def _cipher_opt_free_o_cb(user_data, result):
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is made before passing to ffi
-        _cipher_opt_free_o_cb = assign_cipher_opt_free_o_cb
 
         self.lib.safe_app.cipher_opt_free(app, handle, user_data, _cipher_opt_free_o_cb)
 
