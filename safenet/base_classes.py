@@ -96,11 +96,7 @@ class BindableBase(interface.InterfacesWithSafe, HasLogger):
 
 class FullAuthenticator(BindableBase):
     # Update the dictionary to load all available methods when bind is called
-    ffi_auth_methods = {item:config.GLOBAL_DEFAULT_TIMEOUT for item in available_auth_defs}
-
-class FullApp(BindableBase):
-    # Update the dictionary to load all available methods when bind is called.  This will also include idata and mdata
-    ffi_app_methods = {item: config.GLOBAL_DEFAULT_TIMEOUT for item in available_app_defs}
+    ffi_auth_methods = {item:config.GLOBAL_DEFAULT_TIMEOUT for item in safe_auth_defs._AUTH_DEFS}
 
 class StandardApp(BindableBase):
     # Uses the standard methods

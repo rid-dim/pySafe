@@ -16,7 +16,7 @@ import safenet.immutabledata as immutabledata
 import safenet.sysUri as sysUri
 import queue
 
-class App(base.FullApp):
+class App(base.StandardApp):
     def __init__(self,
                  name='SAFE_Connection',
                  version='0.0.0',

@@ -68,14 +68,10 @@ def mdata_encode_metadata(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
         def _mdata_encode_metadata_o_cb(user_data, result, encoded, encoded_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_encode_metadata_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, encoded, encoded_len)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_encode_metadata_o_cb'].put(_mdata_encode_metadata_o_cb)
 
         self.lib.safe_app.mdata_encode_metadata(metadata, user_data, _mdata_encode_metadata_o_cb)
 
@@ -97,16 +93,12 @@ def mdata_list_keys(self, timeout, log, thread_decorator):
         # @self.ffi_app.callback("void(void* ,FfiResult* ,MDataKey* ,uintptr_t)")
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataKey* ,unsigned long)")
         def _mdata_list_keys_o_cb(user_data, result, keys, keys_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_list_keys_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             returnString = self.ffi.string(keys)
             log.debug(f'got {returnString}')
             self.queue.put(self.ffi.string(keys))
             if o_cb:
                 o_cb(user_data, result, keys, keys_len)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_list_keys_o_cb'].put(_mdata_list_keys_o_cb)
 
 
         self.lib.safe_app.mdata_list_keys(app, info, user_data, _mdata_list_keys_o_cb)
@@ -127,14 +119,10 @@ def mdata_info_new_private(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataInfo*)")
         def _mdata_info_new_private_o_cb(user_data, result, mdata_info):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_info_new_private_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, mdata_info)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_info_new_private_o_cb'].put(_mdata_info_new_private_o_cb)
 
         self.lib.safe_app.mdata_info_new_private(name, type_tag, secret_key, nonce, user_data, _mdata_info_new_private_o_cb)
 
@@ -154,14 +142,10 @@ def mdata_info_random_public(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataInfo*)")
         def _mdata_info_random_public_o_cb(user_data, result, mdata_info):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_info_random_public_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, mdata_info)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_info_random_public_o_cb'].put(_mdata_info_random_public_o_cb)
 
         self.lib.safe_app.mdata_info_random_public(type_tag, user_data, _mdata_info_random_public_o_cb)
 
@@ -181,14 +165,10 @@ def mdata_info_random_private(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataInfo*)")
         def _mdata_info_random_private_o_cb(user_data, result, mdata_info):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_info_random_private_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, mdata_info)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_info_random_private_o_cb'].put(_mdata_info_random_private_o_cb)
 
         self.lib.safe_app.mdata_info_random_private(type_tag, user_data, _mdata_info_random_private_o_cb)
 
@@ -208,14 +188,10 @@ def mdata_info_encrypt_entry_key(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
         def _mdata_info_encrypt_entry_key_o_cb(user_data, result, enc_entry_key, enc_entry_key_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_info_encrypt_entry_key_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, enc_entry_key, enc_entry_key_len)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_info_encrypt_entry_key_o_cb'].put(_mdata_info_encrypt_entry_key_o_cb)
 
         self.lib.safe_app.mdata_info_encrypt_entry_key(info, input, input_len, user_data, _mdata_info_encrypt_entry_key_o_cb)
 
@@ -235,14 +211,10 @@ def mdata_info_encrypt_entry_value(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
         def _mdata_info_encrypt_entry_value_o_cb(user_data, result, enc_entry_value, enc_entry_value_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_info_encrypt_entry_value_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, enc_entry_value, enc_entry_value_len)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_info_encrypt_entry_value_o_cb'].put(_mdata_info_encrypt_entry_value_o_cb)
 
         self.lib.safe_app.mdata_info_encrypt_entry_value(info, input, input_len, user_data, _mdata_info_encrypt_entry_value_o_cb)
 
@@ -262,14 +234,10 @@ def mdata_info_decrypt(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
         def _mdata_info_decrypt_o_cb(user_data, result, mdata_info_decrypt, mdata_info_decrypt_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_info_decrypt_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, mdata_info_decrypt, mdata_info_decrypt_len)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_info_decrypt_o_cb'].put(_mdata_info_decrypt_o_cb)
 
         self.lib.safe_app.mdata_info_decrypt(info, input, input_len, user_data, _mdata_info_decrypt_o_cb)
 
@@ -289,14 +257,10 @@ def mdata_info_serialise(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
         def _mdata_info_serialise_o_cb(user_data, result, encoded, encoded_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_info_serialise_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, encoded, encoded_len)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_info_serialise_o_cb'].put(_mdata_info_serialise_o_cb)
 
         self.lib.safe_app.mdata_info_serialise(info, user_data, _mdata_info_serialise_o_cb)
 
@@ -316,14 +280,10 @@ def mdata_info_deserialise(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataInfo*)")
         def _mdata_info_deserialise_o_cb(user_data, result, mdata_info):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_info_deserialise_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, mdata_info)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_info_deserialise_o_cb'].put(_mdata_info_deserialise_o_cb)
 
         self.lib.safe_app.mdata_info_deserialise(encoded_ptr, encoded_len, user_data, _mdata_info_deserialise_o_cb)
 
@@ -342,14 +302,10 @@ def mdata_put(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _mdata_put_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_put_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_put_o_cb'].put(_mdata_put_o_cb)
 
         self.lib.safe_app.mdata_put(app, info, permissions_h, entries_h, user_data, _mdata_put_o_cb)
 
@@ -369,14 +325,10 @@ def mdata_get_version(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint64_t)")
         def _mdata_get_version_o_cb(user_data, result, version):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_get_version_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, version)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_get_version_o_cb'].put(_mdata_get_version_o_cb)
 
         self.lib.safe_app.mdata_get_version(app, info, user_data, _mdata_get_version_o_cb)
 
@@ -396,14 +348,10 @@ def mdata_serialised_size(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint64_t)")
         def _mdata_serialised_size_o_cb(user_data, result, serialised_size):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_serialised_size_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, serialised_size)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_serialised_size_o_cb'].put(_mdata_serialised_size_o_cb)
 
         self.lib.safe_app.mdata_serialised_size(app, info, user_data, _mdata_serialised_size_o_cb)
 
@@ -423,14 +371,10 @@ def mdata_get_value(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t ,uint64_t)")
         def _mdata_get_value_o_cb(user_data, result, content, content_len, version):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_get_value_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, content, content_len, version)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_get_value_o_cb'].put(_mdata_get_value_o_cb)
 
         self.lib.safe_app.mdata_get_value(app, info, key, key_len, user_data, _mdata_get_value_o_cb)
 
@@ -450,14 +394,10 @@ def mdata_entries(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataEntriesHandle)")
         def _mdata_entries_o_cb(user_data, result, entries_h):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_entries_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, entries_h)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_entries_o_cb'].put(_mdata_entries_o_cb)
 
         self.lib.safe_app.mdata_entries(app, info, user_data, _mdata_entries_o_cb)
 
@@ -477,7 +417,6 @@ def mdata_list_values(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataValue* ,uint64_t)")
         def noWay(user_data, result, values, values_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}noWay'].get_nowait()}")
             #safeUtils.checkResult(result, self.ffi_app, user_data)
             #returnString = self.ffi_app.string(values.content)
             #print(returnString)
@@ -492,9 +431,6 @@ def mdata_list_values(self, timeout, log, thread_decorator):
         #self.lib.safe_app.mdata_list_values(app, info, user_data, noWay)
         
         log.warning(f'i even called the lib without errors')
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}noWay'].put(noWay)
 
 
     self._mdata_list_values = _mdata_list_values
@@ -512,14 +448,10 @@ def mdata_mutate_entries(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _mdata_mutate_entries_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_mutate_entries_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_mutate_entries_o_cb'].put(_mdata_mutate_entries_o_cb)
 
         self.lib.safe_app.mdata_mutate_entries(app, info, actions_h, user_data, _mdata_mutate_entries_o_cb)
 
@@ -539,14 +471,10 @@ def mdata_list_permissions(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataPermissionsHandle)")
         def _mdata_list_permissions_o_cb(user_data, result, perm_h):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_list_permissions_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, perm_h)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_list_permissions_o_cb'].put(_mdata_list_permissions_o_cb)
 
         self.lib.safe_app.mdata_list_permissions(app, info, user_data, _mdata_list_permissions_o_cb)
 
@@ -565,14 +493,10 @@ def mdata_list_user_permissions(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,PermissionSet*)")
         def _mdata_list_user_permissions_o_cb(user_data, result, perm_set):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_list_user_permissions_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, perm_set)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_list_user_permissions_o_cb'].put(_mdata_list_user_permissions_o_cb)
 
         self.lib.safe_app.mdata_list_user_permissions(app, info, user_h, user_data, _mdata_list_user_permissions_o_cb)
 
@@ -592,14 +516,10 @@ def mdata_set_user_permissions(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _mdata_set_user_permissions_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_set_user_permissions_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_set_user_permissions_o_cb'].put(_mdata_set_user_permissions_o_cb)
 
         self.lib.safe_app.mdata_set_user_permissions(app, info, user_h, permission_set, version, user_data,
                                               _mdata_set_user_permissions_o_cb)
@@ -619,14 +539,10 @@ def mdata_del_user_permissions(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _mdata_del_user_permissions_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_del_user_permissions_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_del_user_permissions_o_cb'].put(_mdata_del_user_permissions_o_cb)
 
         self.lib.safe_app.mdata_del_user_permissions(app, info, user_h, version, user_data, _mdata_del_user_permissions_o_cb)
 
@@ -646,14 +562,10 @@ def mdata_permissions_new(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataPermissionsHandle)")
         def _mdata_permissions_new_o_cb(user_data, result, perm_h):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_permissions_new_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put(perm_h)
             if o_cb:
                 o_cb(user_data, result, perm_h)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_permissions_new_o_cb'].put(_mdata_permissions_new_o_cb)
 
         log.debug(f'attempting to get a permission handle with userdata {user_data} and app {app}')
         self.lib.safe_app.mdata_permissions_new(app, user_data, _mdata_permissions_new_o_cb)
@@ -674,14 +586,10 @@ def mdata_permissions_len(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uintptr_t)")
         def _mdata_permissions_len_o_cb(user_data, result, size):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_permissions_len_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, size)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_permissions_len_o_cb'].put(_mdata_permissions_len_o_cb)
 
         self.lib.safe_app.mdata_permissions_len(app, permissions_h, user_data, _mdata_permissions_len_o_cb)
 
@@ -701,14 +609,10 @@ def mdata_permissions_get(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,PermissionSet*)")
         def _mdata_permissions_get_o_cb(user_data, result, perm_set):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_permissions_get_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, perm_set)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_permissions_get_o_cb'].put(_mdata_permissions_get_o_cb)
 
         self.lib.safe_app.mdata_permissions_get(app, permissions_h, user_h, user_data, _mdata_permissions_get_o_cb)
 
@@ -728,14 +632,10 @@ def mdata_list_permission_sets(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,UserPermissionSet* ,uintptr_t)")
         def _mdata_list_permission_sets_o_cb(user_data, result, user_perm_sets, user_perm_sets_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_list_permission_sets_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, user_perm_sets, user_perm_sets_len)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_list_permission_sets_o_cb'].put(_mdata_list_permission_sets_o_cb)
 
         self.lib.safe_app.mdata_list_permission_sets(app, permissions_h, user_data, _mdata_list_permission_sets_o_cb)
 
@@ -755,14 +655,10 @@ def mdata_permissions_insert(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _mdata_permissions_insert_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_permissions_insert_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_permissions_insert_o_cb'].put(_mdata_permissions_insert_o_cb)
 
         self.lib.safe_app.mdata_permissions_insert(app, permissions_h, user_h, permission_set, user_data,
                                             _mdata_permissions_insert_o_cb)
@@ -783,14 +679,10 @@ def mdata_permissions_free(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _mdata_permissions_free_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_permissions_free_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_permissions_free_o_cb'].put(_mdata_permissions_free_o_cb)
 
         self.lib.safe_app.mdata_permissions_free(app, permissions_h, user_data, _mdata_permissions_free_o_cb)
 
@@ -810,14 +702,10 @@ def mdata_entry_actions_new(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataEntryActionsHandle)")
         def _mdata_entry_actions_new_o_cb(user_data, result, entry_actions_h):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_entry_actions_new_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, entry_actions_h)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_entry_actions_new_o_cb'].put(_mdata_entry_actions_new_o_cb)
 
         self.lib.safe_app.mdata_entry_actions_new(app, user_data, _mdata_entry_actions_new_o_cb)
 
@@ -837,14 +725,10 @@ def mdata_entry_actions_insert(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _mdata_entry_actions_insert_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_entry_actions_insert_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_entry_actions_insert_o_cb'].put(_mdata_entry_actions_insert_o_cb)
 
         self.lib.safe_app.mdata_entry_actions_insert(app, actions_h, key, key_len, value, value_len, user_data,
                                               _mdata_entry_actions_insert_o_cb)
@@ -865,14 +749,10 @@ def mdata_entry_actions_update(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _mdata_entry_actions_update_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_entry_actions_update_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_entry_actions_update_o_cb'].put(_mdata_entry_actions_update_o_cb)
 
         self.lib.safe_app.mdata_entry_actions_update(app, actions_h, key, key_len, value, value_len,
                                                      entry_version, user_data, _mdata_entry_actions_update_o_cb)
@@ -892,14 +772,10 @@ def mdata_entry_actions_delete(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _mdata_entry_actions_delete_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_entry_actions_delete_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_entry_actions_delete_o_cb'].put(_mdata_entry_actions_delete_o_cb)
 
         self.lib.safe_app.mdata_entry_actions_delete(app, actions_h, key, key_len, entry_version, user_data,
                                               _mdata_entry_actions_delete_o_cb)
@@ -920,14 +796,10 @@ def mdata_entry_actions_free(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _mdata_entry_actions_free_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_entry_actions_free_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_entry_actions_free_o_cb'].put(_mdata_entry_actions_free_o_cb)
 
         self.lib.safe_app.mdata_entry_actions_free(app, actions_h, user_data, _mdata_entry_actions_free_o_cb)
 
@@ -947,7 +819,6 @@ def mdata_entries_new(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataEntriesHandle)")
         def _mdata_entries_new_o_cb(user_data, result, entries_h):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_entries_new_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put(entries_h)
             if o_cb:
@@ -955,9 +826,6 @@ def mdata_entries_new(self, timeout, log, thread_decorator):
         
         log.debug(f'attempting to get a entries handle with userdata {user_data} and app {app}')
         self.lib.safe_app.mdata_entries_new(app, user_data, _mdata_entries_new_o_cb)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_entries_new_o_cb'].put(_mdata_entries_new_o_cb)
 
 
     self._mdata_entries_new = _mdata_entries_new
@@ -975,14 +843,10 @@ def mdata_entries_insert(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _mdata_entries_insert_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_entries_insert_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_entries_insert_o_cb'].put(_mdata_entries_insert_o_cb)
 
         self.lib.safe_app.mdata_entries_insert(app, entries_h, key, key_len, value, value_len, user_data,
                                         _mdata_entries_insert_o_cb)
@@ -1003,14 +867,10 @@ def mdata_entries_len(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uintptr_t)")
         def _mdata_entries_len_o_cb(user_data, result, len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_entries_len_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, len)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_entries_len_o_cb'].put(_mdata_entries_len_o_cb)
 
         self.lib.safe_app.mdata_entries_len(app, entries_h, user_data, _mdata_entries_len_o_cb)
 
@@ -1030,14 +890,10 @@ def mdata_entries_get(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t ,uint64_t)")
         def _mdata_entries_get_o_cb(user_data, result, content, content_len, version):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_entries_get_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, content, content_len, version)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_entries_get_o_cb'].put(_mdata_entries_get_o_cb)
 
         self.lib.safe_app.mdata_entries_get(app, entries_h, key, key_len, user_data, _mdata_entries_get_o_cb)
 
@@ -1057,14 +913,10 @@ def mdata_list_entries(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataEntry* ,uintptr_t)")
         def _mdata_list_entries_o_cb(user_data, result, entries, entries_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_list_entries_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, entries, entries_len)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_list_entries_o_cb'].put(_mdata_list_entries_o_cb)
 
         self.lib.safe_app.mdata_list_entries(app, entries_h, user_data, _mdata_list_entries_o_cb)
 
@@ -1084,14 +936,10 @@ def mdata_entries_free(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _mdata_entries_free_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_entries_free_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_mdata_entries_free_o_cb'].put(_mdata_entries_free_o_cb)
 
         self.lib.safe_app.mdata_entries_free(app, entries_h, user_data, _mdata_entries_free_o_cb)
 
@@ -1325,14 +1173,10 @@ def test_create_app(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,App*)")
         def _test_create_app_o_cb(user_data, result, app):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_test_create_app_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, app)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_test_create_app_o_cb'].put(_test_create_app_o_cb)
 
         self.lib.safe_app.test_create_app(app_id, user_data, _test_create_app_o_cb)
 
@@ -1352,14 +1196,10 @@ def test_create_app_with_access(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,App*)")
         def _test_create_app_with_access_o_cb(user_data, result, o_app):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_test_create_app_with_access_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, o_app)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_test_create_app_with_access_o_cb'].put(_test_create_app_with_access_o_cb)
 
         self.lib.safe_app.test_create_app_with_access(auth_req, user_data, _test_create_app_with_access_o_cb)
 
@@ -1379,14 +1219,10 @@ def test_simulate_network_disconnect(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _test_simulate_network_disconnect_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_test_simulate_network_disconnect_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_test_simulate_network_disconnect_o_cb'].put(_test_simulate_network_disconnect_o_cb)
 
         self.lib.safe_app.test_simulate_network_disconnect(app, user_data, _test_simulate_network_disconnect_o_cb)
 
@@ -1406,14 +1242,10 @@ def app_init_logging(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _app_init_logging_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_app_init_logging_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_app_init_logging_o_cb'].put(_app_init_logging_o_cb)
 
         self.lib.safe_app.app_init_logging(output_file_name_override, user_data, _app_init_logging_o_cb)
 
@@ -1433,14 +1265,10 @@ def app_output_log_path(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,char*)")
         def _app_output_log_path_o_cb(user_data, result, log_path):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_app_output_log_path_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, log_path)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_app_output_log_path_o_cb'].put(_app_output_log_path_o_cb)
 
         self.lib.safe_app.app_output_log_path(output_file_name, user_data, _app_output_log_path_o_cb)
 
@@ -1461,24 +1289,16 @@ def app_unregistered(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void*)")
         def _app_unregistered_o_disconnect_notifier_cb(user_data):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_app_unregistered_o_disconnect_notifier_cb'].get_nowait()}")
             self.queue.put('gotResult')
             if o_disconnect_notifier_cb:
                 o_disconnect_notifier_cb(user_data)
 
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_app_unregistered_o_disconnect_notifier_cb'].put(_app_unregistered_o_disconnect_notifier_cb)
-
         @self.ffi_app.callback("void(void* ,FfiResult* ,App*)")
         def _app_unregistered_o_cb(user_data, result, app):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_app_unregistered_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, app)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_app_unregistered_o_cb'].put(_app_unregistered_o_cb)
 
         self.lib.safe_app.app_unregistered(bootstrap_config, bootstrap_config_len, user_data,
                                     _app_unregistered_o_disconnect_notifier_cb, _app_unregistered_o_cb)
@@ -1500,24 +1320,16 @@ def app_registered(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void*)")
         def _app_registered_o_disconnect_notifier_cb(user_data):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_app_registered_o_disconnect_notifier_cb'].get_nowait()}")
             self.queue.put('gotResult')
             if o_disconnect_notifier_cb:
                 o_disconnect_notifier_cb(user_data)
 
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_app_registered_o_disconnect_notifier_cb'].put(_app_registered_o_disconnect_notifier_cb)
-
         @self.ffi_app.callback("void(void* ,FfiResult* ,App*)")
         def _app_registered_o_cb(user_data, result, app):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_app_registered_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put(app)
             if o_cb:
                 o_cb(user_data, result, app)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_app_registered_o_cb'].put(_app_registered_o_cb)
 
         self.lib.safe_app.app_registered(app_id, auth_granted, user_data, _app_registered_o_disconnect_notifier_cb,
                                   _app_registered_o_cb)
@@ -1538,14 +1350,10 @@ def app_reconnect(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _app_reconnect_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_app_reconnect_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_app_reconnect_o_cb'].put(_app_reconnect_o_cb)
 
         self.lib.safe_app.app_reconnect(app, user_data, _app_reconnect_o_cb)
 
@@ -1565,14 +1373,10 @@ def app_account_info(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,AccountInfo*)")
         def _app_account_info_o_cb(user_data, result, account_info):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_app_account_info_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, account_info)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_app_account_info_o_cb'].put(_app_account_info_o_cb)
 
         self.lib.safe_app.app_account_info(app, user_data, _app_account_info_o_cb)
 
@@ -1592,14 +1396,10 @@ def app_exe_file_stem(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,char*)")
         def _app_exe_file_stem_o_cb(user_data, result, filename):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_app_exe_file_stem_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, filename)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_app_exe_file_stem_o_cb'].put(_app_exe_file_stem_o_cb)
 
         self.lib.safe_app.app_exe_file_stem(user_data, _app_exe_file_stem_o_cb)
 
@@ -1619,14 +1419,10 @@ def app_set_additional_search_path(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _app_set_additional_search_path_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_app_set_additional_search_path_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_app_set_additional_search_path_o_cb'].put(_app_set_additional_search_path_o_cb)
 
         self.lib.safe_app.app_set_additional_search_path(new_path, user_data, _app_set_additional_search_path_o_cb)
 
@@ -1660,14 +1456,10 @@ def app_reset_object_cache(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _app_reset_object_cache_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_app_reset_object_cache_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_app_reset_object_cache_o_cb'].put(_app_reset_object_cache_o_cb)
 
         self.lib.safe_app.app_reset_object_cache(app, user_data, _app_reset_object_cache_o_cb)
 
@@ -1687,14 +1479,10 @@ def app_container_name(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,char*)")
         def _app_container_name_o_cb(user_data, result, container_name):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_app_container_name_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, container_name)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_app_container_name_o_cb'].put(_app_container_name_o_cb)
 
         self.lib.safe_app.app_container_name(app_id, user_data, _app_container_name_o_cb)
 
@@ -1714,15 +1502,11 @@ def encode_auth_req(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint32_t ,char*)")
         def _encode_auth_req_o_cb(user_data, result, req_id, encoded):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_encode_auth_req_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             request = self.ffi_app.string(encoded)
             self.queue.put(request)
             if o_cb:
                 o_cb(user_data, result, req_id, encoded)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_encode_auth_req_o_cb'].put(_encode_auth_req_o_cb)
 
         self.lib.safe_app.encode_auth_req(req, user_data, _encode_auth_req_o_cb)
 
@@ -1741,14 +1525,10 @@ def encode_containers_req(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint32_t ,char*)")
         def _encode_containers_req_o_cb(user_data, result, req_id, encoded):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_encode_containers_req_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, req_id, encoded)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_encode_containers_req_o_cb'].put(_encode_containers_req_o_cb)
 
         self.lib.safe_app.encode_containers_req(req, user_data, _encode_containers_req_o_cb)
 
@@ -1768,14 +1548,10 @@ def encode_unregistered_req(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint32_t ,char*)")
         def _encode_unregistered_req_o_cb(user_data, result, req_id, encoded):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_encode_unregistered_req_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, req_id, encoded)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_encode_unregistered_req_o_cb'].put(_encode_unregistered_req_o_cb)
 
         self.lib.safe_app.encode_unregistered_req(extra_data, extra_data_len, user_data, _encode_unregistered_req_o_cb)
 
@@ -1795,14 +1571,10 @@ def encode_share_mdata_req(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint32_t ,char*)")
         def _encode_share_mdata_req_o_cb(user_data, result, req_id, encoded):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_encode_share_mdata_req_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, req_id, encoded)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_encode_share_mdata_req_o_cb'].put(_encode_share_mdata_req_o_cb)
 
         self.lib.safe_app.encode_share_mdata_req(req, user_data, _encode_share_mdata_req_o_cb)
 
@@ -1828,64 +1600,40 @@ def decode_ipc_msg(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,uint32_t ,AuthGranted*)")
         def _decode_ipc_msg_o_auth(user_data, req_id, auth_granted):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_decode_ipc_msg_o_auth'].get_nowait()}")
             self.queue.put(safeUtils.copy(auth_granted, self.ffi_app))
             if o_auth:
                 o_auth(user_data, req_id, auth_granted)
 
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_decode_ipc_msg_o_auth'].put(_decode_ipc_msg_o_auth)
-
         @self.ffi_app.callback("void(void* ,uint32_t ,uint8_t* ,uintptr_t)")
         def _decode_ipc_msg_o_unregistered(user_data, req_id, serialised_cfg, serialised_cfg_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_decode_ipc_msg_o_unregistered'].get_nowait()}")
             self.queue.put('gotResult')
             if o_unregistered:
                 o_unregistered(user_data, req_id, serialised_cfg, serialised_cfg_len)
 
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_decode_ipc_msg_o_unregistered'].put(_decode_ipc_msg_o_unregistered)
-
         @self.ffi_app.callback("void(void* ,uint32_t)")
         def _decode_ipc_msg_o_containers(user_data, req_id):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_decode_ipc_msg_o_containers'].get_nowait()}")
             self.queue.put('gotResult')
             if o_containers:
                 o_containers(user_data, req_id)
 
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_decode_ipc_msg_o_containers'].put(_decode_ipc_msg_o_containers)
-
         @self.ffi_app.callback("void(void* ,uint32_t)")
         def _decode_ipc_msg_o_share_mdata(user_data, req_id):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_decode_ipc_msg_o_share_mdata'].get_nowait()}")
             self.queue.put('gotResult')
             if o_share_mdata:
                 o_share_mdata(user_data, req_id)
 
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_decode_ipc_msg_o_share_mdata'].put(_decode_ipc_msg_o_share_mdata)
-
         @self.ffi_app.callback("void(void*)")
         def _decode_ipc_msg_o_revoked(user_data):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_decode_ipc_msg_o_revoked'].get_nowait()}")
             self.queue.put('gotResult')
             if o_revoked:
                 o_revoked(user_data)
 
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_decode_ipc_msg_o_revoked'].put(_decode_ipc_msg_o_revoked)
-
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint32_t)")
         def _decode_ipc_msg_o_err(user_data, result, req_id):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_decode_ipc_msg_o_err'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_err:
                 o_err(user_data, result, req_id)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_decode_ipc_msg_o_err'].put(_decode_ipc_msg_o_err)
 
         self.lib.safe_app.decode_ipc_msg(msg, user_data, _decode_ipc_msg_o_auth, _decode_ipc_msg_o_unregistered,
                                   _decode_ipc_msg_o_containers, _decode_ipc_msg_o_share_mdata, _decode_ipc_msg_o_revoked,
@@ -1907,14 +1655,10 @@ def access_container_refresh_access_info(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _access_container_refresh_access_info_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_access_container_refresh_access_info_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_access_container_refresh_access_info_o_cb'].put(_access_container_refresh_access_info_o_cb)
 
         self.lib.safe_app.access_container_refresh_access_info(app, user_data, _access_container_refresh_access_info_o_cb)
 
@@ -1934,14 +1678,10 @@ def access_container_fetch(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,ContainerPermissions* ,uintptr_t)")
         def _access_container_fetch_o_cb(user_data, result, container_perms, container_perms_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_access_container_fetch_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, container_perms, container_perms_len)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_access_container_fetch_o_cb'].put(_access_container_fetch_o_cb)
 
         self.lib.safe_app.access_container_fetch(app, user_data, _access_container_fetch_o_cb)
 
@@ -1961,14 +1701,10 @@ def access_container_get_container_mdata_info(self, timeout, log, thread_decorat
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataInfo*)")
         def _access_container_get_container_mdata_info_o_cb(user_data, result, mdata_info):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_access_container_get_container_mdata_info_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, mdata_info)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_access_container_get_container_mdata_info_o_cb'].put(_access_container_get_container_mdata_info_o_cb)
 
         self.lib.safe_app.access_container_get_container_mdata_info(app, name, user_data,
                                                              _access_container_get_container_mdata_info_o_cb)
@@ -1989,14 +1725,10 @@ def dir_fetch_file(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,File* ,uint64_t)")
         def _dir_fetch_file_o_cb(user_data, result, file, version):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_dir_fetch_file_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, file, version)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_dir_fetch_file_o_cb'].put(_dir_fetch_file_o_cb)
 
         self.lib.safe_app.dir_fetch_file(app, parent_info, file_name, user_data, _dir_fetch_file_o_cb)
 
@@ -2016,14 +1748,10 @@ def dir_insert_file(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _dir_insert_file_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_dir_insert_file_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_dir_insert_file_o_cb'].put(_dir_insert_file_o_cb)
 
         self.lib.safe_app.dir_insert_file(app, parent_info, file_name, file, user_data, _dir_insert_file_o_cb)
 
@@ -2043,14 +1771,10 @@ def dir_update_file(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint64_t)")
         def _dir_update_file_o_cb(user_data, result, new_version):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_dir_update_file_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, new_version)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_dir_update_file_o_cb'].put(_dir_update_file_o_cb)
 
         self.lib.safe_app.dir_update_file(app, parent_info, file_name, file, version, user_data, _dir_update_file_o_cb)
 
@@ -2070,14 +1794,10 @@ def dir_delete_file(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint64_t)")
         def _dir_delete_file_o_cb(user_data, result, new_version):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_dir_delete_file_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, new_version)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_dir_delete_file_o_cb'].put(_dir_delete_file_o_cb)
 
         self.lib.safe_app.dir_delete_file(app, parent_info, file_name, version, user_data, _dir_delete_file_o_cb)
 
@@ -2097,14 +1817,10 @@ def file_open(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,FileContextHandle)")
         def _file_open_o_cb(user_data, result, file_h):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_file_open_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, file_h)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_file_open_o_cb'].put(_file_open_o_cb)
 
         self.lib.safe_app.file_open(app, parent_info, file, open_mode, user_data, _file_open_o_cb)
 
@@ -2124,14 +1840,10 @@ def file_size(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint64_t)")
         def _file_size_o_cb(user_data, result, size):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_file_size_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, size)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_file_size_o_cb'].put(_file_size_o_cb)
 
         self.lib.safe_app.file_size(app, file_h, user_data, _file_size_o_cb)
 
@@ -2151,14 +1863,10 @@ def file_read(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
         def _file_read_o_cb(user_data, result, data, data_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_file_read_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, data, data_len)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_file_read_o_cb'].put(_file_read_o_cb)
 
         self.lib.safe_app.file_read(app, file_h, position, len, user_data, _file_read_o_cb)
 
@@ -2178,14 +1886,10 @@ def file_write(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _file_write_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_file_write_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_file_write_o_cb'].put(_file_write_o_cb)
 
         self.lib.safe_app.file_write(app, file_h, data, data_len, user_data, _file_write_o_cb)
 
@@ -2205,14 +1909,10 @@ def file_close(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,File*)")
         def _file_close_o_cb(user_data, result, file):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_file_close_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, file)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_file_close_o_cb'].put(_file_close_o_cb)
 
         self.lib.safe_app.file_close(app, file_h, user_data, _file_close_o_cb)
 
@@ -2232,14 +1932,10 @@ def app_pub_sign_key(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,SignPubKeyHandle)")
         def _app_pub_sign_key_o_cb(user_data, result, handle):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_app_pub_sign_key_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, handle)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_app_pub_sign_key_o_cb'].put(_app_pub_sign_key_o_cb)
 
         self.lib.safe_app.app_pub_sign_key(app, user_data, _app_pub_sign_key_o_cb)
 
@@ -2259,14 +1955,10 @@ def sign_generate_key_pair(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,SignPubKeyHandle ,SignSecKeyHandle)")
         def _sign_generate_key_pair_o_cb(user_data, result, public_key_h, secret_key_h):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_sign_generate_key_pair_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, public_key_h, secret_key_h)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_sign_generate_key_pair_o_cb'].put(_sign_generate_key_pair_o_cb)
 
         self.lib.safe_app.sign_generate_key_pair(app, user_data, _sign_generate_key_pair_o_cb)
 
@@ -2286,14 +1978,10 @@ def sign_pub_key_new(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,SignPubKeyHandle)")
         def _sign_pub_key_new_o_cb(user_data, result, handle):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_sign_pub_key_new_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, handle)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_sign_pub_key_new_o_cb'].put(_sign_pub_key_new_o_cb)
 
         self.lib.safe_app.sign_pub_key_new(app, data, user_data, _sign_pub_key_new_o_cb)
 
@@ -2313,14 +2001,10 @@ def sign_pub_key_get(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,SignPublicKey*)")
         def _sign_pub_key_get_o_cb(user_data, result, pub_sign_key):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_sign_pub_key_get_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, pub_sign_key)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_sign_pub_key_get_o_cb'].put(_sign_pub_key_get_o_cb)
 
         self.lib.safe_app.sign_pub_key_get(app, handle, user_data, _sign_pub_key_get_o_cb)
 
@@ -2340,14 +2024,10 @@ def sign_pub_key_free(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _sign_pub_key_free_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_sign_pub_key_free_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_sign_pub_key_free_o_cb'].put(_sign_pub_key_free_o_cb)
 
         self.lib.safe_app.sign_pub_key_free(app, handle, user_data, _sign_pub_key_free_o_cb)
 
@@ -2367,14 +2047,10 @@ def sign_sec_key_new(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,SignSecKeyHandle)")
         def _sign_sec_key_new_o_cb(user_data, result, handle):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_sign_sec_key_new_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, handle)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_sign_sec_key_new_o_cb'].put(_sign_sec_key_new_o_cb)
 
         self.lib.safe_app.sign_sec_key_new(app, data, user_data, _sign_sec_key_new_o_cb)
 
@@ -2394,14 +2070,10 @@ def sign_sec_key_get(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,SignSecretKey*)")
         def _sign_sec_key_get_o_cb(user_data, result, pub_sign_key):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_sign_sec_key_get_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, pub_sign_key)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_sign_sec_key_get_o_cb'].put(_sign_sec_key_get_o_cb)
 
         self.lib.safe_app.sign_sec_key_get(app, handle, user_data, _sign_sec_key_get_o_cb)
 
@@ -2421,14 +2093,10 @@ def sign_sec_key_free(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _sign_sec_key_free_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_sign_sec_key_free_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_sign_sec_key_free_o_cb'].put(_sign_sec_key_free_o_cb)
 
         self.lib.safe_app.sign_sec_key_free(app, handle, user_data, _sign_sec_key_free_o_cb)
 
@@ -2448,14 +2116,10 @@ def app_pub_enc_key(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,EncryptPubKeyHandle)")
         def _app_pub_enc_key_o_cb(user_data, result, public_key_h):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_app_pub_enc_key_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, public_key_h)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_app_pub_enc_key_o_cb'].put(_app_pub_enc_key_o_cb)
 
         self.lib.safe_app.app_pub_enc_key(app, user_data, _app_pub_enc_key_o_cb)
 
@@ -2475,14 +2139,10 @@ def enc_generate_key_pair(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,EncryptPubKeyHandle ,EncryptSecKeyHandle)")
         def _enc_generate_key_pair_o_cb(user_data, result, public_key_h, secret_key_h):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_enc_generate_key_pair_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, public_key_h, secret_key_h)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_enc_generate_key_pair_o_cb'].put(_enc_generate_key_pair_o_cb)
 
         self.lib.safe_app.enc_generate_key_pair(app, user_data, _enc_generate_key_pair_o_cb)
 
@@ -2502,14 +2162,10 @@ def enc_pub_key_new(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,EncryptPubKeyHandle)")
         def _enc_pub_key_new_o_cb(user_data, result, public_key_h):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_enc_pub_key_new_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, public_key_h)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_enc_pub_key_new_o_cb'].put(_enc_pub_key_new_o_cb)
 
         self.lib.safe_app.enc_pub_key_new(app, data, user_data, _enc_pub_key_new_o_cb)
 
@@ -2529,14 +2185,10 @@ def enc_pub_key_get(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,AsymPublicKey*)")
         def _enc_pub_key_get_o_cb(user_data, result, pub_enc_key):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_enc_pub_key_get_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, pub_enc_key)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_enc_pub_key_get_o_cb'].put(_enc_pub_key_get_o_cb)
 
         self.lib.safe_app.enc_pub_key_get(app, handle, user_data, _enc_pub_key_get_o_cb)
 
@@ -2556,14 +2208,10 @@ def enc_pub_key_free(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _enc_pub_key_free_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_enc_pub_key_free_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_enc_pub_key_free_o_cb'].put(_enc_pub_key_free_o_cb)
 
         self.lib.safe_app.enc_pub_key_free(app, handle, user_data, _enc_pub_key_free_o_cb)
 
@@ -2583,14 +2231,10 @@ def enc_secret_key_new(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,EncryptSecKeyHandle)")
         def _enc_secret_key_new_o_cb(user_data, result, sk_h):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_enc_secret_key_new_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, sk_h)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_enc_secret_key_new_o_cb'].put(_enc_secret_key_new_o_cb)
 
         self.lib.safe_app.enc_secret_key_new(app, data, user_data, _enc_secret_key_new_o_cb)
 
@@ -2610,14 +2254,10 @@ def enc_secret_key_get(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,AsymSecretKey*)")
         def _enc_secret_key_get_o_cb(user_data, result, sec_enc_key):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_enc_secret_key_get_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, sec_enc_key)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_enc_secret_key_get_o_cb'].put(_enc_secret_key_get_o_cb)
 
         self.lib.safe_app.enc_secret_key_get(app, handle, user_data, _enc_secret_key_get_o_cb)
 
@@ -2637,14 +2277,10 @@ def enc_secret_key_free(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _enc_secret_key_free_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_enc_secret_key_free_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_enc_secret_key_free_o_cb'].put(_enc_secret_key_free_o_cb)
 
         self.lib.safe_app.enc_secret_key_free(app, handle, user_data, _enc_secret_key_free_o_cb)
 
@@ -2664,14 +2300,10 @@ def sign(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
         def _sign_o_cb(user_data, result, signed_data, signed_data_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_sign_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, signed_data, signed_data_len)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_sign_o_cb'].put(_sign_o_cb)
 
         self.lib.safe_app.sign(app, data, data_len, sign_sk_h, user_data, _sign_o_cb)
 
@@ -2691,14 +2323,10 @@ def verify(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
         def _verify_o_cb(user_data, result, verified_data, verified_data_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_verify_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, verified_data, verified_data_len)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_verify_o_cb'].put(_verify_o_cb)
 
         self.lib.safe_app.verify(app, signed_data, signed_data_len, sign_pk_h, user_data, _verify_o_cb)
 
@@ -2718,14 +2346,10 @@ def encrypt(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
         def _encrypt_o_cb(user_data, result, ciphertext, ciphertext_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_encrypt_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, ciphertext, ciphertext_len)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_encrypt_o_cb'].put(_encrypt_o_cb)
 
         self.lib.safe_app.encrypt(app, data, data_len, public_key_h, secret_key_h, user_data, _encrypt_o_cb)
 
@@ -2745,14 +2369,10 @@ def decrypt(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
         def _decrypt_o_cb(user_data, result, plaintext, plaintext_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_decrypt_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, plaintext, plaintext_len)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_decrypt_o_cb'].put(_decrypt_o_cb)
 
         self.lib.safe_app.decrypt(app, data, data_len, public_key_h, secret_key_h, user_data, _decrypt_o_cb)
 
@@ -2772,14 +2392,10 @@ def encrypt_sealed_box(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
         def _encrypt_sealed_box_o_cb(user_data, result, ciphertext, ciphertext_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_encrypt_sealed_box_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, ciphertext, ciphertext_len)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_encrypt_sealed_box_o_cb'].put(_encrypt_sealed_box_o_cb)
 
         self.lib.safe_app.encrypt_sealed_box(app, data, data_len, public_key_h, user_data, _encrypt_sealed_box_o_cb)
 
@@ -2799,14 +2415,10 @@ def decrypt_sealed_box(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
         def _decrypt_sealed_box_o_cb(user_data, result, plaintext, plaintext_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_decrypt_sealed_box_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, plaintext, plaintext_len)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_decrypt_sealed_box_o_cb'].put(_decrypt_sealed_box_o_cb)
 
         self.lib.safe_app.decrypt_sealed_box(app, data, data_len, public_key_h, secret_key_h, user_data, _decrypt_sealed_box_o_cb)
 
@@ -2826,14 +2438,10 @@ def sha3_hash(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
         def _sha3_hash_o_cb(user_data, result, hash, hash_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_sha3_hash_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, hash, hash_len)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_sha3_hash_o_cb'].put(_sha3_hash_o_cb)
 
         self.lib.safe_app.sha3_hash(data, data_len, user_data, _sha3_hash_o_cb)
 
@@ -2853,14 +2461,10 @@ def generate_nonce(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,AsymNonce*)")
         def _generate_nonce_o_cb(user_data, result, nonce):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_generate_nonce_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, nonce)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_generate_nonce_o_cb'].put(_generate_nonce_o_cb)
 
         self.lib.safe_app.generate_nonce(user_data, _generate_nonce_o_cb)
 
@@ -2880,14 +2484,10 @@ def cipher_opt_new_plaintext(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,CipherOptHandle)")
         def _cipher_opt_new_plaintext_o_cb(user_data, result, handle):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_cipher_opt_new_plaintext_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, handle)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_cipher_opt_new_plaintext_o_cb'].put(_cipher_opt_new_plaintext_o_cb)
 
         self.lib.safe_app.cipher_opt_new_plaintext(app, user_data, _cipher_opt_new_plaintext_o_cb)
 
@@ -2907,14 +2507,10 @@ def cipher_opt_new_symmetric(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,CipherOptHandle)")
         def _cipher_opt_new_symmetric_o_cb(user_data, result, handle):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_cipher_opt_new_symmetric_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, handle)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_cipher_opt_new_symmetric_o_cb'].put(_cipher_opt_new_symmetric_o_cb)
 
         self.lib.safe_app.cipher_opt_new_symmetric(app, user_data, _cipher_opt_new_symmetric_o_cb)
 
@@ -2934,14 +2530,10 @@ def cipher_opt_new_asymmetric(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,CipherOptHandle)")
         def _cipher_opt_new_asymmetric_o_cb(user_data, result, handle):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_cipher_opt_new_asymmetric_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, handle)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_cipher_opt_new_asymmetric_o_cb'].put(_cipher_opt_new_asymmetric_o_cb)
 
         self.lib.safe_app.cipher_opt_new_asymmetric(app, peer_encrypt_key_h, user_data, _cipher_opt_new_asymmetric_o_cb)
 
@@ -2961,14 +2553,10 @@ def cipher_opt_free(self, timeout, log, thread_decorator):
 
         @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _cipher_opt_free_o_cb(user_data, result):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_cipher_opt_free_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
-
-        # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}_cipher_opt_free_o_cb'].put(_cipher_opt_free_o_cb)
 
         self.lib.safe_app.cipher_opt_free(app, handle, user_data, _cipher_opt_free_o_cb)
 

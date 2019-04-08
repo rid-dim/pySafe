@@ -40,10 +40,10 @@ def generate_used_bindings_variable(obj):
 
 
 if __name__ == '__main__':
-    # Get authenticator methods
-    #import safenet.authenticator as auth
-    #A=auth.Authenticator()
-    #print(stump_code_for_overriding_ffi_calls(A))
+    #Get authenticator methods
+    import safenet.authenticator as auth
+    A=auth.Authenticator()
+    print(stump_code_for_overriding_ffi_calls(A))
 
     # Generate _IDATA
     #import safenet.app as app
@@ -51,6 +51,6 @@ if __name__ == '__main__':
     #print(generate_used_bindings_variable(A))
 
     # Generate _MDATA
-    import safenet.mutabledata as app
-    A=app.MutableData()
-    print(generate_used_bindings_variable(A))
+    #import safenet.mutabledata as app
+    #A=app.MutableData()
+    #print(generate_used_bindings_variable(A))
