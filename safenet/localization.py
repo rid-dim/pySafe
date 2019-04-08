@@ -81,11 +81,16 @@ if not filecheck:
 SAFECRUSTCONFIG=os.path.join(BINPATH,'python3.crust.config')
 
 # Review this after the autogenerators
+if platform.system() == 'Linux':
+    APP_DATAHEADERS=os.path.join(HEADERPATH,'safe_app_datatype_declarations_linux')
+    AUTH_DATAHEADERS=os.path.join(HEADERPATH,'safe_authenticator_datatype_declarations_linux')
+    SYSURI_DATAHEADERS=os.path.join(HEADERPATH,'safe_app_datatype_declarations_linux')
+if platform.system() == 'Windows':
+    APP_DATAHEADERS=os.path.join(HEADERPATH,'safe_app_datatype_declarations_windows')
+    AUTH_DATAHEADERS=os.path.join(HEADERPATH,'safe_authenticator_datatype_declarations_windows')
+    SYSURI_DATAHEADERS=os.path.join(HEADERPATH,'safe_app_datatype_declarations_windows')
 APP_FUNCHEADERS=os.path.join(HEADERPATH,'safe_app_function_declarations')
-APP_DATAHEADERS=os.path.join(HEADERPATH,'safe_app_datatype_declarations')
 AUTH_FUNCHEADERS=os.path.join(HEADERPATH,'safe_authenticator_function_declarations')
-AUTH_DATAHEADERS=os.path.join(HEADERPATH,'safe_authenticator_datatype_declarations')
 SYSURI_FUNCHEADERS=os.path.join(HEADERPATH,'system_uri_function_declarations')
-SYSURI_DATAHEADERS=os.path.join(HEADERPATH,'safe_app_datatype_declarations')
 
 safenet.config.GLOBAL_BINPATH=os.path.abspath(BINPATH)
