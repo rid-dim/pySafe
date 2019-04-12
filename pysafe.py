@@ -11,11 +11,11 @@
 
 import argparse
 parser = argparse.ArgumentParser()
-parser.add_argument("--rpc", help="run an rpc server")
+parser.add_argument("--rpc", help="run an rpc server on port : ")
 args = parser.parse_args()
 
 if args.rpc:
-    print('Running an RPC server .. not really though :(')
+    print(f'Running an RPC server on port:{args.rpc} .. not really though :(')
 
 else:
     import safenet
