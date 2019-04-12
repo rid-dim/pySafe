@@ -12,6 +12,9 @@
 # Setuptools distribution folder.
 /dist/
 
+# Pyinstaller build folder
+/build/
+
 # Python egg metadata, regenerated from source files by setuptools.
 /*.egg-info
 

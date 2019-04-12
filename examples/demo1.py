@@ -13,3 +13,4 @@ safenet.setup_logger()
 myAuth=safenet.Authenticator()
 myAuth.login('a','b',None)
 
+print(safenet.app.base.safe_auth_defs.LOCAL_QUEUES.keys())
