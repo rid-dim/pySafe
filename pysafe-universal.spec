@@ -18,6 +18,8 @@ bins = [(f'{p}/compiled_binaries/*{libext}','/compiled_binaries'),
 
 datas=[(f'{p}/safenet/extracted_headers/','/safenet/extracted_headers/')]
 
+excludes=['scipy', 'numpy', 'pywin.debugger']
+
 a = Analysis(['pysafe.py'],
              pathex=pat,
              binaries=bins,
@@ -25,7 +27,7 @@ a = Analysis(['pysafe.py'],
              hiddenimports=['_cffi_backend'],
              hookspath=[],
              runtime_hooks=[],
-             excludes=[],
+             excludes=excludes,
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
              cipher=block_cipher,
@@ -45,4 +47,5 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           runtime_tmpdir=None,
-          console=True )
+          console=True,
+          icon = f'{p}/docs/logo.ico')
