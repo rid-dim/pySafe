@@ -35,7 +35,7 @@ ERROR = logging.ERROR
 CRITICAL = logging.CRITICAL
 
 # Formatting Styles
-printformatter = logging.Formatter('%(message)s')
+printformatter = logging.Formatter('%(levelname)s: %(message)s')
 simpleformatter = logging.Formatter('[%(asctime)s] %(name)s:%(levelname)s -> %(message)s', datefmt='%I:%M:%S %p')
 deluxeformatter = logging.Formatter("[%(asctime)s] %(name)-8s [%(levelname)8s] %(message)-74s ", "%H:%M:%S")
 debugformatter = logging.Formatter("[%(asctime)s%(msecs)03d] %(name)-11s:%(threadName)-10s(%(filename)18s:%(lineno)4s) [%(levelname)8s] %(message)-64s",
@@ -55,6 +55,15 @@ levels = {'debug'   : DEBUG,
 ############
 # LOGGING FUNCTIONS
 ############
+def _set_level(obj,lvl):
+    if isinstance(lvl,str):
+        lvl=levels.get(lvl,DEBUG)
+    obj.setLevel(lvl)
+
+def _set_style(obj,sty):
+    if not isinstance(sty,logging.Formatter):
+        sty=formats.get(sty,debugformatter)
+    obj.setFormatter(sty)
 
 def print_only_setup():
     '''
@@ -87,20 +96,20 @@ def setup_logger(**kwargs):
 
     #  This controls the first filter .. any message above this threshold can be further filtered at the
     #  stream and file levels seperately
-    logger.setLevel(master_level)
+    _set_level(logger,master_level)
 
     if enable_stream:
         logstream = logging.StreamHandler(stream=stream)
-        logstream.setLevel(std_level)
-        logstream.setFormatter(std_style)
+        _set_level(logstream,std_level)
+        _set_style(logstream,std_style)
         logger.addHandler(logstream)
         internal_handlers.append(logstream)
 
     if enable_file:
         try:
             system_logfile = logging.FileHandler(logfile, mode='w')
-            system_logfile.setLevel(file_level)
-            system_logfile.setFormatter(file_style)
+            _set_level(system_logfile, file_level)
+            _set_style(system_logfile, file_style)
             internal_handlers.append(system_logfile)
             logger.addHandler(system_logfile)
         except:

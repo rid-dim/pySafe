@@ -9,9 +9,14 @@
 #print ('PAUSING TO DEBUG TEMP DIRECTORY')
 #time.sleep(5)
 
-import argparse
+import argparse, getpass
 parser = argparse.ArgumentParser()
 parser.add_argument("--rpc", help="run an rpc server on port : ")
+parser.add_argument("--user", help="supply user name")
+parser.add_argument("--pw", help="supply password")
+parser.add_argument("--verbose", help="verbose", action='store_true')
+parser.add_argument("--authenticate", help="authenticate this request")
+
 args = parser.parse_args()
 
 if args.rpc:
@@ -19,9 +24,20 @@ if args.rpc:
 
 else:
     import safenet
-    safenet.setup_logger()
+    if args.verbose:
+        safenet.setup_logger()
+    else:
+        safenet.setup_logger(std_style='print',master_level='warning')
     print('Running in some other mode')
 
     # Logging in is easy!
     myAuth = safenet.Authenticator()
-    myAuth.login('a', 'b', None)
+    if not args.user:
+        args.user=getpass.getpass(prompt='USER:')
+    if not args.pw:
+        args.pw = getpass.getpass(prompt='PASSWORD:')
+
+    myAuth.login(args.user, args.pw, None)
+
+    if args.authenticate:
+        print('At some point this will do something.')
