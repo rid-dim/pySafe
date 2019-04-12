@@ -11,19 +11,20 @@
 #
 ########################################################################################################################
 
+
 import platform
 import os
 import safenet.config
+import sys
+
+LIVE=True # running live
+if getattr( sys, 'frozen', False ):
+    LIVE=False  # running in a bundle
+    basedir = sys._MEIPASS
+else:
+    basedir = os.path.dirname(__file__)
 
 ### Helper Functions
-def find_bin_dir():
-    pass
-
-def _lvl_down(path):
-    '''
-    Move down one directory
-    '''
-    return os.path.split(path)[0]
 
 def _lvl_up(path, up_dir):
     '''
@@ -39,9 +40,18 @@ def get_mod_loc(module):
 
 # todo These variables must always return the correct library location.. Test test test
 
-BINPATH = os.path.dirname(_lvl_down(__file__))+os.sep+'compiled_binaries'
-LOGPATH = os.path.dirname(_lvl_down(__file__)) + os.sep + 'logs'
-HEADERPATH = os.path.dirname(__file__)+os.sep+'extracted_headers'
+
+
+if LIVE:
+    HEADERPATH = _lvl_up(basedir,'extracted_headers')
+    BINPATH = os.path.dirname(basedir) + os.sep + 'compiled_binaries'
+    LOGPATH = os.path.dirname(basedir) + os.sep + 'logs'
+else:
+    HEADERPATH = _lvl_up(basedir, 'safenet/extracted_headers')  # THis is ridiculous, but bc pyinstaller.
+    BINPATH = _lvl_up(basedir,'compiled_binaries')
+    LOGPATH = _lvl_up(basedir,'logs')
+
+print('DEBUGGING LOCALIZATION:',basedir, BINPATH, LOGPATH,HEADERPATH)
 
 # Inject this into the config file
 if safenet.config.GLOBAL_BINPATH is None:
@@ -75,7 +85,9 @@ for item in [SAFEAPPFILE,SAFEAUTHFILE,SAFESYSURIFILE]:
 if not filecheck:
     print(f'---\nThe above SAFE binaries for {platform.system()} are missing.\n'
           f'..Ensure they are in {BINPATH} and try again')
-    exit(1)
+    if LIVE: exit(1)
+    else:
+        print('normally would exit for error, but testing compilation')
 
 # Eventually need a utility to find this.
 SAFECRUSTCONFIG=os.path.join(BINPATH,'python3.crust.config')

@@ -5,7 +5,7 @@ mod_path = Path(__file__).parent
 AUTH_DATA=(mod_path / '../safenet/extracted_headers/safe_authenticator_datatype_declarations').resolve()
 AUTH_FUNCS=(mod_path / '../safenet/extracted_headers/safe_authenticator_function_declarations').resolve()
 APP_DATA=(mod_path / '../safenet/extracted_headers/safe_app_datatype_declarations').resolve()
-APP_FUNCS=(mod_path / '../safenet/extracted_headers/safe_app_function_declarations').resolve()
+APP_FUNCS=(mod_path / '../safenet/extracted_headers/safe_app_function_declarations.h').resolve()
 OUTFILE='dataclass_template.py'
 
 #   Proof of concept auto-templater
