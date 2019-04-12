@@ -51,8 +51,6 @@ else:
     BINPATH = _lvl_up(basedir,'compiled_binaries')
     LOGPATH = _lvl_up(basedir,'logs')
 
-print('DEBUGGING LOCALIZATION:',basedir, BINPATH, LOGPATH,HEADERPATH)
-
 # Inject this into the config file
 if safenet.config.GLOBAL_BINPATH is None:
     safenet.config.GLOBAL_BINPATH=os.path.abspath(BINPATH)

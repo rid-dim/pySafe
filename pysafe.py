@@ -8,14 +8,20 @@
 #import time
 #print ('PAUSING TO DEBUG TEMP DIRECTORY')
 #time.sleep(5)
-import safenet
+
 import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("--rpc", help="run an rpc server")
+args = parser.parse_args()
 
+if args.rpc:
+    print('Running an RPC server .. not really though :(')
 
-if __name__=='__main__':
+else:
+    import safenet
     safenet.setup_logger()
+    print('Running in some other mode')
 
     # Logging in is easy!
     myAuth = safenet.Authenticator()
     myAuth.login('a', 'b', None)
-    print('Safenet load success')
