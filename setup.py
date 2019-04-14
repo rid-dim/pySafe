@@ -16,20 +16,20 @@ install_requires = [
     "base64"
 ]
 
-setup(name='safenet',
+setup(name='safenet-dev',
       version='0.1',
       description='Python interface to the SAFE binaries',
       long_description=readme(),
       classifiers=[
-            'Development Status :: 1 - Dev',
+            'Development Status :: 2 - Pre-Alpha',
             'License :: OSI Approved :: MIT License',
-            'Programming Language :: Python :: 3.6+',
-            'Topic :: File Utilities and Management',
+            'Programming Language :: Python :: 3.6',
       ],
       keywords='safenetwork safenet interface',
       url='https://github.com/rid-dim/pySafe/tree/dev',
       license='GPL3',
       packages=['safenet'],
+      include_package_data=True,
       zip_safe=False,
       entry_points={
           'console_scripts': [

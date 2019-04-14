@@ -44,11 +44,11 @@ def get_mod_loc(module):
 
 if LIVE:
     HEADERPATH = _lvl_up(basedir,'extracted_headers')
-    BINPATH = os.path.dirname(basedir) + os.sep + 'compiled_binaries'
+    BINPATH = _lvl_up(basedir,'compiled_binaries')
     LOGPATH = os.path.dirname(basedir) + os.sep + 'logs'
 else:
     HEADERPATH = _lvl_up(basedir, 'safenet/extracted_headers')  # THis is ridiculous, but bc pyinstaller.
-    BINPATH = _lvl_up(basedir,'compiled_binaries')
+    BINPATH = _lvl_up(basedir,'safenet/compiled_binaries')
     LOGPATH = _lvl_up(basedir,'logs')
 
 # Inject this into the config file
