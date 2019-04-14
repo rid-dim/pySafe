@@ -8,16 +8,8 @@ recommended = {
     "cffi": ["cffi>1.11.5"]
 }
 
-install_requires = [
-    "cffi>=1.11.5"
-    "multihash"
-    "py-cid"
-    "requests"
-    "base64"
-]
-
 setup(name='safenet-dev',
-      version='0.1',
+      version='0.2',
       description='Python interface to the SAFE binaries',
       long_description=readme(),
       classifiers=[
@@ -30,6 +22,14 @@ setup(name='safenet-dev',
       license='GPL3',
       packages=['safenet'],
       include_package_data=True,
+      install_requires=[
+          'cffi',
+          'multihash',
+          'py-cid',
+          'requests',
+          'werkzeug',
+          'pyOpenSSL',
+      ],
       zip_safe=False,
       entry_points={
           'console_scripts': [
