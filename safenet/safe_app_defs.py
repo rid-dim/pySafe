@@ -156,7 +156,7 @@ def mdata_info_random_public(self, timeout, log, thread_decorator):
         def _mdata_info_random_public_o_cb(user_data, result, mdata_info):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_info_random_public_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put('gotResult')
+            self.queue.put(self.ffi_app.new('MDataInfo*',mdata_info[0]))
             if o_cb:
                 o_cb(user_data, result, mdata_info)
 
@@ -465,6 +465,7 @@ def mdata_entries(self, timeout, log, thread_decorator):
     self._mdata_entries = _mdata_entries
 
 def mdata_list_values(self, timeout, log, thread_decorator):
+
     @thread_decorator(timeout=timeout, queue=self.queue)
     def _mdata_list_values(app, info, user_data, o_cb=None):
         """
@@ -476,26 +477,26 @@ def mdata_list_values(self, timeout, log, thread_decorator):
         """
 
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataValue* ,uint64_t)")
-        def noWay(user_data, result, values, values_len):
-            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}noWay'].get_nowait()}")
-            #safeUtils.checkResult(result, self.ffi_app, user_data)
-            #returnString = self.ffi_app.string(values.content)
-            #print(returnString)
-            log.debug(f'got a result')
-            #self.queue.put(values)
-            #if o_cb:
-            #    o_cb(user_data, result, values, values_len)
-        print(self)
-        print(self.ffi_app)
-        print(self.ffi_app.callback)
-        
-        #self.lib.safe_app.mdata_list_values(app, info, user_data, noWay)
-        
-        log.warning(f'i even called the lib without errors')
+        def _mdata_list_values_o_cb(user_data, result, values, values_len):
+            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_list_values_o_cb'].get_nowait()}")
+            safeUtils.checkResult(result, self.ffi_app, user_data)
+
+            returnValues = []
+            for i in range(values_len):
+                returnValues.append(self.ffi_app.string(values[i].content))
+
+            self.queue.put(returnValues)
+            self.queue.put(returnValues)
+            self.queue.put(values)
+            if o_cb:
+                o_cb(user_data, result, values, values_len)
+
 
         # To ensure the reference is not GCd
-        LOCAL_QUEUES[f'{str(id(self))}noWay'].put(noWay)
+        LOCAL_QUEUES[f'{str(id(self))}_mdata_list_values_o_cb'].put(_mdata_list_values_o_cb)
 
+        self.lib.safe_app.mdata_list_values(app, info, user_data, _mdata_list_values_o_cb)
+        return self.queue.get()
 
     self._mdata_list_values = _mdata_list_values
 
@@ -952,12 +953,11 @@ def mdata_entries_new(self, timeout, log, thread_decorator):
             self.queue.put(entries_h)
             if o_cb:
                 o_cb(user_data, result, entries_h)
-        
-        log.debug(f'attempting to get a entries handle with userdata {user_data} and app {app}')
-        self.lib.safe_app.mdata_entries_new(app, user_data, _mdata_entries_new_o_cb)
 
         # To ensure the reference is not GCd
         LOCAL_QUEUES[f'{str(id(self))}_mdata_entries_new_o_cb'].put(_mdata_entries_new_o_cb)
+
+        self.lib.safe_app.mdata_entries_new(app, user_data, _mdata_entries_new_o_cb)
 
 
     self._mdata_entries_new = _mdata_entries_new

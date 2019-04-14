@@ -16,6 +16,23 @@ class MutableData(base.StandardMutableData):
             self.asBytes = None
 
     ## Now, public methods here
-    
 
-        
+    def new_random_public(self, app_pointer, type_tag, content_as_dict=None):
+        self.mdata_permissions_new(app_pointer, None)
+        permission_handle = self.queue.get()
+
+        self.mdata_entries_new(app_pointer, None)
+        entry_handle = self.queue.get()
+
+        for item in content_as_dict:
+            self.mdata_entries_insert(app_pointer, entry_handle, item, len(item), content_as_dict[item],
+                                           len(content_as_dict[item]), None)
+            self.queue.get()
+
+        self.mdata_info_random_public(type_tag, None)
+        random_info = self.queue.get()
+
+        self.mdata_put(app_pointer, random_info, permission_handle, entry_handle, None)
+        self.queue.get()
+
+        return random_info

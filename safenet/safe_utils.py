@@ -117,7 +117,7 @@ def getXorAddresOfMutable(data, ffi):
     xorName_asBytes = ffi.buffer(data.name)[:]
     myHash = multihash.encode(xorName_asBytes,'sha3-256')
     myCid = cid.make_cid(1,'dag-pb',myHash)
-    encodedAddress = myCid.encode('base32').decode()
+    encodedAddress = myCid.encode('base16').decode()
     return 'safe://' + encodedAddress + ':' + str(data.type_tag)
         
 def getffiMutable(asBytes,ffi):
