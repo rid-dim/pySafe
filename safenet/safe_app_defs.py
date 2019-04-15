@@ -92,16 +92,19 @@ def mdata_list_keys(self, timeout, log, thread_decorator):
             > callback functions:
             (*o_cb)(void* user_data, FfiResult* result, MDataKey* keys, uintptr_t keys_len)
         """
-        print('strange')
 
         # @self.ffi_app.callback("void(void* ,FfiResult* ,MDataKey* ,uintptr_t)")
         @self.ffi_app.callback("void(void* ,FfiResult* ,MDataKey* ,unsigned long)")
         def _mdata_list_keys_o_cb(user_data, result, keys, keys_len):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_list_keys_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            returnString = self.ffi.string(keys)
-            log.debug(f'got {returnString}')
-            self.queue.put(self.ffi.string(keys))
+
+            returnValues = []
+            for i in range(keys_len):
+                returnValues.append(self.ffi_app.string(keys[i].key,keys[i].key_len))
+
+            log.debug(f'got Result')
+            self.queue.put(returnValues)
             if o_cb:
                 o_cb(user_data, result, keys, keys_len)
 
@@ -483,11 +486,9 @@ def mdata_list_values(self, timeout, log, thread_decorator):
 
             returnValues = []
             for i in range(values_len):
-                returnValues.append(self.ffi_app.string(values[i].content))
+                returnValues.append(self.ffi_app.string(values[i].content,values[i].content_len))
 
             self.queue.put(returnValues)
-            self.queue.put(returnValues)
-            self.queue.put(values)
             if o_cb:
                 o_cb(user_data, result, values, values_len)
 
@@ -496,7 +497,6 @@ def mdata_list_values(self, timeout, log, thread_decorator):
         LOCAL_QUEUES[f'{str(id(self))}_mdata_list_values_o_cb'].put(_mdata_list_values_o_cb)
 
         self.lib.safe_app.mdata_list_values(app, info, user_data, _mdata_list_values_o_cb)
-        return self.queue.get()
 
     self._mdata_list_values = _mdata_list_values
 
@@ -813,7 +813,7 @@ def mdata_entry_actions_new(self, timeout, log, thread_decorator):
         def _mdata_entry_actions_new_o_cb(user_data, result, entry_actions_h):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_mdata_entry_actions_new_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put('gotResult')
+            self.queue.put(entry_actions_h)
             if o_cb:
                 o_cb(user_data, result, entry_actions_h)
 
@@ -2234,7 +2234,7 @@ def app_pub_sign_key(self, timeout, log, thread_decorator):
         def _app_pub_sign_key_o_cb(user_data, result, handle):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_app_pub_sign_key_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put('gotResult')
+            self.queue.put(handle)
             if o_cb:
                 o_cb(user_data, result, handle)
 

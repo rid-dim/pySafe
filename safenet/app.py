@@ -58,6 +58,10 @@ class App(base.StandardApp):
         self.app_registered(auth_data.app.id, self.granted_auth_pointer[0], None)
         self.app_pointer = self.queue.get()
 
+    def get_pub_key_handle(self):
+        self.app_pub_sign_key(self.app_pointer, None)
+        return self.queue.get()
+
         
 if __name__ == '__main__':
     # we test it!
