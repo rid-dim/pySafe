@@ -4,7 +4,7 @@ import queue
 
 class ImmutableData(base.StandardImmutableData):
 
-    def __init__(self,fromBytes=None):
+    def __init__(self, app_pointer=None,fromBytes=None):
         self.queue = queue.Queue()
         self.bind_ffi_methods()
 

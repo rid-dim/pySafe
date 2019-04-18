@@ -1111,12 +1111,16 @@ def idata_new_self_encryptor(self, timeout, log, thread_decorator):
             (*o_cb)(void* user_data, FfiResult* result, SEWriterHandle se_h)
         """
 
-        @self.ffi.callback("void(void* ,FfiResult* ,SEWriterHandle)")
+        @self.ffi_app.callback("void(void* ,FfiResult* ,SEWriterHandle)")
         def _idata_new_self_encryptor_o_cb(user_data, result, se_h):
-            safeUtils.checkResult(result, self.ffi)
-            self.queue.put('gotResult')
+            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_idata_new_self_encryptor_o_cb'].get_nowait()}")
+            safeUtils.checkResult(result, self.ffi_app, user_data)
+            self.queue.put(se_h)
             if o_cb:
                 o_cb(user_data, result, se_h)
+
+        # To ensure the reference is not GCd
+        LOCAL_QUEUES[f'{str(id(self))}_idata_new_self_encryptor_o_cb'].put(_idata_new_self_encryptor_o_cb)
 
         self.lib.safe_app.idata_new_self_encryptor(app, user_data, _idata_new_self_encryptor_o_cb)
 
@@ -1134,12 +1138,16 @@ def idata_write_to_self_encryptor(self, timeout, log, thread_decorator):
             (*o_cb)(void* user_data, FfiResult* result)
         """
 
-        @self.ffi.callback("void(void* ,FfiResult*)")
+        @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _idata_write_to_self_encryptor_o_cb(user_data, result):
-            safeUtils.checkResult(result, self.ffi)
+            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_idata_write_to_self_encryptor_o_cb'].get_nowait()}")
+            safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
+
+        # To ensure the reference is not GCd
+        LOCAL_QUEUES[f'{str(id(self))}_idata_write_to_self_encryptor_o_cb'].put(_idata_write_to_self_encryptor_o_cb)
 
         self.lib.safe_app.idata_write_to_self_encryptor(app, se_h, data, data_len, user_data, _idata_write_to_self_encryptor_o_cb)
 
@@ -1157,12 +1165,16 @@ def idata_close_self_encryptor(self, timeout, log, thread_decorator):
             (*o_cb)(void* user_data, FfiResult* result, XorNameArray* name)
         """
 
-        @self.ffi.callback("void(void* ,FfiResult* ,XorNameArray*)")
+        @self.ffi_app.callback("void(void* ,FfiResult* ,XorNameArray*)")
         def _idata_close_self_encryptor_o_cb(user_data, result, name):
-            safeUtils.checkResult(result, self.ffi)
-            self.queue.put('gotResult')
+            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_idata_close_self_encryptor_o_cb'].get_nowait()}")
+            safeUtils.checkResult(result, self.ffi_app, user_data)
+            self.queue.put(self.ffi_app.cast('XorNameArray*',name[0]))
             if o_cb:
                 o_cb(user_data, result, name)
+
+        # To ensure the reference is not GCd
+        LOCAL_QUEUES[f'{str(id(self))}_idata_close_self_encryptor_o_cb'].put(_idata_close_self_encryptor_o_cb)
 
         self.lib.safe_app.idata_close_self_encryptor(app, se_h, cipher_opt_h, user_data, _idata_close_self_encryptor_o_cb)
 
@@ -1180,12 +1192,16 @@ def idata_fetch_self_encryptor(self, timeout, log, thread_decorator):
             (*o_cb)(void* user_data, FfiResult* result, SEReaderHandle se_h)
         """
 
-        @self.ffi.callback("void(void* ,FfiResult* ,SEReaderHandle)")
+        @self.ffi_app.callback("void(void* ,FfiResult* ,SEReaderHandle)")
         def _idata_fetch_self_encryptor_o_cb(user_data, result, se_h):
-            safeUtils.checkResult(result, self.ffi)
-            self.queue.put('gotResult')
+            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_idata_fetch_self_encryptor_o_cb'].get_nowait()}")
+            safeUtils.checkResult(result, self.ffi_app, user_data)
+            self.queue.put(se_h)
             if o_cb:
                 o_cb(user_data, result, se_h)
+
+        # To ensure the reference is not GCd
+        LOCAL_QUEUES[f'{str(id(self))}_idata_fetch_self_encryptor_o_cb'].put(_idata_fetch_self_encryptor_o_cb)
 
         self.lib.safe_app.idata_fetch_self_encryptor(app, name, user_data, _idata_fetch_self_encryptor_o_cb)
 
@@ -1203,12 +1219,16 @@ def idata_serialised_size(self, timeout, log, thread_decorator):
             (*o_cb)(void* user_data, FfiResult* result, uint64_t serialised_size)
         """
 
-        @self.ffi.callback("void(void* ,FfiResult* ,uint64_t)")
+        @self.ffi_app.callback("void(void* ,FfiResult* ,uint64_t)")
         def _idata_serialised_size_o_cb(user_data, result, serialised_size):
-            safeUtils.checkResult(result, self.ffi)
+            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_idata_serialised_size_o_cb'].get_nowait()}")
+            safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, serialised_size)
+
+        # To ensure the reference is not GCd
+        LOCAL_QUEUES[f'{str(id(self))}_idata_serialised_size_o_cb'].put(_idata_serialised_size_o_cb)
 
         self.lib.safe_app.idata_serialised_size(app, name, user_data, _idata_serialised_size_o_cb)
 
@@ -1226,12 +1246,16 @@ def idata_size(self, timeout, log, thread_decorator):
             (*o_cb)(void* user_data, FfiResult* result, uint64_t size)
         """
 
-        @self.ffi.callback("void(void* ,FfiResult* ,uint64_t)")
+        @self.ffi_app.callback("void(void* ,FfiResult* ,uint64_t)")
         def _idata_size_o_cb(user_data, result, size):
-            safeUtils.checkResult(result, self.ffi)
+            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_idata_size_o_cb'].get_nowait()}")
+            safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result, size)
+
+        # To ensure the reference is not GCd
+        LOCAL_QUEUES[f'{str(id(self))}_idata_size_o_cb'].put(_idata_size_o_cb)
 
         self.lib.safe_app.idata_size(app, se_h, user_data, _idata_size_o_cb)
 
@@ -1249,12 +1273,16 @@ def idata_read_from_self_encryptor(self, timeout, log, thread_decorator):
             (*o_cb)(void* user_data, FfiResult* result, uint8_t* data, uintptr_t data_len)
         """
 
-        @self.ffi.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
+        @self.ffi_app.callback("void(void* ,FfiResult* ,uint8_t* ,uintptr_t)")
         def _idata_read_from_self_encryptor_o_cb(user_data, result, data, data_len):
-            safeUtils.checkResult(result, self.ffi)
-            self.queue.put('gotResult')
+            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_idata_read_from_self_encryptor_o_cb'].get_nowait()}")
+            safeUtils.checkResult(result, self.ffi_app, user_data)
+            self.queue.put(self.ffi_app.string(data,data_len))
             if o_cb:
                 o_cb(user_data, result, data, data_len)
+
+        # To ensure the reference is not GCd
+        LOCAL_QUEUES[f'{str(id(self))}_idata_read_from_self_encryptor_o_cb'].put(_idata_read_from_self_encryptor_o_cb)
 
         self.lib.safe_app.idata_read_from_self_encryptor(app, se_h, from_pos, len, user_data,
                                                          _idata_read_from_self_encryptor_o_cb)
@@ -1273,12 +1301,16 @@ def idata_self_encryptor_writer_free(self, timeout, log, thread_decorator):
             (*o_cb)(void* user_data, FfiResult* result)
         """
 
-        @self.ffi.callback("void(void* ,FfiResult*)")
+        @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _idata_self_encryptor_writer_free_o_cb(user_data, result):
-            safeUtils.checkResult(result, self.ffi)
+            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_idata_self_encryptor_writer_free_o_cb'].get_nowait()}")
+            safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
+
+        # To ensure the reference is not GCd
+        LOCAL_QUEUES[f'{str(id(self))}_idata_self_encryptor_writer_free_o_cb'].put(_idata_self_encryptor_writer_free_o_cb)
 
         self.lib.safe_app.idata_self_encryptor_writer_free(app, handle, user_data, _idata_self_encryptor_writer_free_o_cb)
 
@@ -1296,12 +1328,16 @@ def idata_self_encryptor_reader_free(self, timeout, log, thread_decorator):
             (*o_cb)(void* user_data, FfiResult* result)
         """
 
-        @self.ffi.callback("void(void* ,FfiResult*)")
+        @self.ffi_app.callback("void(void* ,FfiResult*)")
         def _idata_self_encryptor_reader_free_o_cb(user_data, result):
-            safeUtils.checkResult(result, self.ffi)
+            log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_idata_self_encryptor_reader_free_o_cb'].get_nowait()}")
+            safeUtils.checkResult(result, self.ffi_app, user_data)
             self.queue.put('gotResult')
             if o_cb:
                 o_cb(user_data, result)
+
+        # To ensure the reference is not GCd
+        LOCAL_QUEUES[f'{str(id(self))}_idata_self_encryptor_reader_free_o_cb'].put(_idata_self_encryptor_reader_free_o_cb)
 
         self.lib.safe_app.idata_self_encryptor_reader_free(app, handle, user_data, _idata_self_encryptor_reader_free_o_cb)
 
@@ -2882,7 +2918,7 @@ def cipher_opt_new_plaintext(self, timeout, log, thread_decorator):
         def _cipher_opt_new_plaintext_o_cb(user_data, result, handle):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_cipher_opt_new_plaintext_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put('gotResult')
+            self.queue.put(handle)
             if o_cb:
                 o_cb(user_data, result, handle)
 
@@ -2909,7 +2945,7 @@ def cipher_opt_new_symmetric(self, timeout, log, thread_decorator):
         def _cipher_opt_new_symmetric_o_cb(user_data, result, handle):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_cipher_opt_new_symmetric_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put('gotResult')
+            self.queue.put(handle)
             if o_cb:
                 o_cb(user_data, result, handle)
 
@@ -2936,7 +2972,7 @@ def cipher_opt_new_asymmetric(self, timeout, log, thread_decorator):
         def _cipher_opt_new_asymmetric_o_cb(user_data, result, handle):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_cipher_opt_new_asymmetric_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put('gotResult')
+            self.queue.put(handle)
             if o_cb:
                 o_cb(user_data, result, handle)
 

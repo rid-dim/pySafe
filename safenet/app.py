@@ -47,6 +47,9 @@ class App(base.StandardApp):
     def mData(self):
         return self.mutableData(app_pointer=self.app_pointer)
 
+    def iData(self):
+        return self.immutableData(app_pointer=self.app_pointer)
+
     def encode_authentication(self, auth_data):
         self.encode_auth_req(auth_data, None)
         return self.queue.get()
@@ -60,6 +63,10 @@ class App(base.StandardApp):
 
     def get_pub_key_handle(self):
         self.app_pub_sign_key(self.app_pointer, None)
+        return self.queue.get()
+
+    def cipher_new_plaintext(self):
+        self.cipher_opt_new_plaintext(self.app_pointer, None)
         return self.queue.get()
 
         
