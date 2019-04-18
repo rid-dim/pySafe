@@ -123,5 +123,7 @@ def setup_logger(**kwargs):
 if cfg.GLOBAL_AUTO_INIT_LOGGING:
     setup_logger()
 
+log = logging.getLogger(cfg.GLOBAL_LOGGER_NAME)
+
 if __name__ == '__main__':
     pass

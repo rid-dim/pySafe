@@ -16,7 +16,7 @@
 #
 ########################################################################################################################
 
-from safenet.log_util import setup_logger
+from safenet.log_util import setup_logger, log
 from safenet.app import App
 from safenet.authenticator import Authenticator
 from safenet.mutabledata import MutableData

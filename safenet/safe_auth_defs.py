@@ -141,8 +141,10 @@ def login(self, timeout, log, thread_decorator):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_login_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_auth, user_data)
             self.queue.put('gotResult')
+            user_data = self if user_data == self.ffi_auth.NULL else self.ffi_auth.from_handle(user_data)
             if o_cb:
-                o_cb(user_data ,result ,authenticaor)
+                o_cb(user_data ,result ,authenticaor)  #  If user data is None, we should send self to the CB
+
 
         # To ensure the reference is not GCd
         LOCAL_QUEUES[f'{str(id(self))}_login_o_cb'].put(_login_o_cb)
@@ -186,6 +188,7 @@ def auth_account_info(self, timeout, log, thread_decorator):
             > callback functions:
             (*o_cb)(void* user_data, FfiResult* result, AccountInfo* account_info)
         """
+        log.debug('auth_acount_info called')
         @self.ffi_auth.callback("void(void* ,FfiResult* ,AccountInfo*)")
         def _auth_account_info_o_cb(user_data ,result ,account_info):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_auth_account_info_o_cb'].get_nowait()}")
@@ -588,6 +591,7 @@ def auth_registered_apps(self, timeout, log, thread_decorator):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_auth_registered_apps_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_auth, user_data)
             self.queue.put('gotResult')
+            user_data = self if user_data == self.ffi_auth.NULL else self.ffi_auth.from_handle(user_data)
             if o_cb:
                 o_cb(user_data ,result ,registered_app ,registered_app_len)
 
