@@ -14,7 +14,8 @@ Build Status dev:
 |[![Build Status](https://travis-ci.org/rid-dim/pySafe.svg?branch=dev)](https://travis-ci.org/rid-dim/pySafe?branch=dev)|[![Build status](https://ci.appveyor.com/api/projects/status/qyx4b75u9mxrla1g/branch/dev?svg=true)](https://ci.appveyor.com/project/rid-dim/pysafe/branch/dev)|[![docs](https://readthedocs.org/projects/pysafe/badge/?version=dev)](http://pysafe.readthedocs.io/en/dev)|
 
 
-python interface for the C FFI API of the SAFE Network (www.maidsafe.net)
+A Python interface for the C FFI API of the SAFE Network (www.maidsafe.net)
+---
 
 contributors: rid-dim, duncankushnir
 
@@ -22,19 +23,28 @@ The design goal of pySafe is to provide a full python interface to SAFE network,
 
 The package (will) include an importable and installable module, as well as utilities to generate the bindings and hopefully eventually some example applications beyond 'hello world'.
 
-Designed to be minimally dependent; only cffi is not included in the base python install.  We do however use features that currently require python 3.6+ . With enough interest, we could probably back port it, but this will depend on our chosen asynchronous implementation.
+Designed to be minimally dependent, however the following modules are not included in the base python install:
 
-Currently under construction - so please don't criticize but just open a pull request ;)
+-cffi, py-cid, multihash  
+
+We use features that currently require python 3.6+ . With enough interest, we could probably back port it, but this will depend on our chosen asynchronous implementation.
+
+Under heavy development - so please don't criticize but just open a pull request ;)
 
 
+Installing into an environment
+---
+
+First, clone the repo.  We are currently working to find an acceptable PyPi name to enable pip/easy install
 
 
 - On linux, running upg_local.sh will pip update your local environment to the current pySafe state (any python prog can import pySafe, sym-linked to the development directory):
 
 - sh ./upg_local.sh
 
-- On Windows: upg_local.bat (note that at present you will have to compile your own binaries.  Windows support is a ways off yet)
+- On Windows: upg_local.bat (we now feature Windows compatibility)
 
+- On Mac: well, the way localization is coded should work, but we need someone to compile the binaries on mac and test!
 
 Contributing
 ----
