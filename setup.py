@@ -8,8 +8,8 @@ recommended = {
     "cffi": ["cffi>1.11.5"]
 }
 
-setup(name='safenet-dev',
-      version='0.2',
+setup(name='safenet',
+      version='0.0.1',
       description='Python interface to the SAFE binaries',
       long_description=readme(),
       classifiers=[
@@ -35,5 +35,6 @@ setup(name='safenet-dev',
           'console_scripts': [
               'safeAuth=safenet:Authenticator', # I just thought it would be cool to have a simple and basic authenticator available in the command line
               'safeConn=safenet:ConnTest',      # and maybe a connection test as well - rid
+              'safenetChat=safenet:crappyChat_reloaded_commandLine',
           ],}
       )
