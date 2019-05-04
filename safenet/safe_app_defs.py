@@ -1223,7 +1223,7 @@ def idata_serialised_size(self, timeout, log, thread_decorator):
         def _idata_serialised_size_o_cb(user_data, result, serialised_size):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_idata_serialised_size_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put('gotResult')
+            self.queue.put(serialised_size)
             if o_cb:
                 o_cb(user_data, result, serialised_size)
 
@@ -1250,7 +1250,7 @@ def idata_size(self, timeout, log, thread_decorator):
         def _idata_size_o_cb(user_data, result, size):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_idata_size_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put('gotResult')
+            self.queue.put(size)
             if o_cb:
                 o_cb(user_data, result, size)
 
