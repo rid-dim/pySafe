@@ -101,7 +101,7 @@ def mdata_list_keys(self, timeout, log, thread_decorator):
 
             returnValues = []
             for i in range(keys_len):
-                returnValues.append(self.ffi_app.string(keys[i].key,keys[i].key_len))
+                returnValues.append(self.ffi_app.buffer(keys[i].key,keys[i].key_len)[:])
 
             log.debug(f'got Result')
             self.queue.put(returnValues)
@@ -486,7 +486,7 @@ def mdata_list_values(self, timeout, log, thread_decorator):
 
             returnValues = []
             for i in range(values_len):
-                returnValues.append(self.ffi_app.string(values[i].content,values[i].content_len))
+                returnValues.append(self.ffi_app.buffer(values[i].content,values[i].content_len)[:])
 
             self.queue.put(returnValues)
             if o_cb:
@@ -1277,7 +1277,6 @@ def idata_read_from_self_encryptor(self, timeout, log, thread_decorator):
         def _idata_read_from_self_encryptor_o_cb(user_data, result, data, data_len):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_idata_read_from_self_encryptor_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            #self.queue.put(self.ffi_app.string(data,data_len))
             self.queue.put(self.ffi_app.buffer(data,data_len)[:])
             if o_cb:
                 o_cb(user_data, result, data, data_len)
@@ -1726,7 +1725,7 @@ def app_container_name(self, timeout, log, thread_decorator):
         def _app_container_name_o_cb(user_data, result, container_name):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_app_container_name_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put('gotResult')
+            self.queue.put(self.ffi_app.string(container_name))
             if o_cb:
                 o_cb(user_data, result, container_name)
 
@@ -2000,7 +1999,7 @@ def access_container_get_container_mdata_info(self, timeout, log, thread_decorat
         def _access_container_get_container_mdata_info_o_cb(user_data, result, mdata_info):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_access_container_get_container_mdata_info_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put('gotResult')
+            self.queue.put(safeUtils.copy(mdata_info,self.ffi_app))
             if o_cb:
                 o_cb(user_data, result, mdata_info)
 
@@ -2028,7 +2027,7 @@ def dir_fetch_file(self, timeout, log, thread_decorator):
         def _dir_fetch_file_o_cb(user_data, result, file, version):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_dir_fetch_file_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put('gotResult')
+            self.queue.put({'file':safeUtils.copy(file,self.ffi_app),'version':version})
             if o_cb:
                 o_cb(user_data, result, file, version)
 
@@ -2082,7 +2081,7 @@ def dir_update_file(self, timeout, log, thread_decorator):
         def _dir_update_file_o_cb(user_data, result, new_version):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_dir_update_file_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put('gotResult')
+            self.queue.put(new_version)
             if o_cb:
                 o_cb(user_data, result, new_version)
 
@@ -2109,7 +2108,7 @@ def dir_delete_file(self, timeout, log, thread_decorator):
         def _dir_delete_file_o_cb(user_data, result, new_version):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_dir_delete_file_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put('gotResult')
+            self.queue.put(new_version)
             if o_cb:
                 o_cb(user_data, result, new_version)
 
@@ -2136,7 +2135,7 @@ def file_open(self, timeout, log, thread_decorator):
         def _file_open_o_cb(user_data, result, file_h):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_file_open_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put('gotResult')
+            self.queue.put(file_h)
             if o_cb:
                 o_cb(user_data, result, file_h)
 
@@ -2163,7 +2162,7 @@ def file_size(self, timeout, log, thread_decorator):
         def _file_size_o_cb(user_data, result, size):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_file_size_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put('gotResult')
+            self.queue.put(size)
             if o_cb:
                 o_cb(user_data, result, size)
 
@@ -2190,7 +2189,7 @@ def file_read(self, timeout, log, thread_decorator):
         def _file_read_o_cb(user_data, result, data, data_len):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_file_read_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put('gotResult')
+            self.queue.put(self.ffi_app.buffer(data, data_len)[:])
             if o_cb:
                 o_cb(user_data, result, data, data_len)
 
