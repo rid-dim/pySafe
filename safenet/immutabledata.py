@@ -3,10 +3,10 @@ import safenet.safe_utils as safeUtils
 import queue
 
 class ImmutableData(base.StandardImmutableData):
-
     def __init__(self, app_pointer=None,fromBytes=None):
         self.queue = queue.Queue()
         self.bind_ffi_methods()
+        self.app_pointer = app_pointer
 
         # defining the mutableData
         if fromBytes:

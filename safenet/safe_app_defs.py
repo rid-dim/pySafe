@@ -1277,7 +1277,8 @@ def idata_read_from_self_encryptor(self, timeout, log, thread_decorator):
         def _idata_read_from_self_encryptor_o_cb(user_data, result, data, data_len):
             log.debug(f"got {LOCAL_QUEUES[f'{str(id(self))}_idata_read_from_self_encryptor_o_cb'].get_nowait()}")
             safeUtils.checkResult(result, self.ffi_app, user_data)
-            self.queue.put(self.ffi_app.string(data,data_len))
+            #self.queue.put(self.ffi_app.string(data,data_len))
+            self.queue.put(self.ffi_app.buffer(data,data_len)[:])
             if o_cb:
                 o_cb(user_data, result, data, data_len)
 
