@@ -23,12 +23,16 @@ Currently in development, so it is quite raw.
 - On Windows: upg_local.bat (note that at present you will have to compile your own binaries.  Windows support is a ways off yet)
 
 
+.. include:: examples.rst
+
+
 Tests
 =======
 
 Automatic tests are run through travis-ci and appveyor on windows, osx and linux
 
-To add tests the test files that are meant to be executed need to be added to the tests_ directory and need to start with **test_**\* or end with \***_test**
+To add tests the test files that are meant to be executed need to be added
+to the tests_ directory and need to start with **test_**\* or end with ***_test**
 
 .. _tests: https://github.com/rid-dim/pySafe/tree/dev/tests
 
@@ -45,13 +49,15 @@ the test functions that are meant to be executed must be named **test_**\* and n
 
 
 Documentation
-=======
+=============
 
 feel free to just improve this docs and open a pull request on github.
 
 
+
+
 Contributing
-=======
+============
 
 If you want to help us and work together with us on this project you can just join `our telegram channel`_ or get in touch with us in the `dev forum`_ or you just open a pull request / contact us on github :)
 
