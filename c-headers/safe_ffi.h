@@ -8,27 +8,20 @@
 // specific language governing permissions and limitations relating to use
 // of the SAFE Network Software.
 
-#ifndef bindgen_ffi_utilsh
-#define bindgen_ffi_utilsh
+#ifndef bindgen_safe_ffi_root
+#define bindgen_safe_ffi_root
 
+typedef void* Safe;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <stdint.h>
-#include <stdbool.h>
-
-typedef struct FfiResult {
-    int32_t error_code;
-    char const* description;
-} FfiResult;
-
-
-
-#ifdef __cplusplus
-}
-#endif
+#include "safe_ffi/ffi_structs.h"
+#include "ffi_utils.h"
+#include "safe_ffi/safe_ffi.h"
+#include "safe_ffi/files.h"
+#include "safe_ffi/keys.h"
+#include "safe_ffi/xorurl.h"
+#include "safe_ffi/nrs.h"
+#include "safe_ffi/fetch.h"
+#include "safe_ffi/wallet.h"
 
 
 #endif
